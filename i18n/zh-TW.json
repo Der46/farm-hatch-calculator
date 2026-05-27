@@ -1,0 +1,109 @@
+{
+    "meta": {
+        "lang": "zh-TW",
+        "name": "繁體中文",
+        "nativeName": "繁體中文"
+    },
+    "app": {
+        "documentTitle": "Coin999 夥伴計算機",
+        "footer": "© Coin999-長長久久 隊伍"
+    },
+    "language": {
+        "zhTW": "繁中",
+        "vi": "Tiếng Việt",
+        "en": "EN"
+    },
+    "settings": {
+        "title": "關卡設定",
+        "saveLocal": "資料保存在本機",
+        "saved": "已自動儲存",
+        "clearedAndReset": "已清除並重設"
+    },
+    "mode": {
+        "hatch": "🥚 孵化",
+        "farm": "🌱 耕種",
+        "goldHatch": "🏆 黃金孵化",
+        "goldFarm": "👑 黃金耕種"
+    },
+    "pageTitle": {
+        "hatch": "孵化夥伴",
+        "farm": "耕種夥伴",
+        "goldHatch": "黃金孵化夥伴",
+        "goldFarm": "黃金耕種夥伴"
+    },
+    "detailTitle": {
+        "hatch": "孵化關卡",
+        "farm": "耕種關卡",
+        "goldHatch": "黃金關卡",
+        "goldFarm": "黃金關卡"
+    },
+    "modeName": {
+        "hatch": "孵化",
+        "farm": "耕種",
+        "goldHatch": "黃金孵化",
+        "goldFarm": "黃金耕種"
+    },
+    "target": {
+        "hatch": "孵化每位目標分數",
+        "farm": "耕種每位目標分數",
+        "goldHatch": "黃金孵化每位目標分數",
+        "goldFarm": "黃金耕種每位目標分數"
+    },
+    "summary": {
+        "totalTarget": "總目標分",
+        "progress": "完成進度"
+    },
+    "button": {
+        "clearAll": "清除全部本機資料",
+        "back": "返回"
+    },
+    "person": {
+        "selfDefault": "自己",
+        "friendDefault": "隊友",
+        "unnamed": "未命名",
+        "selfName": "自己名稱",
+        "selfScore": "自己分數",
+        "friendName": "隊友名稱",
+        "friendScore": "隊友分數"
+    },
+    "memberDefault": {
+        "normal": "隊友{n}",
+        "gold": "黃金隊友{n}"
+    },
+    "detail": {
+        "currentTotal": "目前總分",
+        "targetScore": "目標分數",
+        "remaining": "還差完成",
+        "needTokens": "預估代幣",
+        "nextStage": "下一階段",
+        "nextStageRemaining": "還差下一階段"
+    },
+    "stage": {
+        "stage": "階段",
+        "levelText": "{current}/{total}",
+        "tableTitle": "{mode} {count} 階段分數表",
+        "nth": "第 {n} 階",
+        "cumulative": "累積 {score}",
+        "completed": "已完成"
+    },
+    "message": {
+        "needLine": "還需 {score} 分才能完成",
+        "completedCanUpgrade": "已完成，可以升等",
+        "clearConfirm": "確定要清除全部本機資料嗎？此操作無法復原。"
+    },
+    "progressBar": {
+        "normalTitle": "藍色：自己，綠色：隊友",
+        "goldTitle": "藍色：自己，金色：隊友",
+        "selfColor": "自己",
+        "friendColor": "隊友"
+    },
+    "unit": {
+        "score": "分",
+        "token": "代幣",
+        "percent": "%"
+    },
+    "status": {
+        "empty": "-",
+        "zero": "0"
+    }
+}
