@@ -9,9 +9,7 @@
     <style>
         :root {
             --red: #b71934;
-            --red-dark: #771022;
             --gold: #ffd84f;
-            --gold-dark: #c98216;
             --cream: #fff1c4;
             --text: #4b210e;
             --shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
@@ -51,7 +49,8 @@
         }
 
         button,
-        input {
+        input,
+        select {
             font-family: inherit;
         }
 
@@ -59,7 +58,8 @@
             cursor: pointer;
         }
 
-        .app {
+        .app,
+        .detail-inner {
             width: min(520px, 100%);
             min-height: 100vh;
             margin: 0 auto;
@@ -67,52 +67,19 @@
             position: relative;
         }
 
-        .top-bar {
+        .title-row {
+            position: relative;
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 4px;
-        }
-
-        .language-switcher {
-            display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin: 2px 0 10px;
-        }
-
-        .lang-btn {
-            border: 0;
-            border-radius: 999px;
-            padding: 7px 12px;
-            color: #743916;
-            font-size: 13px;
-            font-weight: 950;
-            background: rgba(255, 249, 223, 0.92);
-            box-shadow: inset 0 -3px 0 rgba(91, 45, 12, 0.16);
-        }
-
-        .lang-btn.active {
-            color: white;
-            background: linear-gradient(180deg, #67d7ff, #1679d8);
-            text-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
-        }
-
-        .back-btn {
-            width: 54px;
-            height: 54px;
-            border: 4px solid #fff1cc;
-            border-radius: 14px;
-            color: white;
-            font-size: 28px;
-            font-weight: 950;
-            background: linear-gradient(180deg, #d85f25, #a62c16);
-            box-shadow: var(--shadow);
-            text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+            margin: 4px 0 14px;
+            min-height: 48px;
         }
 
         .title {
             text-align: center;
-            margin: 4px 0 14px;
+            margin: 0;
+            padding: 0 92px 0 0;
             color: var(--gold);
             font-size: 34px;
             font-weight: 950;
@@ -120,6 +87,25 @@
             text-shadow:
                 0 3px 0 #8e2c19,
                 0 7px 14px rgba(0, 0, 0, 0.34);
+        }
+
+        .language-select {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 86px;
+            border: 0;
+            border-radius: 999px;
+            padding: 7px 8px;
+            color: #743916;
+            font-size: 12px;
+            font-weight: 950;
+            background: rgba(255, 249, 223, 0.96);
+            box-shadow:
+                inset 0 -3px 0 rgba(91, 45, 12, 0.16),
+                0 8px 18px rgba(0, 0, 0, 0.16);
+            outline: none;
         }
 
         .settings-card,
@@ -143,6 +129,7 @@
             margin-bottom: 10px;
             font-weight: 950;
             color: #73340f;
+            font-size: 14px;
         }
 
         .mode-tabs {
@@ -173,7 +160,8 @@
             background: linear-gradient(180deg, #ffe871, #d58b13);
         }
 
-        .field-grid {
+        .field-grid,
+        .score-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
@@ -291,19 +279,22 @@
                 linear-gradient(135deg, #456c8b, #15233d);
         }
 
-        .creature {
+        .creature,
+        .plant-creature {
             width: 105px;
             height: 125px;
             position: relative;
             filter: drop-shadow(0 8px 5px rgba(0, 0, 0, 0.24));
         }
 
-        .creature.gold-creature {
+        .creature.gold-creature,
+        .plant-creature.gold-creature {
             filter:
-                drop-shadow(0 0 13px rgba(255, 218, 69, 0.72)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.25));
+                drop-shadow(0 0 14px rgba(255, 218, 69, 0.78)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.25));
         }
 
-        .creature::before {
+        .creature::before,
+        .plant-creature::before {
             content: "";
             position: absolute;
             left: 12px;
@@ -406,34 +397,6 @@
             border-color: #a96a10;
         }
 
-        /* =========================
-   耕種植物造型
-   ========================= */
-
-        .plant-creature {
-            width: 105px;
-            height: 125px;
-            position: relative;
-            filter: drop-shadow(0 8px 5px rgba(0, 0, 0, 0.24));
-        }
-
-        .plant-creature.gold-creature {
-            filter:
-                drop-shadow(0 0 14px rgba(255, 218, 69, 0.78)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.25));
-        }
-
-        .plant-creature::before {
-            content: "";
-            position: absolute;
-            left: 14px;
-            right: 14px;
-            bottom: 0;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(54, 35, 19, 0.28);
-        }
-
-        /* 土壤盆 / 土堆 */
         .plant-creature .soil {
             position: absolute;
             left: 18px;
@@ -455,7 +418,6 @@
             border-color: #5a2d0a;
         }
 
-        /* 莖 */
         .plant-creature .stem {
             position: absolute;
             left: 50px;
@@ -473,7 +435,6 @@
             border-color: #9e6410;
         }
 
-        /* 左葉 */
         .plant-creature .leaf-left {
             position: absolute;
             left: 17px;
@@ -496,7 +457,6 @@
             border-color: #a96a10;
         }
 
-        /* 右葉 */
         .plant-creature .leaf-right {
             position: absolute;
             right: 15px;
@@ -519,7 +479,6 @@
             border-color: #a96a10;
         }
 
-        /* 頂部花苞 / 果實 */
         .plant-creature .bud {
             position: absolute;
             left: 34px;
@@ -545,7 +504,6 @@
             border-color: #b97511;
         }
 
-        /* 花瓣 */
         .plant-creature .petal {
             position: absolute;
             width: 26px;
@@ -578,7 +536,6 @@
             transform: rotate(42deg);
         }
 
-        /* 小臉嘴巴 */
         .plant-creature .bud::after {
             content: "";
             position: absolute;
@@ -601,7 +558,6 @@
             overflow: hidden;
         }
 
-        /* 分段進度條容器 */
         .progress-stack {
             width: 100%;
             height: 100%;
@@ -610,34 +566,18 @@
             overflow: hidden;
         }
 
-        /* 自己的進度：藍色 */
         .progress-self {
             height: 100%;
             background: linear-gradient(180deg, #67d7ff, #1679d8);
         }
 
-        /* 隊友的進度：綠色 */
         .progress-friend {
             height: 100%;
             background: linear-gradient(180deg, #8dfb5c, #19b735);
         }
 
-        /* 黃金關卡時，隊友進度改成金色 */
         .progress-friend.gold-progress {
             background: linear-gradient(180deg, #fff174, #d99a18);
-        }
-
-        /* 進度滿出時的補強，避免圓角破掉 */
-        .progress-self:first-child,
-        .progress-friend:first-child {
-            border-top-left-radius: 999px;
-            border-bottom-left-radius: 999px;
-        }
-
-        .progress-self:last-child,
-        .progress-friend:last-child {
-            border-top-right-radius: 999px;
-            border-bottom-right-radius: 999px;
         }
 
         .summary {
@@ -678,9 +618,13 @@
             font-weight: 950;
         }
 
-        .clear-btn {
+        .calc-card span {
+            font-size: 19px;
+        }
+
+        .clear-btn,
+        .close-detail-btn {
             width: 100%;
-            margin-top: 12px;
             border: 0;
             border-radius: 14px;
             padding: 12px;
@@ -688,6 +632,10 @@
             font-size: 15px;
             font-weight: 950;
             background: linear-gradient(180deg, #e76256, #b93429);
+        }
+
+        .clear-btn {
+            margin-top: 12px;
         }
 
         footer {
@@ -714,11 +662,23 @@
             display: block;
         }
 
-        .detail-inner {
-            width: min(520px, 100%);
-            min-height: 100vh;
-            margin: 0 auto;
-            padding: 18px 12px 24px;
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 4px;
+        }
+
+        .back-btn {
+            width: 54px;
+            height: 54px;
+            border: 4px solid #fff1cc;
+            border-radius: 14px;
+            color: white;
+            font-size: 28px;
+            font-weight: 950;
+            background: linear-gradient(180deg, #d85f25, #a62c16);
+            box-shadow: var(--shadow);
+            text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
         }
 
         .gold-header {
@@ -816,95 +776,6 @@
             box-shadow: var(--shadow);
         }
 
-        .level-bar-box {
-            padding: 12px;
-            border-radius: 20px;
-            background: linear-gradient(180deg, #bd1737, #7c0e25);
-            border: 4px solid var(--gold);
-            box-shadow: var(--shadow);
-        }
-
-        .level-row {
-            display: grid;
-            grid-template-columns: 84px 1fr;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .level-badge {
-            padding: 9px 6px;
-            border-radius: 14px;
-            color: #7b310f;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 950;
-            background: linear-gradient(180deg, #fff174, #ffbb24);
-        }
-
-        .level-progress {
-            height: 28px;
-            padding: 3px;
-            border-radius: 999px;
-            background: #65101d;
-            overflow: hidden;
-        }
-
-        .level-progress-fill {
-            height: 100%;
-            border-radius: 999px;
-            background: linear-gradient(180deg, #54ef62, #11a634);
-            width: 0%;
-        }
-
-        .stage-table {
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 18px;
-            background: rgba(255, 241, 196, 0.96);
-            border: 3px solid var(--gold);
-            box-shadow: var(--shadow);
-        }
-
-        .stage-table-title {
-            margin-bottom: 8px;
-            font-weight: 950;
-            color: #73340f;
-            text-align: center;
-        }
-
-        .stage-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-        }
-
-        .stage-cell {
-            padding: 8px 5px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.62);
-            text-align: center;
-            font-size: 12px;
-            font-weight: 950;
-            color: #5b2a0d;
-        }
-
-        .stage-cell small {
-            display: block;
-            margin-top: 3px;
-            font-size: 10px;
-            opacity: 0.82;
-        }
-
-        .stage-cell.done {
-            color: white;
-            background: linear-gradient(180deg, #70e84e, #1fa83a);
-        }
-
-        .stage-cell.current {
-            color: white;
-            background: linear-gradient(180deg, #ff9c42, #db5b1b);
-        }
-
         .calc-panel {
             margin-top: 12px;
             padding: 14px;
@@ -920,10 +791,6 @@
             margin-top: 12px;
         }
 
-        .calc-card span {
-            font-size: 19px;
-        }
-
         .detail-actions {
             display: grid;
             grid-template-columns: 1fr;
@@ -932,21 +799,23 @@
         }
 
         .close-detail-btn {
-            border: 0;
-            border-radius: 16px;
-            padding: 13px;
-            color: white;
-            font-size: 16px;
-            font-weight: 950;
             background: linear-gradient(180deg, #ff9c42, #db5b1b);
         }
 
         @media (max-width: 430px) {
             .title {
-                font-size: 30px;
+                font-size: 28px;
+                padding-right: 84px;
             }
 
-            .field-grid {
+            .language-select {
+                width: 78px;
+                font-size: 11px;
+                padding: 6px 6px;
+            }
+
+            .field-grid,
+            .score-row {
                 grid-template-columns: 1fr;
             }
 
@@ -961,11 +830,6 @@
             .avatar {
                 width: 62px;
                 height: 74px;
-            }
-
-            .score-pill {
-                top: 94px;
-                font-size: 12px;
             }
 
             .creature,
@@ -992,24 +856,21 @@
             .calc-result-grid {
                 grid-template-columns: 1fr;
             }
-
-            .stage-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
     </style>
 </head>
 
 <body>
     <main class="app">
+        <div class="title-row">
+            <h1 class="title" id="pageTitle">孵化夥伴</h1>
 
-        <div class="language-switcher">
-            <button class="lang-btn" type="button" data-lang="zh-TW" data-i18n="language.zhTW">繁中</button>
-            <button class="lang-btn" type="button" data-lang="vi" data-i18n="language.vi">Tiếng Việt</button>
-            <button class="lang-btn" type="button" data-lang="en" data-i18n="language.en">EN</button>
+            <select id="languageSelect" class="language-select" aria-label="Language">
+                <option value="zh-TW">繁體中文</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="en">English</option>
+            </select>
         </div>
-
-        <h1 class="title" id="pageTitle">孵化夥伴</h1>
 
         <section class="settings-card">
             <div class="settings-head">
@@ -1072,9 +933,7 @@
 
         <button class="clear-btn" type="button" id="clearAllBtn" data-i18n="button.clearAll">清除全部本機資料</button>
 
-        <footer data-i18n="app.footer">
-            © Coin999-長長久久 隊伍
-        </footer>
+        <footer data-i18n="app.footer">© Coin999-長長久久 隊伍</footer>
     </main>
 
     <section class="detail-page" id="detailPage">
@@ -1103,39 +962,11 @@
 
             <div class="need-line" id="needLine">還需 0 分才能完成</div>
 
-            <div class="level-bar-box">
-                <div class="level-row">
-                    <div class="level-badge">
-                        <span data-i18n="stage.stage">階段</span><br>
-                        <span id="levelText">0/8</span>
-                    </div>
-
-                    <div class="level-progress">
-                        <div class="level-progress-fill" id="detailProgressBar"></div>
-                    </div>
-                </div>
-            </div>
-
-            <section class="stage-table" id="stageTableBox">
-                <div class="stage-table-title" id="stageTableTitle">階段表</div>
-                <div class="stage-grid" id="stageGrid"></div>
-            </section>
-
             <section class="calc-panel">
-                <div class="calc-grid">
-                    <div class="field">
-                        <label for="selfNameInput" data-i18n="person.selfName">自己名稱</label>
-                        <input id="selfNameInput" type="text" maxlength="16">
-                    </div>
-
+                <div class="calc-grid score-row">
                     <div class="field">
                         <label for="selfScoreInput" data-i18n="person.selfScore">自己分數</label>
                         <input id="selfScoreInput" type="number" min="0" step="1">
-                    </div>
-
-                    <div class="field">
-                        <label for="friendNameInput" data-i18n="person.friendName">隊友名稱</label>
-                        <input id="friendNameInput" type="text" maxlength="16">
                     </div>
 
                     <div class="field">
@@ -1156,23 +987,23 @@
                     </div>
 
                     <div class="calc-card">
-                        <strong data-i18n="detail.remaining">還差完成</strong>
+                        <strong data-i18n="detail.remainingWhole">一整顆還差</strong>
                         <span id="detailRemainingScore">0</span>
                     </div>
 
                     <div class="calc-card">
-                        <strong data-i18n="detail.needTokens">預估代幣</strong>
+                        <strong data-i18n="detail.needTokensWhole">一整顆代幣</strong>
                         <span id="detailNeedTokens">0</span>
                     </div>
 
                     <div class="calc-card">
-                        <strong data-i18n="detail.nextStage">下一階段</strong>
-                        <span id="detailNextStage">-</span>
+                        <strong data-i18n="detail.responsibilityScore">責任分還差</strong>
+                        <span id="detailResponsibilityScore">0</span>
                     </div>
 
                     <div class="calc-card">
-                        <strong data-i18n="detail.nextStageRemaining">還差下一階段</strong>
-                        <span id="detailNextStageRemaining">0</span>
+                        <strong data-i18n="detail.responsibilityTokens">責任分代幣</strong>
+                        <span id="detailResponsibilityTokens">0</span>
                     </div>
                 </div>
 
@@ -1182,18 +1013,356 @@
                 </div>
             </section>
 
-            <footer data-i18n="app.footer">
-                © Coin999-長長久久 隊伍
-            </footer>
+            <footer data-i18n="app.footer">© Coin999-長長久久 隊伍</footer>
         </div>
     </section>
 
     <script>
-        const STORAGE_KEY = "coin999_partner_calc_v6";
+        const STORAGE_KEY = "coin999_partner_calc_v9_inline_i18n";
         const DEFAULT_LANG = "zh-TW";
         const SUPPORTED_LANGS = ["zh-TW", "vi", "en"];
 
-        let i18n = {};
+        const I18N = {
+            "zh-TW": {
+                meta: {
+                    lang: "zh-TW",
+                    name: "繁體中文",
+                    nativeName: "繁體中文"
+                },
+                app: {
+                    documentTitle: "Coin999 夥伴計算機",
+                    footer: "© Coin999-長長久久 隊伍"
+                },
+                language: {
+                    zhTW: "繁中",
+                    vi: "Tiếng Việt",
+                    en: "EN"
+                },
+                settings: {
+                    title: "關卡設定",
+                    saveLocal: "資料保存在本機",
+                    saved: "已自動儲存",
+                    clearedAndReset: "已清除並重設"
+                },
+                mode: {
+                    hatch: "🥚 孵化",
+                    farm: "🌱 耕種",
+                    goldHatch: "🏆 黃金孵化",
+                    goldFarm: "👑 黃金耕種"
+                },
+                pageTitle: {
+                    hatch: "孵化夥伴",
+                    farm: "耕種夥伴",
+                    goldHatch: "黃金孵化夥伴",
+                    goldFarm: "黃金耕種夥伴"
+                },
+                detailTitle: {
+                    hatch: "孵化關卡",
+                    farm: "耕種關卡",
+                    goldHatch: "黃金關卡",
+                    goldFarm: "黃金關卡"
+                },
+                modeName: {
+                    hatch: "孵化",
+                    farm: "耕種",
+                    goldHatch: "黃金孵化",
+                    goldFarm: "黃金耕種"
+                },
+                target: {
+                    hatch: "孵化每位目標分數",
+                    farm: "耕種每位目標分數",
+                    goldHatch: "黃金孵化每位目標分數",
+                    goldFarm: "黃金耕種每位目標分數"
+                },
+                summary: {
+                    totalTarget: "總目標分",
+                    progress: "完成進度"
+                },
+                button: {
+                    clearAll: "清除全部本機資料",
+                    back: "返回"
+                },
+                person: {
+                    selfDefault: "自己",
+                    friendDefault: "隊友",
+                    unnamed: "未命名",
+                    selfName: "自己名稱",
+                    selfScore: "自己分數",
+                    friendName: "隊友名稱",
+                    friendScore: "隊友分數"
+                },
+                memberDefault: {
+                    normal: "隊友{n}",
+                    gold: "隊友{n}"
+                },
+                detail: {
+                    currentTotal: "目前總分",
+                    targetScore: "目標分數",
+                    remaining: "還差完成",
+                    needTokens: "預估代幣",
+                    remainingWhole: "一整顆還差",
+                    needTokensWhole: "一整顆代幣",
+                    responsibilityScore: "責任分還差",
+                    responsibilityTokens: "責任分代幣",
+                    nextStage: "下一階段",
+                    nextStageRemaining: "還差下一階段代幣"
+                },
+                stage: {
+                    stage: "階段",
+                    levelText: "{current}/{total}",
+                    tableTitle: "{mode} {count} 階段分數表",
+                    nth: "第 {n} 階",
+                    cumulative: "累積 {score}",
+                    completed: "已完成"
+                },
+                message: {
+                    needLine: "還需 {score} 分才能完成",
+                    completedCanUpgrade: "已完成，可以升等",
+                    clearConfirm: "確定要清除全部本機資料嗎？此操作無法復原。"
+                },
+                progressBar: {
+                    normalTitle: "藍色：自己，綠色：隊友",
+                    goldTitle: "藍色：自己，金色：隊友",
+                    selfColor: "自己",
+                    friendColor: "隊友"
+                },
+                unit: {
+                    score: "分",
+                    token: "代幣",
+                    percent: "%"
+                },
+                status: {
+                    empty: "-",
+                    zero: "0"
+                }
+            },
+            vi: {
+                meta: {
+                    lang: "vi",
+                    name: "Vietnamese",
+                    nativeName: "Tiếng Việt"
+                },
+                app: {
+                    documentTitle: "Máy tính Đồng Đội Coin999",
+                    footer: "© Coin999-長長久久 隊伍"
+                },
+                language: {
+                    zhTW: "繁中",
+                    vi: "Tiếng Việt",
+                    en: "EN"
+                },
+                settings: {
+                    title: "Cài đặt ải",
+                    saveLocal: "Dữ liệu được lưu trên thiết bị",
+                    saved: "Đã tự động lưu",
+                    clearedAndReset: "Đã xoá và đặt lại"
+                },
+                mode: {
+                    hatch: "🥚 Ấp trứng",
+                    farm: "🌱 Trồng trọt",
+                    goldHatch: "🏆 Ấp trứng vàng",
+                    goldFarm: "👑 Trồng trọt vàng"
+                },
+                pageTitle: {
+                    hatch: "Đồng đội Ấp trứng",
+                    farm: "Đồng đội Trồng trọt",
+                    goldHatch: "Đồng đội Ấp trứng vàng",
+                    goldFarm: "Đồng đội Trồng trọt vàng"
+                },
+                detailTitle: {
+                    hatch: "Ải Ấp trứng",
+                    farm: "Ải Trồng trọt",
+                    goldHatch: "Ải vàng",
+                    goldFarm: "Ải vàng"
+                },
+                modeName: {
+                    hatch: "Ấp trứng",
+                    farm: "Trồng trọt",
+                    goldHatch: "Ấp trứng vàng",
+                    goldFarm: "Trồng trọt vàng"
+                },
+                target: {
+                    hatch: "Điểm mục tiêu mỗi đồng đội Ấp trứng",
+                    farm: "Điểm mục tiêu mỗi đồng đội Trồng trọt",
+                    goldHatch: "Điểm mục tiêu mỗi đồng đội Ấp trứng vàng",
+                    goldFarm: "Điểm mục tiêu mỗi đồng đội Trồng trọt vàng"
+                },
+                summary: {
+                    totalTarget: "Tổng điểm mục tiêu",
+                    progress: "Tiến độ hoàn thành"
+                },
+                button: {
+                    clearAll: "Xoá toàn bộ dữ liệu trên thiết bị",
+                    back: "Quay lại"
+                },
+                person: {
+                    selfDefault: "Tôi",
+                    friendDefault: "Đồng đội",
+                    unnamed: "Chưa đặt tên",
+                    selfName: "Tên của tôi",
+                    selfScore: "Điểm của tôi",
+                    friendName: "Tên đồng đội",
+                    friendScore: "Điểm đồng đội"
+                },
+                memberDefault: {
+                    normal: "Đồng đội {n}",
+                    gold: "Đồng đội {n}"
+                },
+                detail: {
+                    currentTotal: "Tổng điểm hiện tại",
+                    targetScore: "Điểm mục tiêu",
+                    remaining: "Còn thiếu",
+                    needTokens: "Xu dự kiến",
+                    remainingWhole: "Còn thiếu cả quả",
+                    needTokensWhole: "Xu cả quả",
+                    responsibilityScore: "Điểm trách nhiệm",
+                    responsibilityTokens: "Xu trách nhiệm",
+                    nextStage: "Giai đoạn tiếp theo",
+                    nextStageRemaining: "Token còn thiếu đến giai đoạn sau"
+                },
+                stage: {
+                    stage: "Giai đoạn",
+                    levelText: "{current}/{total}",
+                    tableTitle: "Bảng điểm {count} giai đoạn - {mode}",
+                    nth: "Giai đoạn {n}",
+                    cumulative: "Tích luỹ {score}",
+                    completed: "Đã hoàn thành"
+                },
+                message: {
+                    needLine: "Còn thiếu {score} điểm để hoàn thành",
+                    completedCanUpgrade: "Đã hoàn thành, có thể nâng cấp",
+                    clearConfirm: "Bạn có chắc muốn xoá toàn bộ dữ liệu trên thiết bị không? Thao tác này không thể khôi phục."
+                },
+                progressBar: {
+                    normalTitle: "Xanh dương: Tôi, Xanh lá: Đồng đội",
+                    goldTitle: "Xanh dương: Tôi, Vàng: Đồng đội",
+                    selfColor: "Tôi",
+                    friendColor: "Đồng đội"
+                },
+                unit: {
+                    score: "điểm",
+                    token: "xu",
+                    percent: "%"
+                },
+                status: {
+                    empty: "-",
+                    zero: "0"
+                }
+            },
+            en: {
+                meta: {
+                    lang: "en",
+                    name: "English",
+                    nativeName: "English"
+                },
+                app: {
+                    documentTitle: "Coin999 Partner Calculator",
+                    footer: "© Coin999-長長久久 隊伍"
+                },
+                language: {
+                    zhTW: "繁中",
+                    vi: "Tiếng Việt",
+                    en: "EN"
+                },
+                settings: {
+                    title: "Stage Settings",
+                    saveLocal: "Data is saved locally",
+                    saved: "Auto-saved",
+                    clearedAndReset: "Cleared and reset"
+                },
+                mode: {
+                    hatch: "🥚 Hatch",
+                    farm: "🌱 Farm",
+                    goldHatch: "🏆 Gold Hatch",
+                    goldFarm: "👑 Gold Farm"
+                },
+                pageTitle: {
+                    hatch: "Hatch Partners",
+                    farm: "Farm Partners",
+                    goldHatch: "Gold Hatch Partners",
+                    goldFarm: "Gold Farm Partners"
+                },
+                detailTitle: {
+                    hatch: "Hatch Stage",
+                    farm: "Farm Stage",
+                    goldHatch: "Gold Stage",
+                    goldFarm: "Gold Stage"
+                },
+                modeName: {
+                    hatch: "Hatch",
+                    farm: "Farm",
+                    goldHatch: "Gold Hatch",
+                    goldFarm: "Gold Farm"
+                },
+                target: {
+                    hatch: "Target score per Hatch partner",
+                    farm: "Target score per Farm partner",
+                    goldHatch: "Target score per Gold Hatch partner",
+                    goldFarm: "Target score per Gold Farm partner"
+                },
+                summary: {
+                    totalTarget: "Total Target",
+                    progress: "Progress"
+                },
+                button: {
+                    clearAll: "Clear all local data",
+                    back: "Back"
+                },
+                person: {
+                    selfDefault: "Me",
+                    friendDefault: "Partner",
+                    unnamed: "Unnamed",
+                    selfName: "My Name",
+                    selfScore: "My Score",
+                    friendName: "Partner Name",
+                    friendScore: "Partner Score"
+                },
+                memberDefault: {
+                    normal: "Partner {n}",
+                    gold: "Partner {n}"
+                },
+                detail: {
+                    currentTotal: "Current Total",
+                    targetScore: "Target Score",
+                    remaining: "Remaining",
+                    needTokens: "Estimated Tokens",
+                    remainingWhole: "Whole Remaining",
+                    needTokensWhole: "Whole Tokens",
+                    responsibilityScore: "Responsibility Remaining",
+                    responsibilityTokens: "Responsibility Tokens",
+                    nextStage: "Next Stage",
+                    nextStageRemaining: "Tokens to next stage"
+                },
+                stage: {
+                    stage: "Stage",
+                    levelText: "{current}/{total}",
+                    tableTitle: "{mode} {count}-Stage Score Table",
+                    nth: "Stage {n}",
+                    cumulative: "Total {score}",
+                    completed: "Completed"
+                },
+                message: {
+                    needLine: "{score} points remaining",
+                    completedCanUpgrade: "Completed. Ready to upgrade",
+                    clearConfirm: "Clear all local data? This action cannot be undone."
+                },
+                progressBar: {
+                    normalTitle: "Blue: Me, Green: Partner",
+                    goldTitle: "Blue: Me, Gold: Partner",
+                    selfColor: "Me",
+                    friendColor: "Partner"
+                },
+                unit: {
+                    score: "points",
+                    token: "tokens",
+                    percent: "%"
+                },
+                status: {
+                    empty: "-",
+                    zero: "0"
+                }
+            }
+        };
 
         const RATES = {
             hatch: {
@@ -1203,52 +1372,11 @@
             farm: {
                 tokens: 7500,
                 score: 90000
+            },
+            goldFarm: {
+                tokens: 47000,
+                score: 1120000
             }
-        };
-
-        const STAGE_TABLES = {
-            hatch: [
-                5000,
-                20000,
-                43000,
-                73000,
-                125000,
-                185000,
-                255000,
-                340000
-            ],
-
-            goldHatch: [
-                20000,
-                70000,
-                170000,
-                340000,
-                560000,
-                830000,
-                1150000,
-                1500000,
-                1900000
-            ],
-
-            farm: [
-                5000,
-                15000,
-                35000,
-                60000,
-                105000,
-                180000
-            ],
-
-            goldFarm: [
-                10000,
-                40000,
-                120000,
-                220000,
-                370000,
-                570000,
-                820000,
-                1120000
-            ]
         };
 
         const MODES = {
@@ -1257,28 +1385,28 @@
                 targetKey: "hatch",
                 count: 4,
                 isGold: false,
-                stageKey: "hatch"
+                creatureType: "hatch"
             },
             farm: {
                 rateType: "farm",
                 targetKey: "farm",
                 count: 4,
                 isGold: false,
-                stageKey: "farm"
+                creatureType: "farm"
             },
             goldHatch: {
                 rateType: "hatch",
                 targetKey: "goldHatch",
                 count: 2,
                 isGold: true,
-                stageKey: "goldHatch"
+                creatureType: "hatch"
             },
             goldFarm: {
-                rateType: "farm",
+                rateType: "goldFarm",
                 targetKey: "goldFarm",
                 count: 2,
                 isGold: true,
-                stageKey: "goldFarm"
+                creatureType: "farm"
             }
         };
 
@@ -1322,13 +1450,13 @@
         let appData = loadData();
         let editingMemberId = null;
         let saveTimer = null;
-        let isI18nReady = false;
 
         const els = {
+            languageSelect: document.getElementById("languageSelect"),
+
             pageTitle: document.getElementById("pageTitle"),
             saveStatus: document.getElementById("saveStatus"),
             modeButtons: document.querySelectorAll(".mode-btn"),
-            langButtons: document.querySelectorAll(".lang-btn"),
 
             hatchTarget: document.getElementById("hatchTarget"),
             farmTarget: document.getElementById("farmTarget"),
@@ -1353,25 +1481,17 @@
             friendAvatarView: document.getElementById("friendAvatarView"),
             friendScoreView: document.getElementById("friendScoreView"),
 
-            selfNameInput: document.getElementById("selfNameInput"),
             selfScoreInput: document.getElementById("selfScoreInput"),
-            friendNameInput: document.getElementById("friendNameInput"),
             friendScoreInput: document.getElementById("friendScoreInput"),
 
             needLine: document.getElementById("needLine"),
-            levelText: document.getElementById("levelText"),
-            detailProgressBar: document.getElementById("detailProgressBar"),
-
-            stageTableBox: document.getElementById("stageTableBox"),
-            stageTableTitle: document.getElementById("stageTableTitle"),
-            stageGrid: document.getElementById("stageGrid"),
 
             detailTotalScore: document.getElementById("detailTotalScore"),
             detailTargetScore: document.getElementById("detailTargetScore"),
             detailRemainingScore: document.getElementById("detailRemainingScore"),
             detailNeedTokens: document.getElementById("detailNeedTokens"),
-            detailNextStage: document.getElementById("detailNextStage"),
-            detailNextStageRemaining: document.getElementById("detailNextStageRemaining")
+            detailResponsibilityScore: document.getElementById("detailResponsibilityScore"),
+            detailResponsibilityTokens: document.getElementById("detailResponsibilityTokens")
         };
 
         function clone(data) {
@@ -1411,7 +1531,7 @@
         }
 
         function formatNumber(num) {
-            return Math.ceil(num).toLocaleString(getLocale());
+            return Math.ceil(numberValue(num, 0)).toLocaleString(getLocale());
         }
 
         function getByPath(obj, path) {
@@ -1421,7 +1541,7 @@
         }
 
         function t(path, params = {}) {
-            let text = getByPath(i18n, path);
+            let text = getByPath(I18N[getLang()] || I18N[DEFAULT_LANG], path);
 
             if (text === undefined || text === null) {
                 text = path;
@@ -1436,68 +1556,23 @@
             return text;
         }
 
-        function getDefaultMemberName(member) {
-            const type = member.nameType || "normal";
+        function getMemberDisplayName(member) {
             const number = member.nameNumber || 1;
+            const type = member.nameType || "normal";
 
             return t(`memberDefault.${type}`, {
                 n: number
             });
         }
 
-        function getMemberDisplayName(member) {
-            const customName = String(member.name || "").trim();
-
-            if (customName) {
-                return customName;
-            }
-
-            return getDefaultMemberName(member);
-        }
-
-        async function loadLanguage(lang) {
-            const safeLang = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
-
-            try {
-                const response = await fetch(`./i18n/${safeLang}.json`, {
-                    cache: "no-store"
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Cannot load language: ${safeLang}`);
-                }
-
-                i18n = await response.json();
-                appData.lang = safeLang;
-                isI18nReady = true;
-            } catch (error) {
-                console.error(error);
-
-                if (safeLang !== DEFAULT_LANG) {
-                    await loadLanguage(DEFAULT_LANG);
-                    return;
-                }
-
-                i18n = {};
-                isI18nReady = true;
-            }
-        }
-
         function applyI18n() {
-            if (!isI18nReady) {
-                return;
-            }
-
             document.documentElement.lang = getLang();
             document.title = t("app.documentTitle");
+            els.languageSelect.value = getLang();
 
             document.querySelectorAll("[data-i18n]").forEach((node) => {
                 const key = node.dataset.i18n;
                 node.textContent = t(key);
-            });
-
-            els.langButtons.forEach((button) => {
-                button.classList.toggle("active", button.dataset.lang === getLang());
             });
 
             if (!saveTimer) {
@@ -1505,20 +1580,13 @@
             }
         }
 
-        async function setLanguage(lang) {
+        function setLanguage(lang) {
             if (!SUPPORTED_LANGS.includes(lang)) {
                 return;
             }
 
-            const member = findEditingMember();
-
-            await loadLanguage(lang);
+            appData.lang = lang;
             applyI18n();
-
-            if (member && !member.name) {
-                els.friendNameInput.value = getDefaultMemberName(member);
-            }
-
             render();
             saveData();
         }
@@ -1540,7 +1608,8 @@
                     lang: SUPPORTED_LANGS.includes(parsed.lang) ? parsed.lang : DEFAULT_LANG,
                     self: {
                         ...defaults.self,
-                        ...(parsed.self || {})
+                        ...(parsed.self || {}),
+                        name: ""
                     },
                     targets: {
                         ...defaults.targets,
@@ -1551,39 +1620,6 @@
             } catch {
                 return clone(DEFAULT_DATA);
             }
-        }
-
-        function isLegacyDefaultMemberName(name, member) {
-            const value = String(name || "").trim();
-
-            if (!value) {
-                return true;
-            }
-
-            const number = member.nameNumber || 1;
-            const type = member.nameType || "normal";
-
-            const legacyNames = type === "gold"
-                ? [
-                    `黃金隊友${number}`,
-                    `Gold Partner ${number}`,
-                    `Đồng đội vàng ${number}`
-                ]
-                : [
-                    `隊友${number}`,
-                    `Partner ${number}`,
-                    `Đồng đội ${number}`
-                ];
-
-            return legacyNames.includes(value);
-        }
-
-        function normalizeMemberName(savedName, member) {
-            if (isLegacyDefaultMemberName(savedName, member)) {
-                return "";
-            }
-
-            return String(savedName || "").trim();
         }
 
         function mergeMembers(savedMembers) {
@@ -1602,20 +1638,9 @@
                         ? {
                             ...member,
                             ...saved,
-
-                            /**
-                             * 重點：
-                             * 如果舊資料是「隊友1、隊友2、黃金隊友1」這類預設名稱，
-                             * 就清成空字串，讓畫面改用 i18n 動態顯示。
-                             *
-                             * 如果使用者真的自訂名稱，例如「小明」「Anna」，
-                             * 則會保留下來。
-                             */
-                            name: normalizeMemberName(saved.name, member),
-
+                            name: "",
                             nameType: member.nameType,
                             nameNumber: member.nameNumber,
-
                             selfScore: numberValue(saved.selfScore, member.selfScore || 0),
                             score: numberValue(saved.score, member.score || 0)
                         }
@@ -1657,8 +1682,7 @@
         }
 
         function isFarmMode() {
-            const config = getModeConfig();
-            return config.rateType === "farm";
+            return getModeConfig().creatureType === "farm";
         }
 
         function getCurrentMembers() {
@@ -1668,69 +1692,24 @@
         function getCurrentTarget() {
             const config = getModeConfig();
 
-            return numberValue(
-                appData.targets[config.targetKey],
-                DEFAULT_DATA.targets[config.targetKey]
+            return Math.max(
+                1,
+                numberValue(
+                    appData.targets[config.targetKey],
+                    DEFAULT_DATA.targets[config.targetKey]
+                )
             );
         }
 
-        function getScorePerToken() {
+        function getTokensNeeded(scoreAmount) {
             const config = getModeConfig();
             const rate = RATES[config.rateType];
 
-            return rate.score / rate.tokens;
-        }
-
-        function getStageData(score) {
-            const config = getModeConfig();
-            const stages = config.stageKey ? STAGE_TABLES[config.stageKey] : null;
-
-            if (!stages || !Array.isArray(stages) || stages.length === 0) {
-                const target = getCurrentTarget();
-                const progress = target > 0 ? Math.min(score / target, 1) : 0;
-                const pseudoStage = Math.min(9, Math.floor(progress * 9));
-                const nextRemaining = Math.max(target - score, 0);
-
-                return {
-                    hasStages: false,
-                    stages: [],
-                    currentStage: pseudoStage,
-                    totalStages: 9,
-                    nextStage: pseudoStage >= 9 ? null : pseudoStage + 1,
-                    nextRemaining,
-                    completedStageCount: pseudoStage
-                };
+            if (!rate || rate.score <= 0 || rate.tokens <= 0) {
+                return 0;
             }
 
-            let completedStageCount = 0;
-            let nextStage = null;
-            let nextStageTarget = 0;
-
-            for (let i = 0; i < stages.length; i++) {
-                const stageTarget = stages[i];
-
-                if (score >= stageTarget) {
-                    completedStageCount = i + 1;
-                } else {
-                    nextStage = i + 1;
-                    nextStageTarget = stageTarget;
-                    break;
-                }
-            }
-
-            const nextRemaining = nextStage
-                ? Math.max(nextStageTarget - score, 0)
-                : 0;
-
-            return {
-                hasStages: true,
-                stages,
-                currentStage: completedStageCount,
-                totalStages: stages.length,
-                nextStage,
-                nextRemaining,
-                completedStageCount
-            };
+            return Math.ceil(numberValue(scoreAmount, 0) * rate.tokens / rate.score);
         }
 
         function getMemberProgressParts(member) {
@@ -1761,10 +1740,6 @@
         }
 
         function render() {
-            if (!isI18nReady) {
-                return;
-            }
-
             applyI18n();
             renderInputs();
             renderMode();
@@ -1799,31 +1774,32 @@
 
         function getCreatureHtml(config, extraClass = "") {
             const goldClass = config.isGold ? "gold-creature" : "";
-            const className = `${isFarmMode() ? "plant-creature" : "creature"} ${extraClass} ${goldClass}`.trim();
+            const farmMode = isFarmMode();
+            const className = `${farmMode ? "plant-creature" : "creature"} ${extraClass} ${goldClass}`.trim();
 
-            if (isFarmMode()) {
+            if (farmMode) {
                 return `
-                <div class="${className}">
-                    <div class="petal p1"></div>
-                    <div class="petal p2"></div>
-                    <div class="petal p3"></div>
-                    <div class="bud"></div>
-                    <div class="leaf-left"></div>
-                    <div class="leaf-right"></div>
-                    <div class="stem"></div>
-                    <div class="soil"></div>
-                </div>
-            `;
+                    <div class="${className}">
+                        <div class="petal p1"></div>
+                        <div class="petal p2"></div>
+                        <div class="petal p3"></div>
+                        <div class="bud"></div>
+                        <div class="leaf-left"></div>
+                        <div class="leaf-right"></div>
+                        <div class="stem"></div>
+                        <div class="soil"></div>
+                    </div>
+                `;
             }
 
             return `
-            <div class="${className}">
-                <div class="crest"></div>
-                <div class="head"></div>
-                <div class="body"></div>
-                <div class="tail"></div>
-            </div>
-        `;
+                <div class="${className}">
+                    <div class="crest"></div>
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="tail"></div>
+                </div>
+            `;
         }
 
         function renderMembers() {
@@ -1840,24 +1816,23 @@
                 button.className = "member-card";
 
                 button.innerHTML = `
-                <div class="member-name">${escapeHtml(getMemberDisplayName(member))}</div>
+                    <div class="member-name">${escapeHtml(getMemberDisplayName(member))}</div>
 
-                <div class="avatar">
-                    <div class="avatar-inner">${escapeHtml(member.avatar || "🧑")}</div>
-                </div>
-
-                ${getCreatureHtml(config)}
-
-                <div class="progress-wrap" title="${escapeHtml(config.isGold ? t("progressBar.goldTitle") : t("progressBar.normalTitle"))}">
-                    <div class="progress-stack">
-                        <div class="progress-self" style="width:${progressParts.selfPercent}%"></div>
-                        <div class="progress-friend ${config.isGold ? "gold-progress" : ""}" style="width:${progressParts.friendPercent}%"></div>
+                    <div class="avatar">
+                        <div class="avatar-inner">${escapeHtml(member.avatar || "🧑")}</div>
                     </div>
-                </div>
-            `;
+
+                    ${getCreatureHtml(config)}
+
+                    <div class="progress-wrap" title="${escapeHtml(config.isGold ? t("progressBar.goldTitle") : t("progressBar.normalTitle"))}">
+                        <div class="progress-stack">
+                            <div class="progress-self" style="width:${progressParts.selfPercent}%"></div>
+                            <div class="progress-friend ${config.isGold ? "gold-progress" : ""}" style="width:${progressParts.friendPercent}%"></div>
+                        </div>
+                    </div>
+                `;
 
                 button.addEventListener("click", () => openDetail(member.id));
-
                 els.teamRow.appendChild(button);
             });
         }
@@ -1894,9 +1869,7 @@
                 return;
             }
 
-            els.selfNameInput.value = appData.self.name || t("person.selfDefault");
             els.selfScoreInput.value = member.selfScore || 0;
-            els.friendNameInput.value = member.name || getDefaultMemberName(member);
             els.friendScoreInput.value = member.score || 0;
 
             updateDetailCalc();
@@ -1921,20 +1894,19 @@
                 return;
             }
 
-            const selfName = els.selfNameInput.value.trim() || t("person.selfDefault");
+            const selfName = t("person.selfDefault");
             const selfScore = numberValue(els.selfScoreInput.value, 0);
-            const friendName = els.friendNameInput.value.trim() || getDefaultMemberName(member);
+            const friendName = getMemberDisplayName(member);
             const friendScore = numberValue(els.friendScoreInput.value, 0);
 
             const target = getCurrentTarget();
             const totalScore = selfScore + friendScore;
-            const remaining = Math.max(target - totalScore, 0);
-            const progress = target > 0 ? Math.min((totalScore / target) * 100, 100) : 0;
 
-            const scorePerToken = getScorePerToken();
-            const needTokens = remaining / scorePerToken;
+            const remainingWholeScore = Math.max(target - totalScore, 0);
+            const remainingWholeTokens = getTokensNeeded(remainingWholeScore);
 
-            const stageData = getStageData(totalScore);
+            const responsibilityScore = remainingWholeScore / 2;
+            const responsibilityTokens = getTokensNeeded(responsibilityScore);
 
             els.detailTitle.textContent = t(`detailTitle.${appData.mode}`);
             els.detailCreatureStage.innerHTML = getCreatureHtml(config, "big-creature");
@@ -1946,64 +1918,18 @@
             els.friendAvatarView.textContent = member.avatar || "🧑";
             els.friendScoreView.textContent = formatNumber(friendScore);
 
-            els.needLine.textContent = remaining > 0
-                ? t("message.needLine", { score: formatNumber(remaining) })
+            els.needLine.textContent = remainingWholeScore > 0
+                ? t("message.needLine", { score: formatNumber(remainingWholeScore) })
                 : t("message.completedCanUpgrade");
-
-            els.levelText.textContent = t("stage.levelText", {
-                current: stageData.currentStage,
-                total: stageData.totalStages
-            });
-
-            els.detailProgressBar.style.width = `${progress}%`;
 
             els.detailTotalScore.textContent = formatNumber(totalScore);
             els.detailTargetScore.textContent = formatNumber(target);
-            els.detailRemainingScore.textContent = formatNumber(remaining);
-            els.detailNeedTokens.textContent = formatNumber(needTokens);
 
-            els.detailNextStage.textContent = stageData.nextStage
-                ? t("stage.nth", { n: stageData.nextStage })
-                : t("stage.completed");
+            els.detailRemainingScore.textContent = formatNumber(remainingWholeScore);
+            els.detailNeedTokens.textContent = formatNumber(remainingWholeTokens);
 
-            els.detailNextStageRemaining.textContent = formatNumber(stageData.nextRemaining);
-
-            renderStageTable(stageData, totalScore);
-        }
-
-        function renderStageTable(stageData, totalScore) {
-            if (!stageData.hasStages) {
-                els.stageTableBox.style.display = "none";
-                els.stageGrid.innerHTML = "";
-                return;
-            }
-
-            els.stageTableBox.style.display = "block";
-            els.stageTableTitle.textContent = t("stage.tableTitle", {
-                mode: t(`modeName.${appData.mode}`),
-                count: stageData.totalStages
-            });
-
-            els.stageGrid.innerHTML = stageData.stages.map((stageTarget, index) => {
-                const previousTarget = index === 0 ? 0 : stageData.stages[index - 1];
-                const stageScore = stageTarget - previousTarget;
-
-                let className = "stage-cell";
-
-                if (totalScore >= stageTarget) {
-                    className += " done";
-                } else if (stageData.nextStage === index + 1) {
-                    className += " current";
-                }
-
-                return `
-                <div class="${className}">
-                    ${escapeHtml(t("stage.nth", { n: index + 1 }))}<br>
-                    ${formatNumber(stageScore)}<br>
-                    <small>${escapeHtml(t("stage.cumulative", { score: formatNumber(stageTarget) }))}</small>
-                </div>
-            `;
-            }).join("");
+            els.detailResponsibilityScore.textContent = formatNumber(responsibilityScore);
+            els.detailResponsibilityTokens.textContent = formatNumber(responsibilityTokens);
         }
 
         function autoSaveDetail() {
@@ -2013,24 +1939,10 @@
                 return;
             }
 
-            const inputSelfName = els.selfNameInput.value.trim();
-            const inputFriendName = els.friendNameInput.value.trim();
-            const defaultFriendName = getDefaultMemberName(member);
+            appData.self.name = "";
+            member.name = "";
 
-            appData.self.name = inputSelfName || t("person.selfDefault");
             member.selfScore = numberValue(els.selfScoreInput.value, 0);
-
-            /**
-             * 重點：
-             * 如果輸入框內容等於目前語言的預設名稱，
-             * 就不要存成自訂名稱。
-             *
-             * 這樣切語言時才會自動變成 Partner 1 / Đồng đội 1。
-             */
-            member.name = inputFriendName === defaultFriendName
-                ? ""
-                : inputFriendName;
-
             member.score = numberValue(els.friendScoreInput.value, 0);
 
             updateDetailCalc();
@@ -2045,7 +1957,11 @@
             renderMode();
             renderMembers();
             renderSummary();
-            updateDetailCalc();
+
+            if (editingMemberId) {
+                updateDetailCalc();
+            }
+
             saveData();
         }
 
@@ -2078,18 +1994,16 @@
             }, 1200);
         }
 
+        els.languageSelect.addEventListener("change", () => {
+            setLanguage(els.languageSelect.value);
+        });
+
         els.modeButtons.forEach((button) => {
             button.addEventListener("click", () => {
                 appData.mode = button.dataset.mode;
                 closeDetail();
                 render();
                 saveData();
-            });
-        });
-
-        els.langButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                setLanguage(button.dataset.lang);
             });
         });
 
@@ -2110,9 +2024,7 @@
         });
 
         [
-            els.selfNameInput,
             els.selfScoreInput,
-            els.friendNameInput,
             els.friendScoreInput
         ].forEach((input) => {
             input.addEventListener("input", autoSaveDetail);
@@ -2137,15 +2049,12 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
         });
 
-        async function initApp() {
-            await loadLanguage(getLang());
-            applyI18n();
+        function initApp() {
             render();
         }
 
         initApp();
     </script>
-
 </body>
 
 </html>
