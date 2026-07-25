@@ -254,6 +254,7 @@ class Coin999PartnerCalculator {
 
     applyI18n() {
         const lang = this.getLang();
+        const year = new Date().getFullYear();
 
         document.documentElement.lang = lang;
         document.title = this.t("app.documentTitle");
@@ -261,7 +262,10 @@ class Coin999PartnerCalculator {
 
         document.querySelectorAll("[data-i18n]").forEach((node) => {
             const key = node.dataset.i18n;
-            node.textContent = this.t(key);
+
+            node.textContent = this.t(key, {
+                year
+            });
         });
 
         this.els.timezoneLine.textContent = this.t("settings.timezone", {
