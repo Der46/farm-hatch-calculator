@@ -1,0 +1,862 @@
+:root {
+    --red: #b71934;
+    --gold: #ffd84f;
+    --cream: #fff1c4;
+    --text: #4b210e;
+    --shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans TC",
+        "Microsoft JhengHei",
+        "Noto Sans",
+        sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 50% 8%, rgba(255, 255, 255, 0.32), transparent 28%),
+        linear-gradient(180deg, #b9979c 0%, #efd8c8 34%, #f9e4a3 62%, #9b1730 100%);
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 20% 35%, rgba(78, 172, 103, 0.32), transparent 20%),
+        radial-gradient(ellipse at 84% 38%, rgba(69, 152, 97, 0.28), transparent 18%),
+        radial-gradient(ellipse at bottom, rgba(255, 210, 38, 0.35), transparent 36%);
+    z-index: -1;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app,
+.detail-inner {
+    width: min(520px, 100%);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 18px 12px 24px;
+    position: relative;
+}
+
+.title-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 14px;
+    min-height: 48px;
+}
+
+.title {
+    text-align: center;
+    margin: 0;
+    padding: 0 122px 0 0;
+    color: var(--gold);
+    font-size: 32px;
+    font-weight: 950;
+    letter-spacing: 1px;
+    text-shadow:
+        0 3px 0 #8e2c19,
+        0 7px 14px rgba(0, 0, 0, 0.34);
+}
+
+.language-select {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 116px;
+    border: 0;
+    border-radius: 999px;
+    padding: 7px 8px;
+    color: #743916;
+    font-size: 12px;
+    font-weight: 950;
+    background: rgba(255, 249, 223, 0.96);
+    box-shadow:
+        inset 0 -3px 0 rgba(91, 45, 12, 0.16),
+        0 8px 18px rgba(0, 0, 0, 0.16);
+    outline: none;
+}
+
+.settings-card,
+.summary,
+.calc-panel {
+    background: rgba(255, 241, 196, 0.95);
+    border: 4px solid var(--gold);
+    box-shadow: var(--shadow);
+}
+
+.settings-card {
+    margin-bottom: 16px;
+    padding: 14px;
+    border-radius: 20px;
+}
+
+.settings-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 950;
+    color: #73340f;
+    font-size: 14px;
+}
+
+.timezone-line {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    color: #73340f;
+    background: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.mode-btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 8px;
+    color: #743916;
+    font-size: 14px;
+    font-weight: 950;
+    background: #fff9df;
+    box-shadow: inset 0 -3px 0 rgba(91, 45, 12, 0.16);
+}
+
+.mode-btn.active {
+    color: white;
+    background: linear-gradient(180deg, #7aec57, #1aa63b);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
+}
+
+.mode-btn.gold.active {
+    background: linear-gradient(180deg, #ffe871, #d58b13);
+}
+
+.field-grid,
+.score-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.field {
+    display: grid;
+    gap: 5px;
+}
+
+label {
+    color: #71380f;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e1a53c;
+    border-radius: 12px;
+    background: #fffdf0;
+    color: #44200d;
+    font-size: 16px;
+    font-weight: 950;
+    outline: none;
+}
+
+input:focus {
+    border-color: #30b54a;
+    box-shadow: 0 0 0 4px rgba(48, 181, 74, 0.18);
+}
+
+.team-stage {
+    min-height: 310px;
+    padding: 24px 4px 8px;
+    border-radius: 28px;
+    background:
+        radial-gradient(ellipse at center bottom, rgba(255, 218, 77, 0.4), transparent 58%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+}
+
+.team-row {
+    display: grid;
+    gap: 8px;
+    align-items: end;
+}
+
+.team-row.normal {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.team-row.gold {
+    width: min(310px, 100%);
+    margin: 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px;
+}
+
+.member-card {
+    min-height: 248px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    transition: 0.18s ease;
+}
+
+.member-card:hover {
+    transform: translateY(-4px);
+}
+
+.member-name {
+    position: absolute;
+    top: 0;
+    z-index: 3;
+    max-width: 92px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    color: white;
+    font-size: 14px;
+    font-weight: 950;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.avatar {
+    position: absolute;
+    top: 26px;
+    width: 70px;
+    height: 82px;
+    padding: 4px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffe075, #cf1d3d);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.28);
+    z-index: 2;
+}
+
+.avatar-inner {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    color: white;
+    font-size: 31px;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.5), transparent 28%),
+        linear-gradient(135deg, #456c8b, #15233d);
+}
+
+.creature,
+.plant-creature {
+    width: 105px;
+    height: 125px;
+    position: relative;
+    filter: drop-shadow(0 8px 5px rgba(0, 0, 0, 0.24));
+}
+
+.creature.gold-creature,
+.plant-creature.gold-creature {
+    filter:
+        drop-shadow(0 0 14px rgba(255, 218, 69, 0.78)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.25));
+}
+
+.creature::before,
+.plant-creature::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(54, 35, 19, 0.28);
+}
+
+.head {
+    position: absolute;
+    left: 17px;
+    top: 31px;
+    width: 70px;
+    height: 70px;
+    border-radius: 48% 48% 42% 42%;
+    border: 3px solid #229c47;
+    background:
+        radial-gradient(circle at 31% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
+        radial-gradient(circle at 68% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
+        linear-gradient(180deg, #b8f45e, #58c946);
+}
+
+.gold-creature .head {
+    border-color: #b97511;
+    background:
+        radial-gradient(circle at 31% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
+        radial-gradient(circle at 68% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
+        linear-gradient(180deg, #ffe977, #e5a017);
+}
+
+.head::before,
+.head::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    width: 29px;
+    height: 33px;
+    border-radius: 60% 40% 60% 40%;
+    background: linear-gradient(180deg, #9b3df0, #36bee5);
+    z-index: -1;
+}
+
+.head::before {
+    left: -10px;
+    transform: rotate(-28deg);
+}
+
+.head::after {
+    right: -10px;
+    transform: rotate(28deg);
+}
+
+.crest {
+    position: absolute;
+    left: 40px;
+    top: 5px;
+    width: 26px;
+    height: 43px;
+    border-radius: 50% 50% 20% 20%;
+    background: linear-gradient(180deg, #58d9e9, #7c3ee8);
+    z-index: 1;
+}
+
+.gold-creature .crest {
+    background: linear-gradient(180deg, #fff2a0, #ff9d1d);
+}
+
+.body {
+    position: absolute;
+    left: 32px;
+    top: 86px;
+    width: 45px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #7ee552, #31a94a);
+    border: 3px solid #218d45;
+}
+
+.gold-creature .body {
+    background: linear-gradient(180deg, #ffe878, #d89218);
+    border-color: #a96a10;
+}
+
+.tail {
+    position: absolute;
+    left: 0;
+    top: 92px;
+    width: 61px;
+    height: 26px;
+    border: 6px solid #218d45;
+    border-top: 0;
+    border-right: 0;
+    border-radius: 0 0 0 80%;
+    transform: rotate(-12deg);
+}
+
+.gold-creature .tail {
+    border-color: #a96a10;
+}
+
+.plant-creature .soil {
+    position: absolute;
+    left: 18px;
+    bottom: 4px;
+    width: 70px;
+    height: 32px;
+    border-radius: 12px 12px 24px 24px;
+    background:
+        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2), transparent 24%),
+        linear-gradient(180deg, #9a5425, #5d2b12);
+    border: 3px solid #3f1c0c;
+    z-index: 2;
+}
+
+.plant-creature.gold-creature .soil {
+    background:
+        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.32), transparent 24%),
+        linear-gradient(180deg, #d78b24, #7d4312);
+    border-color: #5a2d0a;
+}
+
+.plant-creature .stem {
+    position: absolute;
+    left: 50px;
+    bottom: 28px;
+    width: 10px;
+    height: 66px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #7ff06a, #209d3f);
+    border: 2px solid #167a31;
+    z-index: 3;
+}
+
+.plant-creature.gold-creature .stem {
+    background: linear-gradient(180deg, #fff076, #d39218);
+    border-color: #9e6410;
+}
+
+.plant-creature .leaf-left {
+    position: absolute;
+    left: 17px;
+    top: 48px;
+    width: 48px;
+    height: 34px;
+    border-radius: 70% 20% 70% 20%;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.45), transparent 22%),
+        linear-gradient(135deg, #b9f765, #24b447);
+    border: 3px solid #1d8d3d;
+    transform: rotate(-24deg);
+    z-index: 4;
+}
+
+.plant-creature.gold-creature .leaf-left {
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.55), transparent 22%),
+        linear-gradient(135deg, #fff497, #d99a19);
+    border-color: #a96a10;
+}
+
+.plant-creature .leaf-right {
+    position: absolute;
+    right: 15px;
+    top: 42px;
+    width: 50px;
+    height: 36px;
+    border-radius: 20% 70% 20% 70%;
+    background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.45), transparent 22%),
+        linear-gradient(225deg, #b9f765, #22ad43);
+    border: 3px solid #1d8d3d;
+    transform: rotate(25deg);
+    z-index: 4;
+}
+
+.plant-creature.gold-creature .leaf-right {
+    background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.55), transparent 22%),
+        linear-gradient(225deg, #fff497, #d99a19);
+    border-color: #a96a10;
+}
+
+.plant-creature .bud {
+    position: absolute;
+    left: 34px;
+    top: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50% 50% 45% 45%;
+    background:
+        radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.7), transparent 20%),
+        radial-gradient(circle at 35% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
+        radial-gradient(circle at 65% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
+        linear-gradient(180deg, #ff91c8, #ef3d7f);
+    border: 3px solid #b71958;
+    z-index: 5;
+}
+
+.plant-creature.gold-creature .bud {
+    background:
+        radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.72), transparent 20%),
+        radial-gradient(circle at 35% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
+        radial-gradient(circle at 65% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
+        linear-gradient(180deg, #fff39b, #e7a016);
+    border-color: #b97511;
+}
+
+.plant-creature .petal {
+    position: absolute;
+    width: 26px;
+    height: 34px;
+    border-radius: 50% 50% 35% 35%;
+    background: linear-gradient(180deg, #ffcfec, #ff5aa6);
+    border: 2px solid #c51d68;
+    z-index: 4;
+}
+
+.plant-creature.gold-creature .petal {
+    background: linear-gradient(180deg, #fff8b8, #ffc029);
+    border-color: #b97511;
+}
+
+.plant-creature .petal.p1 {
+    left: 42px;
+    top: 0;
+}
+
+.plant-creature .petal.p2 {
+    left: 22px;
+    top: 14px;
+    transform: rotate(-42deg);
+}
+
+.plant-creature .petal.p3 {
+    right: 20px;
+    top: 14px;
+    transform: rotate(42deg);
+}
+
+.plant-creature .bud::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 27px;
+    width: 12px;
+    height: 6px;
+    border-bottom: 3px solid #7b1c34;
+    border-radius: 0 0 999px 999px;
+}
+
+.progress-wrap {
+    width: 86px;
+    height: 15px;
+    margin-top: 4px;
+    padding: 2px;
+    border-radius: 999px;
+    background: #743315;
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+.progress-stack {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-self {
+    height: 100%;
+    background: linear-gradient(180deg, #67d7ff, #1679d8);
+}
+
+.progress-friend {
+    height: 100%;
+    background: linear-gradient(180deg, #8dfb5c, #19b735);
+}
+
+.progress-friend.gold-progress {
+    background: linear-gradient(180deg, #fff174, #d99a18);
+}
+
+.summary {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 18px;
+    border-width: 3px;
+}
+
+.summary-grid,
+.calc-result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.summary-item,
+.calc-card {
+    padding: 10px 8px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.58);
+    text-align: center;
+}
+
+.summary-label,
+.calc-card strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #7a461d;
+    font-size: 12px;
+    font-weight: 950;
+}
+
+.summary-value,
+.calc-card span {
+    color: #481f0b;
+    font-size: 17px;
+    font-weight: 950;
+}
+
+.calc-card span {
+    font-size: 19px;
+}
+
+.clear-btn,
+.close-detail-btn {
+    width: 100%;
+    border: 0;
+    border-radius: 14px;
+    padding: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 950;
+    background: linear-gradient(180deg, #e76256, #b93429);
+}
+
+.clear-btn {
+    margin-top: 12px;
+}
+
+footer {
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.92);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 850;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
+}
+
+.detail-page {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    overflow-y: auto;
+    background:
+        radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.32), transparent 28%),
+        linear-gradient(180deg, #b9979c 0%, #efd8c8 36%, #f7e19a 60%, #940f2b 100%);
+}
+
+.detail-page.open {
+    display: block;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+}
+
+.back-btn {
+    width: 54px;
+    height: 54px;
+    border: 4px solid #fff1cc;
+    border-radius: 14px;
+    color: white;
+    font-size: 28px;
+    font-weight: 950;
+    background: linear-gradient(180deg, #d85f25, #a62c16);
+    box-shadow: var(--shadow);
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.gold-header {
+    position: relative;
+    margin: 6px auto 20px;
+    width: min(360px, 100%);
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gold-title-board {
+    flex: 1;
+    height: 84px;
+    margin: 0 -4px;
+    display: grid;
+    place-items: center;
+    color: var(--gold);
+    font-size: 25px;
+    font-weight: 950;
+    background: linear-gradient(180deg, #c51d3c, #7e1027);
+    border: 5px solid var(--gold);
+    box-shadow: var(--shadow);
+    text-shadow: 0 3px 0 #81210e;
+    text-align: center;
+}
+
+.duel-card {
+    width: 94px;
+    min-height: 120px;
+    z-index: 2;
+    padding: 5px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffdc58, #b81935);
+    box-shadow: var(--shadow);
+    color: white;
+    text-align: center;
+}
+
+.duel-name {
+    font-size: 14px;
+    font-weight: 950;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.duel-avatar {
+    height: 62px;
+    margin: 2px 0 5px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 31px;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.48), transparent 28%),
+        linear-gradient(135deg, #4e7792, #17243a);
+    border: 2px solid #fff2a6;
+}
+
+.duel-score {
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(90, 9, 28, 0.85);
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.creature-stage {
+    display: grid;
+    place-items: center;
+    min-height: 245px;
+    margin-bottom: 10px;
+}
+
+.big-creature {
+    transform: scale(1.85);
+}
+
+.need-line {
+    margin: 0 auto 12px;
+    width: fit-content;
+    max-width: 100%;
+    padding: 8px 16px;
+    border-radius: 999px;
+    color: var(--gold);
+    font-size: 18px;
+    font-weight: 950;
+    background: linear-gradient(180deg, #bd1837, #780d22);
+    border: 3px solid var(--gold);
+    text-align: center;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shadow);
+}
+
+.calc-panel {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 22px;
+}
+
+.calc-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.calc-result-grid {
+    margin-top: 12px;
+}
+
+.detail-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.close-detail-btn {
+    background: linear-gradient(180deg, #ff9c42, #db5b1b);
+}
+
+@media (max-width: 430px) {
+    .title {
+        font-size: 26px;
+        padding-right: 112px;
+    }
+
+    .language-select {
+        width: 106px;
+        font-size: 11px;
+        padding: 6px 6px;
+    }
+
+    .field-grid,
+    .score-row {
+        grid-template-columns: 1fr;
+    }
+
+    .team-row.normal {
+        gap: 2px;
+    }
+
+    .member-card {
+        min-height: 235px;
+    }
+
+    .avatar {
+        width: 62px;
+        height: 74px;
+    }
+
+    .creature,
+    .plant-creature {
+        transform: scale(0.88);
+    }
+
+    .big-creature {
+        transform: scale(1.65);
+    }
+
+    .progress-wrap {
+        width: 76px;
+    }
+
+    .duel-card {
+        width: 88px;
+    }
+
+    .gold-title-board {
+        font-size: 22px;
+    }
+
+    .calc-result-grid {
+        grid-template-columns: 1fr;
+    }
+}
