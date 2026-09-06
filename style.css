@@ -296,7 +296,21 @@ input:focus {
         drop-shadow(0 0 14px rgba(255, 218, 69, 0.78)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.25));
 }
 
-.creature::before,
+/* 孵化底部石頭台座 */
+.creature::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    bottom: 2px;
+    height: 18px;
+    border-radius: 50% 50% 45% 45%;
+    background: linear-gradient(180deg, #d3cdd8 0%, #908899 45%, #595361 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
+    border: 2px solid #4a4452;
+    z-index: 1;
+}
+
 .plant-creature::before {
     content: "";
     position: absolute;
@@ -308,149 +322,394 @@ input:focus {
     background: rgba(54, 35, 19, 0.28);
 }
 
+/* =========================================================
+   孵化動物模型 (微調版：圖層分離、紫傘後置於頭腦兩側)
+   ========================================================= */
+
+/* 1. 蜥蜴綠色頭部 (在上層，大眼萌臉與微笑) */
 .head {
     position: absolute;
-    left: 17px;
-    top: 31px;
-    width: 70px;
-    height: 70px;
-    border-radius: 48% 48% 42% 42%;
-    border: 3px solid #229c47;
+    left: 16px;
+    top: 20px;
+    width: 72px;
+    height: 56px;
+    border-radius: 48% 48% 44% 44%;
+    border: 2.5px solid #1a6d13;
     background:
-        radial-gradient(circle at 31% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
-        radial-gradient(circle at 68% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
-        linear-gradient(180deg, #b8f45e, #58c946);
+        /* 左眼大萌眼 */
+        radial-gradient(circle at 26% 36%, #fff 0, #fff 3.5px, transparent 4px),
+        radial-gradient(circle at 30% 43%, #1e0d05 0, #1e0d05 8.5px, #68300d 9.5px, #f2ea55 13.5px, #1a6d13 14px, transparent 15px),
+        /* 右眼大萌眼 */
+        radial-gradient(circle at 66% 36%, #fff 0, #fff 3.5px, transparent 4px),
+        radial-gradient(circle at 70% 43%, #1e0d05 0, #1e0d05 8.5px, #68300d 9.5px, #f2ea55 13.5px, #1a6d13 14px, transparent 15px),
+        /* 綠面與嫩綠下巴漸層 */
+        radial-gradient(ellipse at 50% 90%, #ddf858 0%, #a6ea2e 40%, transparent 60%),
+        linear-gradient(180deg, #74e532 0%, #46be22 65%, #2a9416 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.22);
+    z-index: 6;
+    /* 絕對高於背景紫傘 */
 }
 
-.gold-creature .head {
-    border-color: #b97511;
-    background:
-        radial-gradient(circle at 31% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
-        radial-gradient(circle at 68% 38%, #fff 0 7px, #3a250d 8px 12px, transparent 13px),
-        linear-gradient(180deg, #ffe977, #e5a017);
-}
-
-.head::before,
-.head::after {
+/* 微笑大嘴 */
+.head::before {
     content: "";
     position: absolute;
-    top: -10px;
-    width: 29px;
-    height: 33px;
-    border-radius: 60% 40% 60% 40%;
-    background: linear-gradient(180deg, #9b3df0, #36bee5);
-    z-index: -1;
-}
-
-.head::before {
-    left: -10px;
-    transform: rotate(-28deg);
+    left: 14px;
+    bottom: 5px;
+    width: 44px;
+    height: 18px;
+    border-radius: 0 0 50% 50%;
+    border-bottom: 3.5px solid #1c6814;
 }
 
 .head::after {
-    right: -10px;
-    transform: rotate(28deg);
+    content: none;
 }
 
+/* 2. 背景褶傘的容器 (z-index 降至 2，確保襯在綠臉 head 之下！) */
 .crest {
     position: absolute;
-    left: 40px;
-    top: 5px;
-    width: 26px;
-    height: 43px;
+    left: 42px;
+    top: 4px;
+    width: 22px;
+    height: 24px;
     border-radius: 50% 50% 20% 20%;
-    background: linear-gradient(180deg, #58d9e9, #7c3ee8);
-    z-index: 1;
+    background:
+        radial-gradient(ellipse at 50% 50%, #4ee0fa 0%, #20b0dd 55%, transparent 60%),
+        linear-gradient(180deg, #ffe045 0%, #f69d12 100%);
+    border: 2px solid #b5720a;
+    box-shadow:
+        -7px 4px 0 -4px #ffd839,
+        7px 4px 0 -4px #ffd839;
+    z-index: 2;
+    /* 降到底層，讓兩側褶傘自然藏在 head 後方 */
+}
+
+/* 3. 往左右兩側拉開的紫色水藍斑褶傘 (像扇翼般從腦後展開) */
+.crest::before,
+.crest::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    width: 38px;
+    height: 48px;
+    border-radius: 60% 40% 70% 30%;
+    background:
+        radial-gradient(circle at 35% 35%, #52e5ff 0, #52e5ff 4.5px, transparent 5.5px),
+        radial-gradient(circle at 65% 70%, #52e5ff 0, #52e5ff 4px, transparent 5px),
+        linear-gradient(180deg, #b04dfb 0%, #681fbe 100%);
+    border: 2.5px solid #4a138c;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* 左側褶傘：向外移動 -48px，完全避開眼睛 */
+.crest::before {
+    left: -48px;
+    transform: rotate(-36deg);
+}
+
+/* 右側褶傘：向外移動 -48px，鏡像旋轉 */
+.crest::after {
+    right: -48px;
+    transform: scaleX(-1) rotate(-36deg);
+}
+
+/* 4. 身體：嫩黃肚皮與挺立坐姿 */
+.body {
+    position: absolute;
+    left: 36px;
+    top: 68px;
+    width: 35px;
+    height: 46px;
+    border-radius: 30% 30% 46% 46%;
+    background:
+        radial-gradient(ellipse at 52% 40%, #eafc64 0%, #cbee3a 55%, transparent 68%),
+        linear-gradient(180deg, #59c824 0%, #2f9413 100%);
+    border: 2.5px solid #1a6d12;
+    z-index: 4;
+}
+
+/* 趴在石頭上的綠色小爪爪 */
+.body::before,
+.body::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    width: 14px;
+    height: 10px;
+    border-radius: 50%;
+    background: #50ca23;
+    border: 2px solid #1a6d12;
+    box-shadow: inset 0 -2px 0 #7b27be;
+    z-index: 5;
+}
+
+.body::before {
+    left: -5px;
+}
+
+.body::after {
+    right: -5px;
+}
+
+/* 5. 尾巴 (帶紫色背刺) */
+.tail {
+    position: absolute;
+    left: 6px;
+    top: 76px;
+    width: 46px;
+    height: 40px;
+    border: 7px solid #32a917;
+    border-top: 0;
+    border-right: 0;
+    border-radius: 0 0 0 90%;
+    transform: rotate(20deg);
+    z-index: 3;
+    box-shadow: -4px -3px 0 0px #973eed;
+}
+
+/* 黃金孵化模式適配 */
+.gold-creature .head {
+    border-color: #9d640e;
+    background:
+        radial-gradient(circle at 26% 36%, #fff 0, #fff 3.5px, transparent 4px),
+        radial-gradient(circle at 30% 43%, #1e0d05 0, #1e0d05 8.5px, #68300d 9.5px, #fff8b3 13.5px, #9d640e 14px, transparent 15px),
+        radial-gradient(circle at 66% 36%, #fff 0, #fff 3.5px, transparent 4px),
+        radial-gradient(circle at 70% 43%, #1e0d05 0, #1e0d05 8.5px, #68300d 9.5px, #fff8b3 13.5px, #9d640e 14px, transparent 15px),
+        radial-gradient(ellipse at 50% 90%, #fff 0%, #ffea88 40%, transparent 60%),
+        linear-gradient(180deg, #ffea72 0%, #f6ad1d 65%, #c77b07 100%);
+}
+
+.gold-creature .head::before {
+    border-bottom-color: #6a3e04;
 }
 
 .gold-creature .crest {
-    background: linear-gradient(180deg, #fff2a0, #ff9d1d);
+    background:
+        radial-gradient(ellipse at 50% 50%, #fff 0%, #ffeaa8 55%, transparent 60%),
+        linear-gradient(180deg, #ffffff 0%, #e8a820 100%);
+    border-color: #8c5609;
+    box-shadow:
+        -7px 4px 0 -4px #fff,
+        7px 4px 0 -4px #fff;
 }
 
-.body {
-    position: absolute;
-    left: 32px;
-    top: 86px;
-    width: 45px;
-    height: 30px;
-    border-radius: 50%;
-    background: linear-gradient(180deg, #7ee552, #31a94a);
-    border: 3px solid #218d45;
+.gold-creature .crest::before,
+.gold-creature .crest::after {
+    background:
+        radial-gradient(circle at 35% 35%, #fff 0, #fff 4.5px, transparent 5.5px),
+        radial-gradient(circle at 65% 70%, #fff 0, #fff 4px, transparent 5px),
+        linear-gradient(180deg, #ff9b36 0%, #c45706 100%);
+    border-color: #7b3101;
 }
 
 .gold-creature .body {
-    background: linear-gradient(180deg, #ffe878, #d89218);
-    border-color: #a96a10;
+    background:
+        radial-gradient(ellipse at 52% 40%, #ffffff 0%, #fff69d 55%, transparent 68%),
+        linear-gradient(180deg, #ffd64f 0%, #de8c12 100%);
+    border-color: #915a07;
 }
 
-.tail {
-    position: absolute;
-    left: 0;
-    top: 92px;
-    width: 61px;
-    height: 26px;
-    border: 6px solid #218d45;
-    border-top: 0;
-    border-right: 0;
-    border-radius: 0 0 0 80%;
-    transform: rotate(-12deg);
+.gold-creature .body::before,
+.gold-creature .body::after {
+    background: #ffc83b;
+    border-color: #915a07;
+    box-shadow: inset 0 -2px 0 #d94b0d;
 }
 
 .gold-creature .tail {
-    border-color: #a96a10;
+    border-color: #df9116;
+    box-shadow: -4px -3px 0 0px #ff691e;
 }
+
+/* =========================================================
+   食人花植物造型 (維持優化版：大笑厚唇、高頸、瞇瞇眼神韻)
+   ========================================================= */
 
 .plant-creature .soil {
     position: absolute;
     left: 18px;
-    bottom: 4px;
-    width: 70px;
-    height: 32px;
-    border-radius: 12px 12px 24px 24px;
+    bottom: 2px;
+    width: 68px;
+    height: 38px;
+    border-radius: 6px 6px 18px 18px;
     background:
-        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.2), transparent 24%),
-        linear-gradient(180deg, #9a5425, #5d2b12);
-    border: 3px solid #3f1c0c;
-    z-index: 2;
+        linear-gradient(108deg, transparent 48%, #36170d 49%, #36170d 52%, transparent 53%) 18px 0 / 14px 22px no-repeat,
+        radial-gradient(circle at 22% 68%, #fff4db 3px, transparent 4px),
+        radial-gradient(circle at 78% 68%, #fff4db 3px, transparent 4px),
+        linear-gradient(135deg, #441f17 25%, transparent 25%) 0 16px / 12px 12px repeat-x,
+        linear-gradient(225deg, #441f17 25%, transparent 25%) 0 16px / 12px 12px repeat-x,
+        linear-gradient(180deg, #d39371 0%, #b86f4a 45%, #f1e2d3 46%, #c9b19e 100%);
+    border: 3px solid #3c1a0e;
+    box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.28);
+    z-index: 3;
+}
+
+.plant-creature .soil::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -4px;
+    right: -4px;
+    height: 11px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #f0be9f, #b36e4b);
+    border: 3px solid #3c1a0e;
 }
 
 .plant-creature.gold-creature .soil {
     background:
-        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.32), transparent 24%),
-        linear-gradient(180deg, #d78b24, #7d4312);
-    border-color: #5a2d0a;
+        linear-gradient(108deg, transparent 48%, #5a2c07 49%, #5a2c07 52%, transparent 53%) 18px 0 / 14px 22px no-repeat,
+        radial-gradient(circle at 22% 68%, #fff 3px, transparent 4px),
+        radial-gradient(circle at 78% 68%, #fff 3px, transparent 4px),
+        linear-gradient(135deg, #633c03 25%, transparent 25%) 0 16px / 12px 12px repeat-x,
+        linear-gradient(225deg, #633c03 25%, transparent 25%) 0 16px / 12px 12px repeat-x,
+        linear-gradient(180deg, #f7d268 0%, #d89622 45%, #fff1c4 46%, #d8aa53 100%);
+    border-color: #5a2c07;
 }
 
 .plant-creature .stem {
     position: absolute;
-    left: 50px;
-    bottom: 28px;
-    width: 10px;
-    height: 66px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #7ff06a, #209d3f);
-    border: 2px solid #167a31;
-    z-index: 3;
+    left: 44px;
+    bottom: 26px;
+    width: 13px;
+    height: 64px;
+    border-radius: 12px;
+    background: linear-gradient(100deg, #9be840 10%, #3cae23 70%, #1e6d16 100%);
+    border: 2px solid #145914;
+    transform: rotate(-12deg);
+    z-index: 2;
+}
+
+.plant-creature .stem::before,
+.plant-creature .stem::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.plant-creature .stem::before {
+    left: -9px;
+    top: 24px;
+    border-width: 4px 10px 4px 0;
+    border-color: transparent #a766df transparent transparent;
+}
+
+.plant-creature .stem::after {
+    right: -9px;
+    top: 40px;
+    border-width: 4px 0 4px 10px;
+    border-color: transparent transparent transparent #a766df;
+}
+
+.plant-creature .leaf-left {
+    position: absolute;
+    left: 6px;
+    top: 68px;
+    width: 36px;
+    height: 24px;
+    border-radius: 80% 20% 75% 20%;
+    background: radial-gradient(circle at 35% 30%, #baf542, #39b82f);
+    border: 2px solid #186e1b;
+    transform: rotate(-24deg);
+    z-index: 4;
+}
+
+.plant-creature .leaf-right {
+    position: absolute;
+    right: 4px;
+    top: 64px;
+    width: 40px;
+    height: 26px;
+    border-radius: 20% 80% 25% 75%;
+    background: radial-gradient(circle at 40% 30%, #baf542, #2fa327);
+    border: 2px solid #186e1b;
+    transform: rotate(26deg);
+    z-index: 4;
+}
+
+.plant-creature .petal {
+    position: absolute;
+    width: 30px;
+    height: 42px;
+    border-radius: 60% 40% 70% 30%;
+    background: radial-gradient(circle at 45% 35%, #185a5a 0%, #0c3639 65%, #f4ca36 66%, #c99c16 100%);
+    border: 2.5px solid #f6d142;
+    box-shadow: -2px 3px 6px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+}
+
+.plant-creature .petal.p1 {
+    left: 14px;
+    top: -4px;
+    transform: rotate(-30deg);
+}
+
+.plant-creature .petal.p2 {
+    left: 2px;
+    top: 14px;
+    transform: rotate(-65deg);
+}
+
+.plant-creature .petal.p3 {
+    left: 24px;
+    top: -12px;
+    transform: rotate(-5deg);
+}
+
+.plant-creature .bud {
+    position: absolute;
+    left: 22px;
+    top: -8px;
+    width: 74px;
+    height: 64px;
+    border-radius: 55% 62% 45% 48%;
+    background:
+        radial-gradient(circle at 46% 18%, #78ba19 0, #78ba19 6px, transparent 7px),
+        radial-gradient(circle at 68% 14%, #78ba19 0, #78ba19 4px, transparent 5px),
+        radial-gradient(circle at 56% 30%, transparent 6px, #1a4e12 7px, #1a4e12 9px, transparent 10px),
+        linear-gradient(150deg, #cbfb51 0%, #6acf23 55%, #2a8813 100%);
+    border: 3px solid #165b14;
+    z-index: 5;
+    overflow: visible;
+}
+
+.plant-creature .bud::before {
+    content: "";
+    position: absolute;
+    right: -16px;
+    top: 14px;
+    width: 68px;
+    height: 38px;
+    border-radius: 40% 50% 60% 45%;
+    background:
+        radial-gradient(ellipse at 50% 20%, #ffffff 0%, #f6fcee 75%, transparent 78%),
+        #490a25;
+    border: 5px solid #ff59a3;
+    outline: 2px solid #b1165a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.28);
+    transform: rotate(-14deg);
+    z-index: 6;
+}
+
+.plant-creature .bud::after {
+    content: "";
+    position: absolute;
+    right: -12px;
+    top: 36px;
+    width: 52px;
+    height: 6px;
+    border-radius: 0 0 999px 999px;
+    border-bottom: 3px solid #851247;
+    transform: rotate(-14deg);
+    z-index: 7;
 }
 
 .plant-creature.gold-creature .stem {
     background: linear-gradient(180deg, #fff076, #d39218);
     border-color: #9e6410;
-}
-
-.plant-creature .leaf-left {
-    position: absolute;
-    left: 17px;
-    top: 48px;
-    width: 48px;
-    height: 34px;
-    border-radius: 70% 20% 70% 20%;
-    background:
-        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.45), transparent 22%),
-        linear-gradient(135deg, #b9f765, #24b447);
-    border: 3px solid #1d8d3d;
-    transform: rotate(-24deg);
-    z-index: 4;
 }
 
 .plant-creature.gold-creature .leaf-left {
@@ -460,21 +719,6 @@ input:focus {
     border-color: #a96a10;
 }
 
-.plant-creature .leaf-right {
-    position: absolute;
-    right: 15px;
-    top: 42px;
-    width: 50px;
-    height: 36px;
-    border-radius: 20% 70% 20% 70%;
-    background:
-        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.45), transparent 22%),
-        linear-gradient(225deg, #b9f765, #22ad43);
-    border: 3px solid #1d8d3d;
-    transform: rotate(25deg);
-    z-index: 4;
-}
-
 .plant-creature.gold-creature .leaf-right {
     background:
         radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.55), transparent 22%),
@@ -482,73 +726,36 @@ input:focus {
     border-color: #a96a10;
 }
 
-.plant-creature .bud {
-    position: absolute;
-    left: 34px;
-    top: 12px;
-    width: 42px;
-    height: 42px;
-    border-radius: 50% 50% 45% 45%;
-    background:
-        radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.7), transparent 20%),
-        radial-gradient(circle at 35% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
-        radial-gradient(circle at 65% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
-        linear-gradient(180deg, #ff91c8, #ef3d7f);
-    border: 3px solid #b71958;
-    z-index: 5;
-}
-
 .plant-creature.gold-creature .bud {
     background:
-        radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.72), transparent 20%),
-        radial-gradient(circle at 35% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
-        radial-gradient(circle at 65% 48%, #fff 0 4px, #3a250d 5px 8px, transparent 9px),
-        linear-gradient(180deg, #fff39b, #e7a016);
-    border-color: #b97511;
+        radial-gradient(circle at 46% 18%, #d18d17 0, #d18d17 6px, transparent 7px),
+        radial-gradient(circle at 68% 14%, #d18d17 0, #d18d17 4px, transparent 5px),
+        radial-gradient(circle at 56% 30%, transparent 6px, #613e07 7px, #613e07 9px, transparent 10px),
+        linear-gradient(155deg, #fff275 0%, #f1a91d 60%, #a46109 100%);
+    border-color: #8c5308;
 }
 
-.plant-creature .petal {
-    position: absolute;
-    width: 26px;
-    height: 34px;
-    border-radius: 50% 50% 35% 35%;
-    background: linear-gradient(180deg, #ffcfec, #ff5aa6);
-    border: 2px solid #c51d68;
-    z-index: 4;
+.plant-creature.gold-creature .bud::before {
+    background:
+        radial-gradient(ellipse at 50% 20%, #ffffff 0%, #fff8db 75%, transparent 78%),
+        #6e3708;
+    border-color: #ffd24c;
+    outline-color: #b36e0d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.28);
+}
+
+.plant-creature.gold-creature .bud::after {
+    border-bottom-color: #854a0a;
 }
 
 .plant-creature.gold-creature .petal {
-    background: linear-gradient(180deg, #fff8b8, #ffc029);
-    border-color: #b97511;
+    background: radial-gradient(circle at 50% 40%, #7d4411 0%, #472005 70%, #ffe978 71%, #d1951b 100%);
+    border-color: #ffeb7b;
 }
 
-.plant-creature .petal.p1 {
-    left: 42px;
-    top: 0;
-}
-
-.plant-creature .petal.p2 {
-    left: 22px;
-    top: 14px;
-    transform: rotate(-42deg);
-}
-
-.plant-creature .petal.p3 {
-    right: 20px;
-    top: 14px;
-    transform: rotate(42deg);
-}
-
-.plant-creature .bud::after {
-    content: "";
-    position: absolute;
-    left: 15px;
-    top: 27px;
-    width: 12px;
-    height: 6px;
-    border-bottom: 3px solid #7b1c34;
-    border-radius: 0 0 999px 999px;
-}
+/* =========================================================
+   進度條與介面卡片
+   ========================================================= */
 
 .progress-wrap {
     width: 86px;
@@ -650,6 +857,7 @@ footer {
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
 }
 
+/* 詳情彈窗與比對視圖 */
 .detail-page {
     position: fixed;
     inset: 0;
@@ -805,6 +1013,7 @@ footer {
     background: linear-gradient(180deg, #ff9c42, #db5b1b);
 }
 
+/* 行動裝置響應式調整 */
 @media (max-width: 430px) {
     .title {
         font-size: 26px;
