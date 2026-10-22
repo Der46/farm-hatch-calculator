@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023n";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023o";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby-6b5hjaPsLo3fpQvS8WXw8oKQZGTBzHH-f4FJtWsyAv7igaGtKDQtZ20nVoOKhPpthQ/exec";
