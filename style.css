@@ -987,6 +987,11 @@ button.match-creature:active {
     font-weight: 950;
 }
 
+/* 有縮圖時隱藏文字連結（display 會蓋掉 hidden 屬性，需明確指定） */
+.match-screenshot-link[hidden] {
+    display: none;
+}
+
 .match-screenshot {
     display: block;
     width: fit-content;
@@ -1003,6 +1008,18 @@ button.match-creature:active {
     max-width: 100%;
     max-height: 160px;
     object-fit: contain;
+}
+
+.match-shot-btn {
+    display: block;
+    margin-top: 8px;
+    border: 2px dashed #9cc7f0;
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: #1a6fd1;
+    font-size: 13px;
+    font-weight: 950;
+    background: #f3f9ff;
 }
 
 .match-author-badge {

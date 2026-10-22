@@ -31,6 +31,12 @@ export const MATCH_I18N = {
             all: "全部"
         },
         post: {
+            addScreenshot: "📷 新增截圖",
+            changeScreenshot: "📷 更換截圖",
+            screenshotPrompt: "請貼上遊戲截圖連結（Imgur、ImgBB、Postimages 或 Google 雲端硬碟）。留空並按確定可移除截圖：",
+            screenshotRemoveConfirm: "確定要移除這篇徵求的截圖嗎？",
+            screenshotUpdated: "已更新截圖。",
+            screenshotRemoved: "已移除截圖。",
             screenshotAlt: "{name} 的遊戲截圖",
             editTokens: "修改代幣",
             editTokensPrompt: "請輸入目前的代幣數量：",
@@ -116,6 +122,12 @@ export const MATCH_I18N = {
             all: "All"
         },
         post: {
+            addScreenshot: "📷 Add screenshot",
+            changeScreenshot: "📷 Change screenshot",
+            screenshotPrompt: "Paste a game screenshot link (Imgur, ImgBB, Postimages or Google Drive). Leave empty and press OK to remove it:",
+            screenshotRemoveConfirm: "Remove the screenshot from this request?",
+            screenshotUpdated: "Screenshot updated.",
+            screenshotRemoved: "Screenshot removed.",
             screenshotAlt: "Game screenshot from {name}",
             editTokens: "Edit tokens",
             editTokensPrompt: "Enter your current token amount:",
@@ -201,6 +213,12 @@ export const MATCH_I18N = {
             all: "Tất cả"
         },
         post: {
+            addScreenshot: "📷 Thêm ảnh chụp",
+            changeScreenshot: "📷 Đổi ảnh chụp",
+            screenshotPrompt: "Dán liên kết ảnh chụp game (Imgur, ImgBB, Postimages hoặc Google Drive). Để trống rồi bấm OK để xoá ảnh:",
+            screenshotRemoveConfirm: "Xoá ảnh chụp khỏi yêu cầu này?",
+            screenshotUpdated: "Đã cập nhật ảnh chụp.",
+            screenshotRemoved: "Đã xoá ảnh chụp.",
             screenshotAlt: "Ảnh chụp game của {name}",
             editTokens: "Sửa token",
             editTokensPrompt: "Nhập số token hiện có:",
@@ -286,6 +304,12 @@ export const MATCH_I18N = {
             all: "すべて"
         },
         post: {
+            addScreenshot: "📷 スクショを追加",
+            changeScreenshot: "📷 スクショを変更",
+            screenshotPrompt: "ゲーム画面のスクリーンショットURL（Imgur・ImgBB・Postimages・Googleドライブ）を貼ってください。空欄でOKを押すと削除します：",
+            screenshotRemoveConfirm: "この募集のスクリーンショットを削除しますか？",
+            screenshotUpdated: "スクリーンショットを更新しました。",
+            screenshotRemoved: "スクリーンショットを削除しました。",
             screenshotAlt: "{name} のゲーム画面",
             editTokens: "トークンを修正",
             editTokensPrompt: "現在のトークン数を入力してください：",
@@ -371,6 +395,12 @@ export const MATCH_I18N = {
             all: "전체"
         },
         post: {
+            addScreenshot: "📷 스크린샷 추가",
+            changeScreenshot: "📷 스크린샷 변경",
+            screenshotPrompt: "게임 스크린샷 링크(Imgur, ImgBB, Postimages, Google 드라이브)를 붙여 넣으세요. 비워 두고 확인을 누르면 삭제됩니다:",
+            screenshotRemoveConfirm: "이 요청의 스크린샷을 삭제하시겠습니까?",
+            screenshotUpdated: "스크린샷을 업데이트했습니다.",
+            screenshotRemoved: "스크린샷을 삭제했습니다.",
             screenshotAlt: "{name}의 게임 스크린샷",
             editTokens: "토큰 수정",
             editTokensPrompt: "현재 토큰 수를 입력하세요:",
@@ -456,6 +486,12 @@ export const MATCH_I18N = {
             all: "ทั้งหมด"
         },
         post: {
+            addScreenshot: "📷 เพิ่มภาพหน้าจอ",
+            changeScreenshot: "📷 เปลี่ยนภาพหน้าจอ",
+            screenshotPrompt: "วางลิงก์ภาพหน้าจอเกม (Imgur, ImgBB, Postimages หรือ Google Drive) เว้นว่างแล้วกดตกลงเพื่อลบภาพ:",
+            screenshotRemoveConfirm: "ลบภาพหน้าจอออกจากคำขอนี้หรือไม่?",
+            screenshotUpdated: "อัปเดตภาพหน้าจอแล้ว",
+            screenshotRemoved: "ลบภาพหน้าจอแล้ว",
             screenshotAlt: "ภาพหน้าจอเกมของ {name}",
             editTokens: "แก้ไขโทเคน",
             editTokensPrompt: "กรอกจำนวนโทเคนปัจจุบัน:",
@@ -541,6 +577,12 @@ export const MATCH_I18N = {
             all: "Semua"
         },
         post: {
+            addScreenshot: "📷 Tambah screenshot",
+            changeScreenshot: "📷 Ganti screenshot",
+            screenshotPrompt: "Tempel link screenshot game (Imgur, ImgBB, Postimages atau Google Drive). Kosongkan lalu tekan OK untuk menghapus:",
+            screenshotRemoveConfirm: "Hapus screenshot dari permintaan ini?",
+            screenshotUpdated: "Screenshot diperbarui.",
+            screenshotRemoved: "Screenshot dihapus.",
             screenshotAlt: "Screenshot game dari {name}",
             editTokens: "Ubah token",
             editTokensPrompt: "Masukkan jumlah token saat ini:",
@@ -626,6 +668,12 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            addScreenshot: "📷 Añadir captura",
+            changeScreenshot: "📷 Cambiar captura",
+            screenshotPrompt: "Pega el enlace de una captura del juego (Imgur, ImgBB, Postimages o Google Drive). Déjalo vacío y pulsa Aceptar para quitarla:",
+            screenshotRemoveConfirm: "¿Quitar la captura de esta solicitud?",
+            screenshotUpdated: "Captura actualizada.",
+            screenshotRemoved: "Captura eliminada.",
             screenshotAlt: "Captura del juego de {name}",
             editTokens: "Editar tokens",
             editTokensPrompt: "Escribe tu cantidad actual de tokens:",
@@ -711,6 +759,12 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            addScreenshot: "📷 Adicionar captura",
+            changeScreenshot: "📷 Trocar captura",
+            screenshotPrompt: "Cole o link de uma captura do jogo (Imgur, ImgBB, Postimages ou Google Drive). Deixe vazio e toque em OK para remover:",
+            screenshotRemoveConfirm: "Remover a captura deste pedido?",
+            screenshotUpdated: "Captura atualizada.",
+            screenshotRemoved: "Captura removida.",
             screenshotAlt: "Captura do jogo de {name}",
             editTokens: "Editar tokens",
             editTokensPrompt: "Digite sua quantidade atual de tokens:",

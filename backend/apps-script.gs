@@ -49,7 +49,7 @@ const RATE_LIMITS = {
     create: { device: [3, 3600], global: [60, 600] },
     comment: { device: [5, 60], device2: [30, 3600], global: [200, 600] },
     report: { device: [10, 3600] },
-    updateTokens: { device: [10, 3600] }
+    update: { device: [10, 3600] }
 };
 
 const LIMITS = {
@@ -112,6 +112,8 @@ function doPost(e) {
                 return withLock_(() => deletePost_(body));
             case "updateTokens":
                 return withLock_(() => updateTokens_(body));
+            case "updateScreenshot":
+                return withLock_(() => updateScreenshot_(body));
             case "report":
                 return withLock_(() => reportPost_(body));
             case "reportComment":
@@ -535,7 +537,7 @@ function updateTokens_(body) {
         throw userError_("notEnoughTokens");
     }
 
-    rateLimit_("updateTokens", ownerId);
+    rateLimit_("update", ownerId);
 
     const now = Date.now();
 
@@ -547,6 +549,35 @@ function updateTokens_(body) {
         id: String(post.row.id),
         tokens: tokens,
         updatedAt: now
+    };
+}
+
+// 只有發文的裝置能新增、更換或移除自己貼文的截圖（留空代表移除）
+function updateScreenshot_(body) {
+    const ownerId = ownerIdFrom_(body.ownerKey);
+    const post = findPost_(String(body.postId || ""));
+    const screenshot = cleanText_(body.screenshot, LIMITS.screenshot);
+
+    if (!post || isTrue_(post.row.deleted)) {
+        throw userError_("notFound");
+    }
+
+    if (String(post.row.ownerId) !== ownerId) {
+        throw userError_("notOwner");
+    }
+
+    if (screenshot && !isAllowedScreenshot_(screenshot)) {
+        throw userError_("badScreenshot");
+    }
+
+    rateLimit_("update", ownerId);
+
+    post.sheet.getRange(post.rowNumber, POST_HEADERS.indexOf("screenshot") + 1).setValue(sheetSafe_(screenshot));
+    clearListCache_();
+
+    return {
+        id: String(post.row.id),
+        screenshot: screenshot
     };
 }
 

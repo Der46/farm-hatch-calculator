@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023k";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023l";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -612,6 +612,47 @@ export class MatchBoard {
         }
     }
 
+    // 發文者新增、更換或移除自己貼文的截圖（輸入框留空代表移除）
+    async editScreenshot(postId, button) {
+        const post = this.posts.find((item) => item.id === postId);
+
+        if (!post) {
+            return;
+        }
+
+        const input = prompt(this.t("post.screenshotPrompt"), post.screenshot || "");
+
+        if (input === null) {
+            return;
+        }
+
+        const screenshot = input.trim();
+
+        if (screenshot === (post.screenshot || "")) {
+            return;
+        }
+
+        if (!screenshot && !confirm(this.t("post.screenshotRemoveConfirm"))) {
+            return;
+        }
+
+        if (screenshot && !isAllowedScreenshot(screenshot)) {
+            this.showToast(this.t("error.badScreenshot"), "error");
+            return;
+        }
+
+        this.setBusy(button, true);
+
+        try {
+            await this.api({ action: "updateScreenshot", postId, screenshot });
+            await this.load();
+            this.showToast(this.t(screenshot ? "post.screenshotUpdated" : "post.screenshotRemoved"));
+        } catch (err) {
+            this.showToast(this.errorText(err, post.mode), "error");
+            this.setBusy(button, false);
+        }
+    }
+
     async reportPost(postId, button) {
         const reason = prompt(this.t("post.reportPrompt"));
 
@@ -911,6 +952,7 @@ export class MatchBoard {
                     </a>
                 ` : ""}
                 ${screenshotLink}
+                ${isMine ? `<button type="button" class="match-shot-btn" data-edit-screenshot="${esc(post.id)}">${esc(this.t(safeScreenshot ? "post.changeScreenshot" : "post.addScreenshot"))}</button>` : ""}
 
                 <div class="match-actions">
                     ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
@@ -971,11 +1013,14 @@ export class MatchBoard {
         this.els.list.addEventListener("click", (event) => {
             const del = event.target.closest("[data-delete]");
             const editTokens = event.target.closest("[data-edit-tokens]");
+            const editScreenshot = event.target.closest("[data-edit-screenshot]");
             const report = event.target.closest("[data-report]");
             const copy = event.target.closest("[data-copy]");
             const reportComment = event.target.closest("[data-report-comment]");
 
-            if (editTokens) {
+            if (editScreenshot) {
+                this.editScreenshot(editScreenshot.dataset.editScreenshot, editScreenshot);
+            } else if (editTokens) {
                 this.editTokens(editTokens.dataset.editTokens, editTokens);
             } else if (reportComment) {
                 this.reportComment(reportComment.dataset.reportComment, reportComment);
