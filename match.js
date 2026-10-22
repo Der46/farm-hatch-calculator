@@ -1,9 +1,10 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023e";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023f";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
 
 const PROFILE_KEY = "coin999_match_profile_v1";
+const OWNER_KEY = "coin999_match_owner_v1";
 
 const MODE_ORDER = ["hatch", "farm", "goldHatch", "goldFarm"];
 
@@ -39,7 +40,6 @@ export class MatchBoard {
             link: document.getElementById("matchLink"),
             tokens: document.getElementById("matchTokens"),
             note: document.getElementById("matchNote"),
-            password: document.getElementById("matchPassword"),
             rule: document.getElementById("matchRule"),
             formMsg: document.getElementById("matchFormMsg"),
             submit: document.getElementById("matchSubmit"),
@@ -50,6 +50,15 @@ export class MatchBoard {
 
         this.bindEvents();
         this.restoreProfile();
+
+        this.ownerKey = this.getOwnerKey();
+        this.ownerIdReady = this.sha256Hex(this.ownerKey)
+            .then((id) => {
+                this.ownerId = id;
+            })
+            .catch(() => {
+                // 非 https 環境沒有 crypto.subtle，只是無法辨識自己的貼文
+            });
     }
 
     isConfigured() {
@@ -98,6 +107,37 @@ export class MatchBoard {
         return rtf.format(0, "minute");
     }
 
+    /* ---------- 裝置身分：只有發文的裝置能刪除自己的貼文 ---------- */
+
+    getOwnerKey() {
+        try {
+            const saved = localStorage.getItem(OWNER_KEY);
+
+            if (/^[0-9a-f]{64}$/.test(saved || "")) {
+                return saved;
+            }
+        } catch {
+            // 無法存取 localStorage 時改用本次頁面的暫時金鑰
+        }
+
+        const bytes = crypto.getRandomValues(new Uint8Array(32));
+        const key = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+
+        try {
+            localStorage.setItem(OWNER_KEY, key);
+        } catch {
+            // 同上
+        }
+
+        return key;
+    }
+
+    async sha256Hex(text) {
+        const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+
+        return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+    }
+
     /* ---------- open / close ---------- */
 
     open() {
@@ -128,7 +168,7 @@ export class MatchBoard {
                     method: "POST",
                     // text/plain 可避免 CORS 預檢，Apps Script 才收得到
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ ...payload, ownerKey: this.ownerKey })
                 })
                 : await fetch(`${MATCH_API_URL}?t=${Date.now()}`);
         } catch {
@@ -172,6 +212,7 @@ export class MatchBoard {
         try {
             const data = await this.api();
 
+            await this.ownerIdReady;
             this.posts = Array.isArray(data.posts) ? data.posts : [];
             this.ttlDays = data.ttlDays;
             this.status = "ready";
@@ -204,8 +245,6 @@ export class MatchBoard {
         const link = this.els.link.value.trim();
         const tokensText = this.els.tokens.value.trim();
         const tokens = Number(tokensText);
-        const password = this.els.password.value;
-
         if (!team) {
             return "badTeam";
         }
@@ -220,10 +259,6 @@ export class MatchBoard {
 
         if (tokens < (MIN_TOKENS[mode] || 0)) {
             return "notEnoughTokens";
-        }
-
-        if (password.length < 4) {
-            return "badPassword";
         }
 
         return "";
@@ -246,6 +281,13 @@ export class MatchBoard {
             return;
         }
 
+        // 普通模式送出前再次提醒：需能自己完成一半，缺一兩顆的人優先幫忙
+        const min = MIN_TOKENS[this.els.mode.value] || 0;
+
+        if (min > 0 && !confirm(this.t("form.confirmNormal", { min: this.formatNumber(min) }))) {
+            return;
+        }
+
         this.submitting = true;
         this.els.submit.disabled = true;
         this.els.submit.textContent = this.t("form.submitting");
@@ -258,8 +300,7 @@ export class MatchBoard {
                 team: this.els.team.value.trim(),
                 link: this.els.link.value.trim(),
                 tokens: Number(this.els.tokens.value),
-                note: this.els.note.value.trim(),
-                password: this.els.password.value
+                note: this.els.note.value.trim()
             });
 
             this.saveProfile({
@@ -268,7 +309,6 @@ export class MatchBoard {
             });
 
             this.els.note.value = "";
-            this.els.password.value = "";
             this.setFormMessage(this.t("form.success"), "success");
             this.filter = "all";
             await this.load();
@@ -309,18 +349,78 @@ export class MatchBoard {
     }
 
     async deletePost(postId) {
-        const password = prompt(this.t("post.deletePrompt"));
-
-        if (password === null) {
+        if (!confirm(this.t("post.deleteConfirm"))) {
             return;
         }
 
         try {
-            await this.api({ action: "delete", postId, password });
+            await this.api({ action: "delete", postId });
             await this.load();
         } catch (err) {
             alert(this.errorText(err));
         }
+    }
+
+    async reportPost(postId) {
+        const reason = prompt(this.t("post.reportPrompt"));
+
+        if (reason === null) {
+            return;
+        }
+
+        if (!reason.trim()) {
+            alert(this.t("error.badReason"));
+            return;
+        }
+
+        try {
+            await this.api({ action: "report", postId, reason: reason.trim() });
+            alert(this.t("post.reported"));
+        } catch (err) {
+            alert(this.errorText(err));
+        }
+    }
+
+    async copyLink(button) {
+        const link = button.dataset.copy;
+        let copied = false;
+
+        try {
+            await navigator.clipboard.writeText(link);
+            copied = true;
+        } catch {
+            // 舊瀏覽器或剪貼簿權限被擋時改用隱藏文字框複製
+            const area = document.createElement("textarea");
+
+            area.value = link;
+            area.setAttribute("readonly", "");
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+
+            try {
+                copied = document.execCommand("copy");
+            } catch {
+                copied = false;
+            }
+
+            area.remove();
+        }
+
+        if (!copied) {
+            prompt(this.t("post.copyManual"), link);
+            return;
+        }
+
+        button.textContent = this.t("post.copied");
+        button.classList.add("copied");
+
+        clearTimeout(button.copyTimer);
+        button.copyTimer = setTimeout(() => {
+            button.textContent = this.t("post.copyLink");
+            button.classList.remove("copied");
+        }, 1500);
     }
 
     /* ---------- profile (只存在這台裝置) ---------- */
@@ -430,6 +530,7 @@ export class MatchBoard {
         const esc = this.escapeHtml;
         const gold = String(post.mode).startsWith("gold");
         const safeLink = /^https:\/\//i.test(post.link) ? post.link : "";
+        const isMine = Boolean(this.ownerId) && post.ownerId === this.ownerId;
         const comments = Array.isArray(post.comments) ? post.comments : [];
 
         const commentItems = comments.length
@@ -446,6 +547,7 @@ export class MatchBoard {
             <article class="match-post${gold ? " gold" : ""}">
                 <div class="match-post-head">
                     <span class="match-badge">${esc(this.appT(`mode.${post.mode}`))}</span>
+                    ${isMine ? `<span class="match-mine">${esc(this.t("post.mine"))}</span>` : ""}
                     <time>${esc(this.formatTimeAgo(post.createdAt))}</time>
                 </div>
 
@@ -454,8 +556,10 @@ export class MatchBoard {
                 ${post.note ? `<p class="match-note">${esc(post.note)}</p>` : ""}
 
                 <div class="match-actions">
-                    ${safeLink ? `<a class="match-link-btn" href="${esc(safeLink)}" target="_blank" rel="noopener noreferrer nofollow">${esc(this.t("post.openLink"))}</a>` : ""}
-                    <button type="button" class="match-delete-btn" data-delete="${esc(post.id)}">${esc(this.t("post.delete"))}</button>
+                    ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
+                    ${isMine
+                        ? `<button type="button" class="match-delete-btn" data-delete="${esc(post.id)}">${esc(this.t("post.delete"))}</button>`
+                        : `<button type="button" class="match-report-btn" data-report="${esc(post.id)}">${esc(this.t("post.report"))}</button>`}
                 </div>
 
                 <div class="match-comments">
@@ -497,9 +601,15 @@ export class MatchBoard {
 
         this.els.list.addEventListener("click", (event) => {
             const del = event.target.closest("[data-delete]");
+            const report = event.target.closest("[data-report]");
+            const copy = event.target.closest("[data-copy]");
 
             if (del) {
                 this.deletePost(del.dataset.delete);
+            } else if (report) {
+                this.reportPost(report.dataset.report);
+            } else if (copy) {
+                this.copyLink(copy);
             }
         });
 

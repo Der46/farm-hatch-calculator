@@ -899,7 +899,8 @@ body.match-open {
 }
 
 .match-link-btn,
-.match-delete-btn {
+.match-delete-btn,
+.match-report-btn {
     border: 0;
     border-radius: 12px;
     padding: 10px 12px;
@@ -916,9 +917,28 @@ body.match-open {
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
 }
 
+.match-link-btn.copied {
+    background: linear-gradient(180deg, #7aec57, #1aa63b);
+}
+
 .match-delete-btn {
     color: #8a2a1a;
     background: #f5ddd0;
+}
+
+.match-report-btn {
+    color: #7a5a3a;
+    background: #efe6d8;
+}
+
+.match-mine {
+    margin-right: auto;
+    border-radius: 999px;
+    padding: 3px 8px;
+    color: #1a6fd1;
+    font-size: 11px;
+    font-weight: 950;
+    background: #e3f1ff;
 }
 
 .match-comments {
