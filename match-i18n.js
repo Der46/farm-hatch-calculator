@@ -31,6 +31,10 @@ export const MATCH_I18N = {
             all: "全部"
         },
         post: {
+            editTokens: "修改代幣",
+            editTokensPrompt: "請輸入目前的代幣數量：",
+            tokensUpdated: "已更新代幣數量。",
+            edited: "（已修改）",
             reportCommentPrompt: "請輸入舉報這則留言的原因（例如：沒出力、冒充作者）：",
             author: "作者",
             reportCount: "⚠️ 此連結被舉報 {n} 次",
@@ -111,6 +115,10 @@ export const MATCH_I18N = {
             all: "All"
         },
         post: {
+            editTokens: "Edit tokens",
+            editTokensPrompt: "Enter your current token amount:",
+            tokensUpdated: "Token amount updated.",
+            edited: "(edited)",
             reportCommentPrompt: "Enter a reason for reporting this comment (e.g. didn't help, pretending to be the author):",
             author: "Author",
             reportCount: "⚠️ This link has been reported {n} times",
@@ -191,6 +199,10 @@ export const MATCH_I18N = {
             all: "Tất cả"
         },
         post: {
+            editTokens: "Sửa token",
+            editTokensPrompt: "Nhập số token hiện có:",
+            tokensUpdated: "Đã cập nhật số token.",
+            edited: "(đã sửa)",
             reportCommentPrompt: "Nhập lý do báo cáo bình luận này (ví dụ: không giúp, mạo danh tác giả):",
             author: "Tác giả",
             reportCount: "⚠️ Liên kết này đã bị báo cáo {n} lần",
@@ -271,6 +283,10 @@ export const MATCH_I18N = {
             all: "すべて"
         },
         post: {
+            editTokens: "トークンを修正",
+            editTokensPrompt: "現在のトークン数を入力してください：",
+            tokensUpdated: "トークン数を更新しました。",
+            edited: "（修正済み）",
             reportCommentPrompt: "このコメントを通報する理由を入力してください（例：手伝わない、投稿者のなりすまし）：",
             author: "投稿者",
             reportCount: "⚠️ このリンクは {n} 回通報されています",
@@ -351,6 +367,10 @@ export const MATCH_I18N = {
             all: "전체"
         },
         post: {
+            editTokens: "토큰 수정",
+            editTokensPrompt: "현재 토큰 수를 입력하세요:",
+            tokensUpdated: "토큰 수를 업데이트했습니다.",
+            edited: "(수정됨)",
             reportCommentPrompt: "이 댓글을 신고하는 이유를 입력하세요 (예: 도와주지 않음, 작성자 사칭):",
             author: "작성자",
             reportCount: "⚠️ 이 링크는 {n}번 신고되었습니다",
@@ -431,6 +451,10 @@ export const MATCH_I18N = {
             all: "ทั้งหมด"
         },
         post: {
+            editTokens: "แก้ไขโทเคน",
+            editTokensPrompt: "กรอกจำนวนโทเคนปัจจุบัน:",
+            tokensUpdated: "อัปเดตจำนวนโทเคนแล้ว",
+            edited: "(แก้ไขแล้ว)",
             reportCommentPrompt: "กรอกเหตุผลที่รายงานคอมเมนต์นี้ (เช่น ไม่ช่วยจริง แอบอ้างเป็นเจ้าของโพสต์):",
             author: "เจ้าของโพสต์",
             reportCount: "⚠️ ลิงก์นี้ถูกรายงาน {n} ครั้ง",
@@ -511,6 +535,10 @@ export const MATCH_I18N = {
             all: "Semua"
         },
         post: {
+            editTokens: "Ubah token",
+            editTokensPrompt: "Masukkan jumlah token saat ini:",
+            tokensUpdated: "Jumlah token diperbarui.",
+            edited: "(diubah)",
             reportCommentPrompt: "Masukkan alasan melaporkan komentar ini (contoh: tidak membantu, menyamar sebagai penulis):",
             author: "Penulis",
             reportCount: "⚠️ Link ini sudah dilaporkan {n} kali",
@@ -591,6 +619,10 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            editTokens: "Editar tokens",
+            editTokensPrompt: "Escribe tu cantidad actual de tokens:",
+            tokensUpdated: "Cantidad de tokens actualizada.",
+            edited: "(editado)",
             reportCommentPrompt: "Escribe el motivo para denunciar este comentario (ej.: no ayudó, se hace pasar por el autor):",
             author: "Autor",
             reportCount: "⚠️ Este enlace ha sido denunciado {n} veces",
@@ -671,6 +703,10 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            editTokens: "Editar tokens",
+            editTokensPrompt: "Digite sua quantidade atual de tokens:",
+            tokensUpdated: "Quantidade de tokens atualizada.",
+            edited: "(editado)",
             reportCommentPrompt: "Digite o motivo da denúncia deste comentário (ex.: não ajudou, fingiu ser o autor):",
             author: "Autor",
             reportCount: "⚠️ Este link foi denunciado {n} vezes",

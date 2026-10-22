@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023i";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023j";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -267,11 +267,11 @@ export class MatchBoard {
         return json.data;
     }
 
-    errorText(err) {
+    errorText(err, mode = this.els.mode.value) {
         const code = err && err.message ? err.message : "server";
         const detail = (err && err.detail) || {};
         const text = this.t(`error.${code}`, {
-            min: this.formatNumber(MIN_TOKENS[this.els.mode.value] || 0),
+            min: this.formatNumber(MIN_TOKENS[mode] || 0),
             hours: detail.hours || 24,
             minutes: detail.minutes || 1
         });
@@ -531,6 +531,48 @@ export class MatchBoard {
             this.showToast(this.errorText(err), "error");
             this.setBusy(button, false);
             card.classList.remove("busy");
+        }
+    }
+
+    // 發文者修改自己貼文的代幣數量（門檻與發文時相同）
+    async editTokens(postId, button) {
+        const post = this.posts.find((item) => item.id === postId);
+
+        if (!post) {
+            return;
+        }
+
+        const input = prompt(this.t("post.editTokensPrompt"), String(post.tokens));
+
+        if (input === null) {
+            return;
+        }
+
+        const tokens = Number(input.trim());
+
+        if (!input.trim() || !Number.isInteger(tokens) || tokens < 0) {
+            this.showToast(this.t("error.badTokens"), "error");
+            return;
+        }
+
+        if (tokens < (MIN_TOKENS[post.mode] || 0)) {
+            this.showToast(this.errorText(new Error("notEnoughTokens"), post.mode), "error");
+            return;
+        }
+
+        if (tokens === post.tokens) {
+            return;
+        }
+
+        this.setBusy(button, true);
+
+        try {
+            await this.api({ action: "updateTokens", postId, tokens });
+            await this.load();
+            this.showToast(this.t("post.tokensUpdated"));
+        } catch (err) {
+            this.showToast(this.errorText(err, post.mode), "error");
+            this.setBusy(button, false);
         }
     }
 
@@ -812,7 +854,10 @@ export class MatchBoard {
 
                 <h3 class="match-team">${esc(post.team)}</h3>
                 ${reportCount > 0 ? `<div class="match-report-count">${esc(this.t("post.reportCount", { n: reportCount }))}</div>` : ""}
-                <div class="match-tokens">${esc(this.t("post.tokens", { n: this.formatNumber(post.tokens) }))}</div>
+                <div class="match-tokens">
+                    ${esc(this.t("post.tokens", { n: this.formatNumber(post.tokens) }))}
+                    ${post.updatedAt ? `<span class="match-edited">${esc(this.t("post.edited", { time: this.formatTimeAgo(post.updatedAt) }))}</span>` : ""}
+                </div>
                 ${Number.isInteger(post.done) && post.total ? `
                     <div class="match-done-row">
                         <div class="match-done-icons">${this.renderCreatureIcons(post.mode, post.done, false)}</div>
@@ -825,7 +870,8 @@ export class MatchBoard {
                 <div class="match-actions">
                     ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
                     ${isMine
-                        ? `<button type="button" class="match-delete-btn" data-delete="${esc(post.id)}">${esc(this.t("post.delete"))}</button>`
+                        ? `<button type="button" class="match-edit-btn" data-edit-tokens="${esc(post.id)}">${esc(this.t("post.editTokens"))}</button>
+                           <button type="button" class="match-delete-btn" data-delete="${esc(post.id)}">${esc(this.t("post.delete"))}</button>`
                         : `<button type="button" class="match-report-btn" data-report="${esc(post.id)}">${esc(this.t("post.report"))}</button>`}
                 </div>
 
@@ -879,11 +925,14 @@ export class MatchBoard {
 
         this.els.list.addEventListener("click", (event) => {
             const del = event.target.closest("[data-delete]");
+            const editTokens = event.target.closest("[data-edit-tokens]");
             const report = event.target.closest("[data-report]");
             const copy = event.target.closest("[data-copy]");
             const reportComment = event.target.closest("[data-report-comment]");
 
-            if (reportComment) {
+            if (editTokens) {
+                this.editTokens(editTokens.dataset.editTokens, editTokens);
+            } else if (reportComment) {
                 this.reportComment(reportComment.dataset.reportComment, reportComment);
             } else if (del) {
                 this.deletePost(del.dataset.delete, del);

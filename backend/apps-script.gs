@@ -48,7 +48,8 @@ const CREATURE_COUNT = {
 const RATE_LIMITS = {
     create: { device: [3, 3600], global: [60, 600] },
     comment: { device: [5, 60], device2: [30, 3600], global: [200, 600] },
-    report: { device: [10, 3600] }
+    report: { device: [10, 3600] },
+    updateTokens: { device: [10, 3600] }
 };
 
 const LIMITS = {
@@ -80,7 +81,7 @@ const SCREENSHOT_HOSTS = [
 const LINK_IN_TEXT_RE = /(https?:\/\/|www\.|getcoinmaster|~[A-Za-z0-9]{6,}|\b[a-z0-9-]+\.(com|net|org|io|me|ly|gg|tw|cc|co|app|link|xyz|top|info)\b)/i;
 
 // note 為舊版欄位（已改用 done），保留以相容舊資料
-const POST_HEADERS = ["id", "createdAt", "mode", "team", "link", "tokens", "note", "ownerId", "deleted", "done", "screenshot"];
+const POST_HEADERS = ["id", "createdAt", "mode", "team", "link", "tokens", "note", "ownerId", "deleted", "done", "screenshot", "updatedAt"];
 const COMMENT_HEADERS = ["id", "postId", "createdAt", "name", "message", "deleted", "ownerId"];
 const REPORT_HEADERS = ["id", "createdAt", "postId", "team", "link", "postOwnerId", "reason", "reporterId", "handled", "type", "commentId", "commentName", "commentOwnerId"];
 const BAN_HEADERS = ["target", "note", "createdAt"];
@@ -109,6 +110,8 @@ function doPost(e) {
                 return withLock_(() => addComment_(body));
             case "delete":
                 return withLock_(() => deletePost_(body));
+            case "updateTokens":
+                return withLock_(() => updateTokens_(body));
             case "report":
                 return withLock_(() => reportPost_(body));
             case "reportComment":
@@ -510,6 +513,43 @@ function deletePost_(body) {
     };
 }
 
+// 只有發文的裝置能修改自己貼文的代幣數量，規則與發文時相同
+function updateTokens_(body) {
+    const ownerId = ownerIdFrom_(body.ownerKey);
+    const post = findPost_(String(body.postId || ""));
+    const tokens = Number(body.tokens);
+
+    if (!post || isTrue_(post.row.deleted)) {
+        throw userError_("notFound");
+    }
+
+    if (String(post.row.ownerId) !== ownerId) {
+        throw userError_("notOwner");
+    }
+
+    if (!Number.isInteger(tokens) || tokens < 0 || tokens > LIMITS.tokens) {
+        throw userError_("badTokens");
+    }
+
+    if (tokens < (MIN_TOKENS[String(post.row.mode)] || 0)) {
+        throw userError_("notEnoughTokens");
+    }
+
+    rateLimit_("updateTokens", ownerId);
+
+    const now = Date.now();
+
+    post.sheet.getRange(post.rowNumber, POST_HEADERS.indexOf("tokens") + 1).setValue(tokens);
+    post.sheet.getRange(post.rowNumber, POST_HEADERS.indexOf("updatedAt") + 1).setValue(now);
+    clearListCache_();
+
+    return {
+        id: String(post.row.id),
+        tokens: tokens,
+        updatedAt: now
+    };
+}
+
 function reportPost_(body) {
     const reporterId = ownerIdFrom_(body.ownerKey);
     const postId = String(body.postId || "");
@@ -891,6 +931,7 @@ function publicPost_(row) {
         done: row.done === "" || row.done === null ? null : Number(row.done),
         total: CREATURE_COUNT[String(row.mode)] || 0,
         screenshot: isAllowedScreenshot_(screenshot) ? screenshot : "",
+        updatedAt: Number(row.updatedAt) || null,
         ownerId: String(row.ownerId)
     };
 }

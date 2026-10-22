@@ -1064,6 +1064,23 @@ button.match-creature:active {
     background: #f5ddd0;
 }
 
+.match-edit-btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: #1a6fd1;
+    font-size: 14px;
+    font-weight: 950;
+    background: #e3f1ff;
+}
+
+.match-edited {
+    margin-left: 6px;
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 800;
+}
+
 .match-report-btn {
     color: #7a5a3a;
     background: #efe6d8;
