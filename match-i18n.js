@@ -10,7 +10,7 @@ export const MATCH_I18N = {
         refresh: "重新整理",
         listTitle: "徵求列表",
         form: {
-            screenshotHint: "把截圖上傳到 Imgur、ImgBB、Postimages 或 Google 相簿後貼上連結，可以提高大家幫你的意願。",
+            screenshotHint: "建議用 Imgur 上傳，貼上圖片網址（i.imgur.com 開頭）或 Imgur 單張圖片頁面，就會直接顯示在徵求裡；也可用 ImgBB、Postimages 的圖片網址，或設為公開的 Google 雲端硬碟檔案。",
             screenshot: "遊戲畫面截圖連結（選填）",
             doneHint: "已完成 {done} / {total} 隻・點第幾隻就代表完成幾隻，再點一次可取消",
             done: "已完成幾隻（點選）",
@@ -31,6 +31,7 @@ export const MATCH_I18N = {
             all: "全部"
         },
         post: {
+            screenshotAlt: "{name} 的遊戲截圖",
             editTokens: "修改代幣",
             editTokensPrompt: "請輸入目前的代幣數量：",
             tokensUpdated: "已更新代幣數量。",
@@ -94,7 +95,7 @@ export const MATCH_I18N = {
         refresh: "Refresh",
         listTitle: "Requests",
         form: {
-            screenshotHint: "Upload a screenshot to Imgur, ImgBB, Postimages or Google Photos and paste the link. It helps others trust your request.",
+            screenshotHint: "Upload to Imgur and paste the image link (starting with i.imgur.com) or a single-image Imgur page to show it in your request. ImgBB / Postimages direct image links or a public Google Drive file also work.",
             screenshot: "Game screenshot link (optional)",
             doneHint: "{done} / {total} done · tap the Nth one to mark N done, tap again to undo",
             done: "How many are done (tap)",
@@ -115,6 +116,7 @@ export const MATCH_I18N = {
             all: "All"
         },
         post: {
+            screenshotAlt: "Game screenshot from {name}",
             editTokens: "Edit tokens",
             editTokensPrompt: "Enter your current token amount:",
             tokensUpdated: "Token amount updated.",
@@ -178,7 +180,7 @@ export const MATCH_I18N = {
         refresh: "Làm mới",
         listTitle: "Danh sách yêu cầu",
         form: {
-            screenshotHint: "Tải ảnh lên Imgur, ImgBB, Postimages hoặc Google Photos rồi dán liên kết để mọi người tin tưởng hơn.",
+            screenshotHint: "Nên tải lên Imgur rồi dán liên kết ảnh (bắt đầu bằng i.imgur.com) hoặc trang ảnh đơn của Imgur để ảnh hiện trong bài. Cũng dùng được liên kết ảnh trực tiếp của ImgBB, Postimages hoặc tệp Google Drive công khai.",
             screenshot: "Liên kết ảnh chụp màn hình game (không bắt buộc)",
             doneHint: "Đã xong {done} / {total} · chạm con thứ N là xong N con, chạm lại để huỷ",
             done: "Đã hoàn thành mấy con (chạm để chọn)",
@@ -199,6 +201,7 @@ export const MATCH_I18N = {
             all: "Tất cả"
         },
         post: {
+            screenshotAlt: "Ảnh chụp game của {name}",
             editTokens: "Sửa token",
             editTokensPrompt: "Nhập số token hiện có:",
             tokensUpdated: "Đã cập nhật số token.",
@@ -262,7 +265,7 @@ export const MATCH_I18N = {
         refresh: "更新",
         listTitle: "募集一覧",
         form: {
-            screenshotHint: "Imgur・ImgBB・Postimages・Googleフォトにアップロードしてリンクを貼ると、信頼されやすくなります。",
+            screenshotHint: "Imgurにアップロードして画像URL（i.imgur.comで始まる）か1枚だけのImgurページを貼ると、募集に画像が表示されます。ImgBB・Postimagesの画像直リンクや公開設定のGoogleドライブのファイルも使えます。",
             screenshot: "ゲーム画面のスクリーンショットURL（任意）",
             doneHint: "{done} / {total} 体完成・N体目をタップでN体完成、もう一度タップで取り消し",
             done: "完成した数（タップで選択）",
@@ -283,6 +286,7 @@ export const MATCH_I18N = {
             all: "すべて"
         },
         post: {
+            screenshotAlt: "{name} のゲーム画面",
             editTokens: "トークンを修正",
             editTokensPrompt: "現在のトークン数を入力してください：",
             tokensUpdated: "トークン数を更新しました。",
@@ -346,7 +350,7 @@ export const MATCH_I18N = {
         refresh: "새로고침",
         listTitle: "요청 목록",
         form: {
-            screenshotHint: "Imgur, ImgBB, Postimages, Google 포토에 올린 뒤 링크를 붙여 넣으면 더 신뢰를 얻을 수 있습니다.",
+            screenshotHint: "Imgur에 올린 뒤 이미지 주소(i.imgur.com으로 시작) 또는 단일 이미지 Imgur 페이지를 붙여 넣으면 요청에 바로 표시됩니다. ImgBB·Postimages 이미지 직접 링크나 공개된 Google 드라이브 파일도 가능합니다.",
             screenshot: "게임 화면 스크린샷 링크 (선택)",
             doneHint: "{done} / {total} 완료 · N번째를 탭하면 N개 완료, 다시 탭하면 취소",
             done: "완료한 수 (탭하여 선택)",
@@ -367,6 +371,7 @@ export const MATCH_I18N = {
             all: "전체"
         },
         post: {
+            screenshotAlt: "{name}의 게임 스크린샷",
             editTokens: "토큰 수정",
             editTokensPrompt: "현재 토큰 수를 입력하세요:",
             tokensUpdated: "토큰 수를 업데이트했습니다.",
@@ -430,7 +435,7 @@ export const MATCH_I18N = {
         refresh: "รีเฟรช",
         listTitle: "รายการคำขอ",
         form: {
-            screenshotHint: "อัปโหลดภาพไปที่ Imgur, ImgBB, Postimages หรือ Google Photos แล้ววางลิงก์ จะช่วยให้คนอื่นเชื่อถือมากขึ้น",
+            screenshotHint: "แนะนำให้อัปโหลดที่ Imgur แล้ววางลิงก์รูป (ขึ้นต้นด้วย i.imgur.com) หรือหน้ารูปเดี่ยวของ Imgur รูปจะแสดงในโพสต์ทันที ใช้ลิงก์รูปตรงของ ImgBB, Postimages หรือไฟล์ Google Drive ที่เปิดสาธารณะก็ได้",
             screenshot: "ลิงก์ภาพหน้าจอเกม (ไม่บังคับ)",
             doneHint: "สำเร็จ {done} / {total} ตัว · แตะตัวที่ N = สำเร็จ N ตัว แตะซ้ำเพื่อยกเลิก",
             done: "ทำสำเร็จแล้วกี่ตัว (แตะเลือก)",
@@ -451,6 +456,7 @@ export const MATCH_I18N = {
             all: "ทั้งหมด"
         },
         post: {
+            screenshotAlt: "ภาพหน้าจอเกมของ {name}",
             editTokens: "แก้ไขโทเคน",
             editTokensPrompt: "กรอกจำนวนโทเคนปัจจุบัน:",
             tokensUpdated: "อัปเดตจำนวนโทเคนแล้ว",
@@ -514,7 +520,7 @@ export const MATCH_I18N = {
         refresh: "Muat ulang",
         listTitle: "Daftar permintaan",
         form: {
-            screenshotHint: "Unggah screenshot ke Imgur, ImgBB, Postimages atau Google Foto lalu tempel link-nya agar orang lebih percaya.",
+            screenshotHint: "Unggah ke Imgur lalu tempel link gambar (diawali i.imgur.com) atau halaman satu gambar Imgur agar tampil di permintaan. Link gambar langsung ImgBB / Postimages atau file Google Drive publik juga bisa.",
             screenshot: "Link screenshot game (opsional)",
             doneHint: "Selesai {done} / {total} · ketuk yang ke-N untuk N selesai, ketuk lagi untuk batal",
             done: "Sudah selesai berapa (ketuk)",
@@ -535,6 +541,7 @@ export const MATCH_I18N = {
             all: "Semua"
         },
         post: {
+            screenshotAlt: "Screenshot game dari {name}",
             editTokens: "Ubah token",
             editTokensPrompt: "Masukkan jumlah token saat ini:",
             tokensUpdated: "Jumlah token diperbarui.",
@@ -598,7 +605,7 @@ export const MATCH_I18N = {
         refresh: "Actualizar",
         listTitle: "Solicitudes",
         form: {
-            screenshotHint: "Sube una captura a Imgur, ImgBB, Postimages o Google Fotos y pega el enlace; así otros confiarán más en tu solicitud.",
+            screenshotHint: "Sube la imagen a Imgur y pega el enlace de la imagen (empieza por i.imgur.com) o la página de una sola imagen para que se vea en tu solicitud. También sirven enlaces directos de ImgBB / Postimages o un archivo público de Google Drive.",
             screenshot: "Enlace a captura del juego (opcional)",
             doneHint: "{done} / {total} completados · toca el N.º N para marcar N, toca de nuevo para deshacer",
             done: "Cuántos completaste (toca)",
@@ -619,6 +626,7 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            screenshotAlt: "Captura del juego de {name}",
             editTokens: "Editar tokens",
             editTokensPrompt: "Escribe tu cantidad actual de tokens:",
             tokensUpdated: "Cantidad de tokens actualizada.",
@@ -682,7 +690,7 @@ export const MATCH_I18N = {
         refresh: "Atualizar",
         listTitle: "Pedidos",
         form: {
-            screenshotHint: "Envie a captura para Imgur, ImgBB, Postimages ou Google Fotos e cole o link; assim os outros confiam mais no seu pedido.",
+            screenshotHint: "Envie para o Imgur e cole o link da imagem (começando com i.imgur.com) ou a página de uma única imagem para ela aparecer no pedido. Links diretos do ImgBB / Postimages ou um arquivo público do Google Drive também funcionam.",
             screenshot: "Link da captura do jogo (opcional)",
             doneHint: "{done} / {total} concluídos · toque no N.º N para marcar N, toque de novo para desfazer",
             done: "Quantos já concluiu (toque)",
@@ -703,6 +711,7 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            screenshotAlt: "Captura do jogo de {name}",
             editTokens: "Editar tokens",
             editTokensPrompt: "Digite sua quantidade atual de tokens:",
             tokensUpdated: "Quantidade de tokens atualizada.",

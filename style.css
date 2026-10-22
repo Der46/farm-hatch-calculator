@@ -987,6 +987,24 @@ button.match-creature:active {
     font-weight: 950;
 }
 
+.match-screenshot {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 2px solid #f0d9a8;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.match-screenshot img {
+    display: block;
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: contain;
+}
+
 .match-author-badge {
     margin-right: 6px;
     border-radius: 999px;

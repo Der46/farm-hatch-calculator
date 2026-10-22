@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023j";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023k";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -40,6 +40,42 @@ function isAllowedScreenshot(url) {
     const host = match[1].toLowerCase();
 
     return SCREENSHOT_HOSTS.some((allowed) => host === allowed || host.endsWith(`.${allowed}`));
+}
+
+/**
+ * 把截圖連結轉成可以直接顯示的圖片網址；無法轉換時回傳空字串（改顯示連結）。
+ * - 直接圖片網址（i.imgur.com、i.ibb.co、i.postimg.cc 等的 .jpg/.png）原樣使用
+ * - imgur.com/代碼 → i.imgur.com/代碼.jpg（相簿 /a/、/gallery/ 無法直接顯示）
+ * - Google 雲端硬碟分享連結 → 縮圖網址（檔案需設為「知道連結的人都能檢視」）
+ */
+function screenshotImageSrc(url) {
+    const match = String(url).match(/^https:\/\/([^\/?#]+)(\/[^?#]*)?(\?[^#]*)?/i);
+
+    if (!match || !isAllowedScreenshot(url)) {
+        return "";
+    }
+
+    const host = match[1].toLowerCase();
+    const path = match[2] || "";
+    const query = match[3] || "";
+
+    if (/\.(jpe?g|png|gif|webp)$/i.test(path)) {
+        return url;
+    }
+
+    if (/^(www\.)?imgur\.com$/.test(host)) {
+        const id = path.match(/^\/([A-Za-z0-9]{5,10})$/);
+
+        return id ? `https://i.imgur.com/${id[1]}.jpg` : "";
+    }
+
+    if (host === "drive.google.com") {
+        const id = (path.match(/\/file\/d\/([\w-]{10,})/) || query.match(/[?&]id=([\w-]{10,})/) || [])[1];
+
+        return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : "";
+    }
+
+    return "";
 }
 
 // 至少能完成一半才可以上來找人（需與 backend/apps-script.gs 的 MIN_TOKENS 一致）
@@ -824,6 +860,10 @@ export class MatchBoard {
         const comments = Array.isArray(post.comments) ? post.comments : [];
 
         const safeScreenshot = post.screenshot && isAllowedScreenshot(post.screenshot) ? post.screenshot : "";
+        const screenshotSrc = safeScreenshot ? screenshotImageSrc(safeScreenshot) : "";
+        const screenshotLink = safeScreenshot
+            ? `<a class="match-screenshot-link" href="${esc(safeScreenshot)}" target="_blank" rel="noopener noreferrer nofollow"${screenshotSrc ? " hidden" : ""}>${esc(this.t("post.viewScreenshot"))}</a>`
+            : "";
         const reportCount = Number(post.reportCount) || 0;
 
         const commentItems = comments.length
@@ -865,7 +905,12 @@ export class MatchBoard {
                     </div>
                 ` : ""}
 
-                ${safeScreenshot ? `<a class="match-screenshot-link" href="${esc(safeScreenshot)}" target="_blank" rel="noopener noreferrer nofollow">${esc(this.t("post.viewScreenshot"))}</a>` : ""}
+                ${screenshotSrc ? `
+                    <a class="match-screenshot" href="${esc(safeScreenshot)}" target="_blank" rel="noopener noreferrer nofollow" title="${esc(this.t("post.viewScreenshot"))}">
+                        <img src="${esc(screenshotSrc)}" alt="${esc(this.t("post.screenshotAlt", { name: post.team }))}" loading="lazy" referrerpolicy="no-referrer">
+                    </a>
+                ` : ""}
+                ${screenshotLink}
 
                 <div class="match-actions">
                     ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
@@ -942,6 +987,24 @@ export class MatchBoard {
                 this.copyLink(copy);
             }
         });
+
+        // 截圖載入失敗（例如檔案未公開）時改顯示連結；error 事件不會冒泡，所以用捕獲階段
+        this.els.list.addEventListener("error", (event) => {
+            const img = event.target;
+
+            if (img.tagName !== "IMG" || !img.closest(".match-screenshot")) {
+                return;
+            }
+
+            const wrap = img.closest(".match-screenshot");
+            const link = wrap.parentElement.querySelector(".match-screenshot-link");
+
+            wrap.remove();
+
+            if (link) {
+                link.hidden = false;
+            }
+        }, true);
 
         this.els.list.addEventListener("submit", (event) => {
             const form = event.target.closest(".match-comment-form");
