@@ -3,8 +3,8 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261023f";
-import { MatchBoard } from "./match.js?v=20261023f";
+} from "./i18n.js?v=20261023g";
+import { MatchBoard } from "./match.js?v=20261023g";
 
 const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
 
@@ -157,7 +157,10 @@ class Coin999PartnerCalculator {
             getLocale: () => this.getLocale(),
             getMode: () => this.appData.mode,
             appT: (path, params) => this.t(path, params),
-            escapeHtml: (value) => this.escapeHtml(value)
+            escapeHtml: (value) => this.escapeHtml(value),
+            getCreatureSvg: (mode, isGold) => MODES[mode]?.creatureType === "farm"
+                ? this.getPlantSvg(isGold)
+                : this.getLizardSvg(isGold)
         });
 
         this.render();

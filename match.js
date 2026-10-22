@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023f";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023g";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -7,6 +7,14 @@ const PROFILE_KEY = "coin999_match_profile_v1";
 const OWNER_KEY = "coin999_match_owner_v1";
 
 const MODE_ORDER = ["hatch", "farm", "goldHatch", "goldFarm"];
+
+// 每種模式的夥伴隻數（需與 backend/apps-script.gs 的 CREATURE_COUNT 一致）
+const CREATURE_COUNT = {
+    hatch: 4,
+    farm: 4,
+    goldHatch: 2,
+    goldFarm: 2
+};
 
 // 至少能完成一半才可以上來找人（需與 backend/apps-script.gs 的 MIN_TOKENS 一致）
 const MIN_TOKENS = {
@@ -17,17 +25,19 @@ const MIN_TOKENS = {
 };
 
 export class MatchBoard {
-    constructor({ getLang, getLocale, getMode, appT, escapeHtml }) {
+    constructor({ getLang, getLocale, getMode, appT, escapeHtml, getCreatureSvg }) {
         this.getLang = getLang;
         this.getLocale = getLocale;
         this.getMode = getMode;
         this.appT = appT;
         this.escapeHtml = escapeHtml;
+        this.getCreatureSvg = getCreatureSvg;
 
         this.posts = [];
         this.filter = "all";
         this.status = "idle";
         this.submitting = false;
+        this.done = 0;
 
         this.els = {
             openBtn: document.getElementById("matchOpenBtn"),
@@ -39,7 +49,8 @@ export class MatchBoard {
             team: document.getElementById("matchTeam"),
             link: document.getElementById("matchLink"),
             tokens: document.getElementById("matchTokens"),
-            note: document.getElementById("matchNote"),
+            donePicker: document.getElementById("matchDonePicker"),
+            doneHint: document.getElementById("matchDoneHint"),
             rule: document.getElementById("matchRule"),
             formMsg: document.getElementById("matchFormMsg"),
             submit: document.getElementById("matchSubmit"),
@@ -143,6 +154,7 @@ export class MatchBoard {
     open() {
         this.els.mode.value = this.getMode();
         this.updateRule();
+        this.renderDonePicker();
         this.els.page.classList.add("open");
         document.body.classList.add("match-open");
         this.load();
@@ -234,6 +246,40 @@ export class MatchBoard {
             : this.t("form.ruleNone");
     }
 
+    getTotal(mode) {
+        return CREATURE_COUNT[mode] || 0;
+    }
+
+    // 已完成隻數的小圖示列：完成的彩色、未完成的灰色
+    renderCreatureIcons(mode, done, interactive) {
+        const isGold = String(mode).startsWith("gold");
+        const svg = this.getCreatureSvg(mode, isGold);
+
+        return Array.from({ length: this.getTotal(mode) }, (_, index) => {
+            const n = index + 1;
+            const state = n <= done ? "done" : "todo";
+
+            return interactive
+                ? `<button type="button" class="match-creature ${state}" data-done="${n}" aria-pressed="${n <= done}" aria-label="${n}">${svg}</button>`
+                : `<span class="match-creature ${state}">${svg}</span>`;
+        }).join("");
+    }
+
+    renderDonePicker() {
+        const mode = this.els.mode.value;
+        const total = this.getTotal(mode);
+
+        this.done = Math.min(this.done, total);
+        this.els.donePicker.innerHTML = this.renderCreatureIcons(mode, this.done, true);
+        this.els.doneHint.textContent = this.t("form.doneHint", { done: this.done, total });
+    }
+
+    // 點第 n 隻 = 完成 n 隻；再點同一隻則取消這一隻
+    setDone(n) {
+        this.done = this.done === n ? n - 1 : n;
+        this.renderDonePicker();
+    }
+
     setFormMessage(text, type = "") {
         this.els.formMsg.textContent = text;
         this.els.formMsg.className = `match-form-msg ${type}`.trim();
@@ -245,6 +291,7 @@ export class MatchBoard {
         const link = this.els.link.value.trim();
         const tokensText = this.els.tokens.value.trim();
         const tokens = Number(tokensText);
+
         if (!team) {
             return "badTeam";
         }
@@ -300,7 +347,7 @@ export class MatchBoard {
                 team: this.els.team.value.trim(),
                 link: this.els.link.value.trim(),
                 tokens: Number(this.els.tokens.value),
-                note: this.els.note.value.trim()
+                done: this.done
             });
 
             this.saveProfile({
@@ -308,7 +355,6 @@ export class MatchBoard {
                 link: this.els.link.value.trim()
             });
 
-            this.els.note.value = "";
             this.setFormMessage(this.t("form.success"), "success");
             this.filter = "all";
             await this.load();
@@ -471,6 +517,7 @@ export class MatchBoard {
         }
 
         this.updateRule();
+        this.renderDonePicker();
         this.render();
     }
 
@@ -553,7 +600,12 @@ export class MatchBoard {
 
                 <h3 class="match-team">${esc(post.team)}</h3>
                 <div class="match-tokens">${esc(this.t("post.tokens", { n: this.formatNumber(post.tokens) }))}</div>
-                ${post.note ? `<p class="match-note">${esc(post.note)}</p>` : ""}
+                ${Number.isInteger(post.done) && post.total ? `
+                    <div class="match-done-row">
+                        <div class="match-done-icons">${this.renderCreatureIcons(post.mode, post.done, false)}</div>
+                        <span class="match-done-text">${esc(this.t("post.done", { done: post.done, total: post.total }))}</span>
+                    </div>
+                ` : ""}
 
                 <div class="match-actions">
                     ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
@@ -583,7 +635,18 @@ export class MatchBoard {
         this.els.openBtn.addEventListener("click", () => this.open());
         this.els.backBtn.addEventListener("click", () => this.close());
         this.els.refresh.addEventListener("click", () => this.load());
-        this.els.mode.addEventListener("change", () => this.updateRule());
+        this.els.mode.addEventListener("change", () => {
+            this.updateRule();
+            this.renderDonePicker();
+        });
+
+        this.els.donePicker.addEventListener("click", (event) => {
+            const item = event.target.closest("[data-done]");
+
+            if (item) {
+                this.setDone(Number(item.dataset.done));
+            }
+        });
 
         this.els.form.addEventListener("submit", (event) => {
             event.preventDefault();

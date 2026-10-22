@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coin999 夥伴計算機</title>
 
-    <link rel="stylesheet" href="./style.css?v=20261023f">
+    <link rel="stylesheet" href="./style.css?v=20261023g">
 </head>
 
 <body>
@@ -194,8 +194,8 @@
                     </div>
 
                     <div class="field">
-                        <label for="matchTeam" data-match-i18n="form.team">隊伍名稱</label>
-                        <input id="matchTeam" type="text" maxlength="30" autocomplete="off" data-match-i18n-placeholder="form.teamPlaceholder">
+                        <label for="matchTeam" data-match-i18n="form.team">暱稱</label>
+                        <input id="matchTeam" type="text" maxlength="20" autocomplete="off" data-match-i18n-placeholder="form.teamPlaceholder">
                     </div>
 
                     <div class="field">
@@ -209,8 +209,9 @@
                     </div>
 
                     <div class="field">
-                        <label for="matchNote" data-match-i18n="form.note">備註（選填）</label>
-                        <textarea id="matchNote" class="match-input" rows="2" maxlength="200" data-match-i18n-placeholder="form.notePlaceholder"></textarea>
+                        <span class="match-field-label" data-match-i18n="form.done">已完成幾隻</span>
+                        <div class="match-done-picker" id="matchDonePicker" role="group"></div>
+                        <p class="match-done-hint" id="matchDoneHint"></p>
                     </div>
 
                     <p class="match-rule" id="matchRule"></p>
@@ -233,7 +234,7 @@
         </div>
     </section>
 
-    <script type="module" src="./app.js?v=20261023f"></script>
+    <script type="module" src="./app.js?v=20261023g"></script>
 </body>
 
 </html>

@@ -26,17 +26,25 @@ const MIN_TOKENS = {
     goldFarm: 0
 };
 
+// 每種模式的夥伴隻數（發文時點選已完成幾隻）
+const CREATURE_COUNT = {
+    hatch: 4,
+    farm: 4,
+    goldHatch: 2,
+    goldFarm: 2
+};
+
 const LIMITS = {
     team: 30,
     link: 300,
-    note: 200,
     name: 20,
     message: 200,
     reason: 200,
     tokens: 100000000
 };
 
-const POST_HEADERS = ["id", "createdAt", "mode", "team", "link", "tokens", "note", "ownerId", "deleted"];
+// note 為舊版欄位（已改用 done），保留以相容舊資料
+const POST_HEADERS = ["id", "createdAt", "mode", "team", "link", "tokens", "note", "ownerId", "deleted", "done"];
 const COMMENT_HEADERS = ["id", "postId", "createdAt", "name", "message", "deleted", "ownerId"];
 const REPORT_HEADERS = ["id", "createdAt", "postId", "team", "link", "postOwnerId", "reason", "reporterId", "handled"];
 const BAN_HEADERS = ["target", "note", "createdAt"];
@@ -125,7 +133,7 @@ function banSelectedRows() {
     rows.forEach((row) => {
         [row.link, row.ownerId, row.postOwnerId].forEach((value) => {
             if (value) {
-                targets.add(String(value));
+                targets.add(normalizeLink_(value));
             }
         });
 
@@ -161,7 +169,7 @@ function banSelectedRows() {
 
         readRows_(postsSheet, POST_HEADERS).forEach((row, index) => {
             const matches = postIds.has(String(row.id))
-                || targets.has(String(row.link))
+                || targets.has(normalizeLink_(row.link))
                 || targets.has(String(row.ownerId));
 
             if (matches && !isTrue_(row.deleted)) {
@@ -186,7 +194,7 @@ function listPosts_() {
         .filter((row) => {
             return !isTrue_(row.deleted)
                 && Number(row.createdAt) >= since
-                && !bans.has(String(row.link))
+                && !bans.has(normalizeLink_(row.link))
                 && !bans.has(String(row.ownerId));
         })
         .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
@@ -234,8 +242,8 @@ function createPost_(body) {
     const ownerId = ownerIdFrom_(body.ownerKey);
     const team = cleanText_(body.team, LIMITS.team);
     const link = cleanText_(body.link, LIMITS.link);
-    const note = cleanText_(body.note, LIMITS.note);
     const tokens = Number(body.tokens);
+    const done = Number(body.done);
 
     if (!team) {
         throw userError_("badTeam");
@@ -253,20 +261,25 @@ function createPost_(body) {
         throw userError_("notEnoughTokens");
     }
 
+    if (!Number.isInteger(done) || done < 0 || done > CREATURE_COUNT[mode]) {
+        throw userError_("badDone");
+    }
+
+    const linkKey = normalizeLink_(link);
     const bans = getBanSet_();
 
-    if (bans.has(link) || bans.has(ownerId)) {
+    if (bans.has(linkKey) || bans.has(ownerId)) {
         throw userError_("banned");
     }
 
     const sheet = getSheet_(SHEET_POSTS, POST_HEADERS);
     const since = Date.now() - POST_TTL_DAYS * 24 * 60 * 60 * 1000;
 
+    // 一個交友連結同時只能有一篇徵求（不分模式），避免用無痕視窗重複發文
     const duplicate = readRows_(sheet, POST_HEADERS).some((row) => {
         return !isTrue_(row.deleted)
             && Number(row.createdAt) >= since
-            && String(row.mode) === mode
-            && String(row.link) === link;
+            && normalizeLink_(row.link) === linkKey;
     });
 
     if (duplicate) {
@@ -282,9 +295,10 @@ function createPost_(body) {
         sheetSafe_(team),
         sheetSafe_(link),
         tokens,
-        sheetSafe_(note),
+        "",
         ownerId,
-        false
+        false,
+        done
     ]);
 
     return {
@@ -486,9 +500,31 @@ function readRows_(sheet, headers) {
 function getBanSet_() {
     return new Set(
         readRows_(getSheet_(SHEET_BANS, BAN_HEADERS), BAN_HEADERS)
-            .map((row) => String(row.target).trim())
+            .map((row) => normalizeLink_(row.target))
             .filter(Boolean)
     );
+}
+
+/**
+ * 交友連結比對用的正規化：網域小寫、去掉 # 與結尾斜線。
+ * Coin Master 的 getcoinmaster.com/~代碼 連結只看代碼，忽略 ?u=c 這類參數，
+ * 避免加參數繞過「一個連結一篇」與封鎖。非網址（例如作者ID）原樣回傳。
+ */
+function normalizeLink_(value) {
+    const text = String(value === undefined || value === null ? "" : value).trim();
+    const match = text.match(/^https?:\/\/([^\/?#]+)([^?#]*)(\?[^#]*)?/i);
+
+    if (!match) {
+        return text;
+    }
+
+    const host = match[1].toLowerCase().replace(/^www\./, "");
+    const path = match[2].replace(/\/+$/, "");
+    const query = /(^|\.)getcoinmaster\.com$/.test(host) && path.indexOf("/~") === 0
+        ? ""
+        : (match[3] || "");
+
+    return "https://" + host + path + query;
 }
 
 function findPost_(postId) {
@@ -517,7 +553,8 @@ function publicPost_(row) {
         team: String(row.team),
         link: String(row.link),
         tokens: Number(row.tokens),
-        note: String(row.note),
+        done: row.done === "" || row.done === null ? null : Number(row.done),
+        total: CREATURE_COUNT[String(row.mode)] || 0,
         ownerId: String(row.ownerId)
     };
 }
