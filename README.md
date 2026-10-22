@@ -78,6 +78,7 @@ python -m http.server 8000
 ├── style.css    # 版面與樣式
 ├── app.js       # 主程式：資料、計算、渲染、SVG 角色、localStorage
 ├── i18n.js      # 多國語言文字與語言設定
+├── assets/      # 1024×1024 圖示、網站分頁圖示與手機主畫面圖示
 ├── match.js     # 媒合平台前端（發文、列表、留言、舉報、刪除）
 ├── match-i18n.js  # 媒合平台多國語言文字
 └── backend/

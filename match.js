@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023n";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023p";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby-6b5hjaPsLo3fpQvS8WXw8oKQZGTBzHH-f4FJtWsyAv7igaGtKDQtZ20nVoOKhPpthQ/exec";
@@ -925,6 +925,26 @@ export class MatchBoard {
 
         this.els.team.value = profile.team || "";
         this.els.link.value = profile.link || "";
+    }
+
+    // 「重置所有設定」時一併清除記住的暱稱、交友連結與留言暱稱
+    // （裝置身分金鑰保留，否則會無法刪除自己已發的貼文）
+    resetProfile() {
+        try {
+            localStorage.removeItem(PROFILE_KEY);
+        } catch {
+            // 無法存取 localStorage 時略過
+        }
+
+        this.els.team.value = "";
+        this.els.link.value = "";
+        this.setFormScreenshot("");
+        this.setUploadStatus("");
+        this.setFormMessage("");
+
+        this.els.list.querySelectorAll(".match-comment-form [name=name]").forEach((input) => {
+            input.value = "";
+        });
     }
 
     /* ---------- render ---------- */
