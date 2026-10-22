@@ -15,48 +15,39 @@ export const SUPPORTED_LANGS = [
 export const LANGUAGE_META = {
     "zh-Hant": {
         label: "繁體中文",
-        locale: "zh-Hant-TW",
-        timezoneText: "UTC+08:00"
+        locale: "zh-Hant-TW"
     },
     en: {
         label: "English",
-        locale: "en-US",
-        timezoneText: "UTC+00:00"
+        locale: "en-US"
     },
     vi: {
         label: "Tiếng Việt",
-        locale: "vi-VN",
-        timezoneText: "UTC+07:00"
+        locale: "vi-VN"
     },
     ja: {
         label: "日本語",
-        locale: "ja-JP",
-        timezoneText: "UTC+09:00"
+        locale: "ja-JP"
     },
     ko: {
         label: "한국어",
-        locale: "ko-KR",
-        timezoneText: "UTC+09:00"
+        locale: "ko-KR"
     },
     th: {
         label: "ไทย",
-        locale: "th-TH",
-        timezoneText: "UTC+07:00"
+        locale: "th-TH"
     },
     id: {
         label: "Indonesia",
-        locale: "id-ID",
-        timezoneText: "UTC+07:00"
+        locale: "id-ID"
     },
     es: {
         label: "Español",
-        locale: "es-ES",
-        timezoneText: "UTC-05:00"
+        locale: "es-ES"
     },
     "pt-BR": {
         label: "Português BR",
-        locale: "pt-BR",
-        timezoneText: "UTC-03:00"
+        locale: "pt-BR"
     }
 };
 
@@ -69,10 +60,6 @@ export const I18N = {
         },
         settings: {
             title: "關卡設定",
-            saveLocal: "資料保存在本機",
-            saved: "已自動儲存",
-            clearedAndReset: "已清除並重設",
-            timezone: "語言時區：{timezone}"
         },
         mode: {
             hatch: "🥚 孵化",
@@ -103,7 +90,7 @@ export const I18N = {
             progress: "完成進度"
         },
         button: {
-            clearAll: "清除全部本機資料",
+            clearAll: "重置所有設定",
             back: "返回"
         },
         person: {
@@ -127,7 +114,7 @@ export const I18N = {
         message: {
             needLine: "還需 {score} 分才能完成",
             completedCanUpgrade: "已完成，可以升等",
-            clearConfirm: "確定要清除全部本機資料嗎？此操作無法復原。"
+            clearConfirm: "確定要重置所有設定嗎？此操作無法復原。"
         },
         progressBar: {
             normalTitle: "藍色：自己，綠色：隊友",
@@ -146,10 +133,6 @@ export const I18N = {
         },
         settings: {
             title: "Stage Settings",
-            saveLocal: "Data is saved locally",
-            saved: "Auto-saved",
-            clearedAndReset: "Cleared and reset",
-            timezone: "Language timezone: {timezone}"
         },
         mode: {
             hatch: "🥚 Hatch",
@@ -180,7 +163,7 @@ export const I18N = {
             progress: "Progress"
         },
         button: {
-            clearAll: "Clear all local data",
+            clearAll: "Reset all settings",
             back: "Back"
         },
         person: {
@@ -204,7 +187,7 @@ export const I18N = {
         message: {
             needLine: "{score} points remaining",
             completedCanUpgrade: "Completed. Ready to upgrade",
-            clearConfirm: "Clear all local data? This action cannot be undone."
+            clearConfirm: "Reset all settings? This action cannot be undone."
         },
         progressBar: {
             normalTitle: "Blue: Me, Green: Partner",
@@ -223,10 +206,6 @@ export const I18N = {
         },
         settings: {
             title: "Cài đặt ải",
-            saveLocal: "Dữ liệu được lưu trên thiết bị",
-            saved: "Đã tự động lưu",
-            clearedAndReset: "Đã xoá và đặt lại",
-            timezone: "Múi giờ ngôn ngữ: {timezone}"
         },
         mode: {
             hatch: "🥚 Ấp trứng",
@@ -257,7 +236,7 @@ export const I18N = {
             progress: "Tiến độ hoàn thành"
         },
         button: {
-            clearAll: "Xoá toàn bộ dữ liệu trên thiết bị",
+            clearAll: "Đặt lại tất cả cài đặt",
             back: "Quay lại"
         },
         person: {
@@ -281,7 +260,7 @@ export const I18N = {
         message: {
             needLine: "Còn thiếu {score} điểm để hoàn thành",
             completedCanUpgrade: "Đã hoàn thành, có thể nâng cấp",
-            clearConfirm: "Bạn có chắc muốn xoá toàn bộ dữ liệu trên thiết bị không? Thao tác này không thể khôi phục."
+            clearConfirm: "Bạn có chắc muốn đặt lại tất cả cài đặt không? Thao tác này không thể khôi phục."
         },
         progressBar: {
             normalTitle: "Xanh dương: Tôi, Xanh lá: Đồng đội",
@@ -300,10 +279,6 @@ export const I18N = {
         },
         settings: {
             title: "ステージ設定",
-            saveLocal: "データは端末に保存されます",
-            saved: "自動保存しました",
-            clearedAndReset: "削除してリセットしました",
-            timezone: "言語タイムゾーン：{timezone}"
         },
         mode: {
             hatch: "🥚 孵化",
@@ -334,7 +309,7 @@ export const I18N = {
             progress: "達成率"
         },
         button: {
-            clearAll: "すべてのローカルデータを削除",
+            clearAll: "すべての設定をリセット",
             back: "戻る"
         },
         person: {
@@ -358,7 +333,7 @@ export const I18N = {
         message: {
             needLine: "完成まであと {score} 点",
             completedCanUpgrade: "完成しました。アップグレードできます",
-            clearConfirm: "すべてのローカルデータを削除しますか？この操作は元に戻せません。"
+            clearConfirm: "すべての設定をリセットしますか？この操作は元に戻せません。"
         },
         progressBar: {
             normalTitle: "青：自分、緑：仲間",
@@ -377,10 +352,6 @@ export const I18N = {
         },
         settings: {
             title: "스테이지 설정",
-            saveLocal: "데이터는 기기에 저장됩니다",
-            saved: "자동 저장됨",
-            clearedAndReset: "삭제 및 초기화 완료",
-            timezone: "언어 시간대: {timezone}"
         },
         mode: {
             hatch: "🥚 부화",
@@ -411,7 +382,7 @@ export const I18N = {
             progress: "진행률"
         },
         button: {
-            clearAll: "모든 로컬 데이터 삭제",
+            clearAll: "모든 설정 초기화",
             back: "뒤로"
         },
         person: {
@@ -435,7 +406,7 @@ export const I18N = {
         message: {
             needLine: "완성까지 {score}점 남음",
             completedCanUpgrade: "완료되었습니다. 업그레이드 가능",
-            clearConfirm: "모든 로컬 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+            clearConfirm: "모든 설정을 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다."
         },
         progressBar: {
             normalTitle: "파란색: 나, 초록색: 팀원",
@@ -454,10 +425,6 @@ export const I18N = {
         },
         settings: {
             title: "ตั้งค่าด่าน",
-            saveLocal: "ข้อมูลถูกบันทึกในเครื่อง",
-            saved: "บันทึกอัตโนมัติแล้ว",
-            clearedAndReset: "ล้างและรีเซ็ตแล้ว",
-            timezone: "เขตเวลาของภาษา: {timezone}"
         },
         mode: {
             hatch: "🥚 ฟักไข่",
@@ -488,7 +455,7 @@ export const I18N = {
             progress: "ความคืบหน้า"
         },
         button: {
-            clearAll: "ล้างข้อมูลในเครื่องทั้งหมด",
+            clearAll: "รีเซ็ตการตั้งค่าทั้งหมด",
             back: "กลับ"
         },
         person: {
@@ -512,7 +479,7 @@ export const I18N = {
         message: {
             needLine: "ต้องการอีก {score} คะแนนเพื่อสำเร็จ",
             completedCanUpgrade: "สำเร็จแล้ว สามารถอัปเกรดได้",
-            clearConfirm: "ต้องการล้างข้อมูลในเครื่องทั้งหมดหรือไม่? ไม่สามารถย้อนกลับได้"
+            clearConfirm: "ต้องการรีเซ็ตการตั้งค่าทั้งหมดหรือไม่? ไม่สามารถย้อนกลับได้"
         },
         progressBar: {
             normalTitle: "สีน้ำเงิน: ฉัน, สีเขียว: เพื่อนร่วมทีม",
@@ -531,10 +498,6 @@ export const I18N = {
         },
         settings: {
             title: "Pengaturan Level",
-            saveLocal: "Data disimpan di perangkat",
-            saved: "Tersimpan otomatis",
-            clearedAndReset: "Dihapus dan direset",
-            timezone: "Zona waktu bahasa: {timezone}"
         },
         mode: {
             hatch: "🥚 Menetas",
@@ -565,7 +528,7 @@ export const I18N = {
             progress: "Progres"
         },
         button: {
-            clearAll: "Hapus semua data lokal",
+            clearAll: "Reset semua pengaturan",
             back: "Kembali"
         },
         person: {
@@ -589,7 +552,7 @@ export const I18N = {
         message: {
             needLine: "Masih perlu {score} poin untuk selesai",
             completedCanUpgrade: "Selesai. Siap untuk naik level",
-            clearConfirm: "Hapus semua data lokal? Tindakan ini tidak dapat dibatalkan."
+            clearConfirm: "Reset semua pengaturan? Tindakan ini tidak dapat dibatalkan."
         },
         progressBar: {
             normalTitle: "Biru: Saya, Hijau: Partner",
@@ -608,10 +571,6 @@ export const I18N = {
         },
         settings: {
             title: "Configuración de etapa",
-            saveLocal: "Los datos se guardan localmente",
-            saved: "Guardado automático",
-            clearedAndReset: "Borrado y reiniciado",
-            timezone: "Zona horaria del idioma: {timezone}"
         },
         mode: {
             hatch: "🥚 Incubar",
@@ -642,7 +601,7 @@ export const I18N = {
             progress: "Progreso"
         },
         button: {
-            clearAll: "Borrar todos los datos locales",
+            clearAll: "Restablecer toda la configuración",
             back: "Volver"
         },
         person: {
@@ -666,7 +625,7 @@ export const I18N = {
         message: {
             needLine: "Faltan {score} puntos para completar",
             completedCanUpgrade: "Completado. Listo para mejorar",
-            clearConfirm: "¿Borrar todos los datos locales? Esta acción no se puede deshacer."
+            clearConfirm: "¿Restablecer toda la configuración? Esta acción no se puede deshacer."
         },
         progressBar: {
             normalTitle: "Azul: Yo, Verde: Socio",
@@ -685,10 +644,6 @@ export const I18N = {
         },
         settings: {
             title: "Configurações da fase",
-            saveLocal: "Os dados são salvos localmente",
-            saved: "Salvo automaticamente",
-            clearedAndReset: "Apagado e redefinido",
-            timezone: "Fuso horário do idioma: {timezone}"
         },
         mode: {
             hatch: "🥚 Chocar",
@@ -719,7 +674,7 @@ export const I18N = {
             progress: "Progresso"
         },
         button: {
-            clearAll: "Apagar todos os dados locais",
+            clearAll: "Redefinir todas as configurações",
             back: "Voltar"
         },
         person: {
@@ -743,7 +698,7 @@ export const I18N = {
         message: {
             needLine: "Faltam {score} pontos para completar",
             completedCanUpgrade: "Concluído. Pronto para melhorar",
-            clearConfirm: "Apagar todos os dados locais? Esta ação não pode ser desfeita."
+            clearConfirm: "Redefinir todas as configurações? Esta ação não pode ser desfeita."
         },
         progressBar: {
             normalTitle: "Azul: Eu, Verde: Parceiro",

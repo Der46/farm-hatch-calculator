@@ -3,7 +3,7 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261022b";
+} from "./i18n.js?v=20261023c";
 
 const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
 
@@ -104,10 +104,8 @@ class Coin999PartnerCalculator {
     getElements() {
         return {
             languageSelect: document.getElementById("languageSelect"),
-            timezoneLine: document.getElementById("timezoneLine"),
 
             pageTitle: document.getElementById("pageTitle"),
-            saveStatus: document.getElementById("saveStatus"),
             modeButtons: document.querySelectorAll(".mode-btn"),
 
             hatchTarget: document.getElementById("hatchTarget"),
@@ -194,10 +192,6 @@ class Coin999PartnerCalculator {
         return LANGUAGE_META[this.getLang()]?.locale || "zh-Hant-TW";
     }
 
-    getTimezoneText() {
-        return LANGUAGE_META[this.getLang()]?.timezoneText || "UTC+08:00";
-    }
-
     formatNumber(num) {
         return Math.ceil(this.numberValue(num, 0)).toLocaleString(this.getLocale());
     }
@@ -267,14 +261,6 @@ class Coin999PartnerCalculator {
                 year
             });
         });
-
-        this.els.timezoneLine.textContent = this.t("settings.timezone", {
-            timezone: this.getTimezoneText()
-        });
-
-        if (!this.saveTimer) {
-            this.els.saveStatus.textContent = this.t("settings.saveLocal");
-        }
     }
 
     setLanguage(lang) {
@@ -352,7 +338,6 @@ class Coin999PartnerCalculator {
         this.saveTimer = setTimeout(() => {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(this.appData));
             this.saveTimer = null;
-            this.showSaved();
         }, 250);
     }
 
@@ -361,17 +346,6 @@ class Coin999PartnerCalculator {
         this.saveTimer = null;
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.appData));
-        this.showSaved();
-    }
-
-    showSaved() {
-        this.els.saveStatus.textContent = this.t("settings.saved");
-
-        clearTimeout(this.showSavedTimer);
-
-        this.showSavedTimer = setTimeout(() => {
-            this.els.saveStatus.textContent = this.t("settings.saveLocal");
-        }, 900);
     }
 
     getModeConfig() {
@@ -862,13 +836,6 @@ class Coin999PartnerCalculator {
         this.render();
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.appData));
-        this.els.saveStatus.textContent = this.t("settings.clearedAndReset");
-
-        clearTimeout(this.showSavedTimer);
-
-        this.showSavedTimer = setTimeout(() => {
-            this.els.saveStatus.textContent = this.t("settings.saveLocal");
-        }, 1200);
     }
 
     bindEvents() {
