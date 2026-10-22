@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023l";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023m";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -78,6 +78,89 @@ function screenshotImageSrc(url) {
     return "";
 }
 
+// 上傳前先在瀏覽器壓縮：最長邊 1280px、JPEG，避免上傳太久或超過後端上限
+const MAX_IMAGE_FILE_BYTES = 15 * 1024 * 1024;
+const MAX_IMAGE_EDGE = 1280;
+const MAX_UPLOAD_BASE64_LENGTH = 3 * 1024 * 1024;
+
+function codeError(code) {
+    return new Error(code);
+}
+
+async function decodeImage(file) {
+    if (window.createImageBitmap) {
+        try {
+            return await createImageBitmap(file);
+        } catch {
+            // 部分格式（例如 iPhone 的 HEIC）改用 <img> 解碼
+        }
+    }
+
+    const url = URL.createObjectURL(file);
+
+    try {
+        const img = new Image();
+
+        img.src = url;
+        await img.decode();
+        return img;
+    } finally {
+        URL.revokeObjectURL(url);
+    }
+}
+
+async function compressImage(file) {
+    if (!file || !/^image\//.test(file.type)) {
+        throw codeError("notImage");
+    }
+
+    if (file.size > MAX_IMAGE_FILE_BYTES) {
+        throw codeError("imageTooLarge");
+    }
+
+    let source;
+
+    try {
+        source = await decodeImage(file);
+    } catch {
+        throw codeError("notImage");
+    }
+
+    const width = source.width;
+    const height = source.height;
+    const scale = Math.min(1, MAX_IMAGE_EDGE / Math.max(width, height));
+    const canvas = document.createElement("canvas");
+
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+
+    const ctx = canvas.getContext("2d");
+
+    // JPEG 沒有透明度，先鋪白底
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
+
+    for (const quality of [0.85, 0.7, 0.55]) {
+        const base64 = canvas.toDataURL("image/jpeg", quality).split(",")[1];
+
+        if (base64.length <= MAX_UPLOAD_BASE64_LENGTH) {
+            return base64;
+        }
+    }
+
+    throw codeError("imageTooLarge");
+}
+
+function imageFromTransfer(dataTransfer) {
+    const files = Array.from((dataTransfer && dataTransfer.files) || []);
+    const items = Array.from((dataTransfer && dataTransfer.items) || []);
+
+    return files.find((file) => /^image\//.test(file.type))
+        || items.filter((item) => item.kind === "file" && /^image\//.test(item.type)).map((item) => item.getAsFile())[0]
+        || null;
+}
+
 // 至少能完成一半才可以上來找人（需與 backend/apps-script.gs 的 MIN_TOKENS 一致）
 const MIN_TOKENS = {
     hatch: 14500,
@@ -113,6 +196,16 @@ export class MatchBoard {
             team: document.getElementById("matchTeam"),
             link: document.getElementById("matchLink"),
             screenshot: document.getElementById("matchScreenshot"),
+            upload: document.getElementById("matchUpload"),
+            uploadEmpty: document.getElementById("matchUploadEmpty"),
+            uploadPick: document.getElementById("matchUploadPick"),
+            uploadFile: document.getElementById("matchUploadFile"),
+            uploadPreview: document.getElementById("matchUploadPreview"),
+            uploadImg: document.getElementById("matchUploadImg"),
+            uploadLinked: document.getElementById("matchUploadLinked"),
+            uploadRemove: document.getElementById("matchUploadRemove"),
+            uploadStatus: document.getElementById("matchUploadStatus"),
+            editFile: document.getElementById("matchEditFile"),
             tokens: document.getElementById("matchTokens"),
             donePicker: document.getElementById("matchDonePicker"),
             doneHint: document.getElementById("matchDoneHint"),
@@ -463,6 +556,11 @@ export class MatchBoard {
             return;
         }
 
+        if (this.uploading) {
+            this.setFormMessage(this.t("form.waitUpload"), "error");
+            return;
+        }
+
         const invalid = this.validateForm();
 
         if (invalid) {
@@ -499,6 +597,7 @@ export class MatchBoard {
                 link: this.els.link.value.trim()
             });
 
+            this.setFormScreenshot("");
             this.filter = "all";
             await this.load();
             this.setFormMessage(this.t("form.success"), "success");
@@ -612,41 +711,101 @@ export class MatchBoard {
         }
     }
 
-    // 發文者新增、更換或移除自己貼文的截圖（輸入框留空代表移除）
-    async editScreenshot(postId, button) {
+    /* ---------- 截圖上傳（壓縮後經後端存到 Google 雲端硬碟） ---------- */
+
+    async uploadImageFile(file) {
+        const image = await compressImage(file);
+        const data = await this.api({ action: "uploadImage", image });
+
+        return data.url;
+    }
+
+    // 發文表單：拖曳、選擇或貼上圖片
+    async handleFormImage(file) {
+        if (!file || this.uploading || this.submitting) {
+            return;
+        }
+
+        this.uploading = true;
+        this.els.upload.classList.add("uploading");
+        this.setUploadStatus(this.t("form.uploading"), "busy");
+
+        try {
+            this.setFormScreenshot(await this.uploadImageFile(file));
+            this.setUploadStatus("");
+        } catch (err) {
+            this.setUploadStatus(this.errorText(err), "error");
+        } finally {
+            this.uploading = false;
+            this.els.upload.classList.remove("uploading");
+        }
+    }
+
+    setUploadStatus(text, type = "") {
+        this.els.uploadStatus.textContent = text;
+        this.els.uploadStatus.className = `match-upload-status ${type}`.trim();
+    }
+
+    setFormScreenshot(url) {
+        this.els.screenshot.value = url;
+        this.renderUploadPreview();
+    }
+
+    renderUploadPreview() {
+        const url = this.els.screenshot.value.trim();
+        const valid = url && isAllowedScreenshot(url);
+        const src = valid ? screenshotImageSrc(url) : "";
+
+        this.els.uploadEmpty.hidden = Boolean(valid);
+        this.els.uploadPreview.hidden = !valid;
+        this.els.uploadImg.hidden = !src;
+        this.els.uploadLinked.hidden = Boolean(src);
+
+        if (src) {
+            this.els.uploadImg.src = src;
+        } else {
+            this.els.uploadImg.removeAttribute("src");
+            this.els.uploadLinked.textContent = valid ? this.t("form.uploadLinked") : "";
+        }
+    }
+
+    // 自己的貼文：選擇或拖曳圖片後上傳並更新截圖
+    async editScreenshotWithFile(postId, button, file) {
         const post = this.posts.find((item) => item.id === postId);
 
-        if (!post) {
+        if (!post || !file) {
             return;
         }
 
-        const input = prompt(this.t("post.screenshotPrompt"), post.screenshot || "");
+        this.setBusy(button, true);
+        button.textContent = this.t("form.uploading");
 
-        if (input === null) {
-            return;
+        try {
+            const screenshot = await this.uploadImageFile(file);
+
+            await this.api({ action: "updateScreenshot", postId, screenshot });
+            await this.load();
+            this.showToast(this.t("post.screenshotUpdated"));
+        } catch (err) {
+            this.showToast(this.errorText(err, post.mode), "error");
+            this.setBusy(button, false);
+            button.textContent = this.t(post.screenshot ? "post.changeScreenshot" : "post.addScreenshot");
         }
+    }
 
-        const screenshot = input.trim();
+    async removeScreenshot(postId, button) {
+        const post = this.posts.find((item) => item.id === postId);
 
-        if (screenshot === (post.screenshot || "")) {
-            return;
-        }
-
-        if (!screenshot && !confirm(this.t("post.screenshotRemoveConfirm"))) {
-            return;
-        }
-
-        if (screenshot && !isAllowedScreenshot(screenshot)) {
-            this.showToast(this.t("error.badScreenshot"), "error");
+        if (!post || !confirm(this.t("post.screenshotRemoveConfirm"))) {
             return;
         }
 
         this.setBusy(button, true);
 
         try {
-            await this.api({ action: "updateScreenshot", postId, screenshot });
+            await this.api({ action: "updateScreenshot", postId, screenshot: "" });
             await this.load();
-            this.showToast(this.t(screenshot ? "post.screenshotUpdated" : "post.screenshotRemoved"));
+            this.showToast(this.t("post.screenshotRemoved"));
         } catch (err) {
             this.showToast(this.errorText(err, post.mode), "error");
             this.setBusy(button, false);
@@ -792,6 +951,7 @@ export class MatchBoard {
 
         this.updateRule();
         this.renderDonePicker();
+        this.renderUploadPreview();
         this.render();
     }
 
@@ -952,7 +1112,12 @@ export class MatchBoard {
                     </a>
                 ` : ""}
                 ${screenshotLink}
-                ${isMine ? `<button type="button" class="match-shot-btn" data-edit-screenshot="${esc(post.id)}">${esc(this.t(safeScreenshot ? "post.changeScreenshot" : "post.addScreenshot"))}</button>` : ""}
+                ${isMine ? `
+                    <div class="match-shot-actions">
+                        <button type="button" class="match-shot-btn" data-edit-screenshot="${esc(post.id)}">${esc(this.t(safeScreenshot ? "post.changeScreenshot" : "post.addScreenshot"))}</button>
+                        ${safeScreenshot ? `<button type="button" class="match-shot-remove" data-remove-screenshot="${esc(post.id)}">${esc(this.t("post.removeScreenshot"))}</button>` : ""}
+                    </div>
+                ` : ""}
 
                 <div class="match-actions">
                     ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
@@ -988,6 +1153,90 @@ export class MatchBoard {
             this.renderDonePicker();
         });
 
+        // 截圖上傳：選擇檔案、拖曳、貼上
+        this.els.uploadPick.addEventListener("click", () => {
+            this.els.uploadFile.value = "";
+            this.els.uploadFile.click();
+        });
+
+        this.els.uploadFile.addEventListener("change", () => {
+            this.handleFormImage(this.els.uploadFile.files[0]);
+        });
+
+        this.els.uploadRemove.addEventListener("click", () => {
+            this.setFormScreenshot("");
+            this.setUploadStatus("");
+        });
+
+        this.els.screenshot.addEventListener("input", () => this.renderUploadPreview());
+
+        this.els.upload.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            this.els.upload.classList.add("dragover");
+        });
+
+        this.els.upload.addEventListener("dragleave", () => {
+            this.els.upload.classList.remove("dragover");
+        });
+
+        this.els.upload.addEventListener("drop", (event) => {
+            event.preventDefault();
+            this.els.upload.classList.remove("dragover");
+
+            const file = imageFromTransfer(event.dataTransfer);
+
+            if (file) {
+                this.handleFormImage(file);
+            } else {
+                this.setUploadStatus(this.t("error.notImage"), "error");
+            }
+        });
+
+        document.addEventListener("paste", (event) => {
+            const file = this.isOpen() ? imageFromTransfer(event.clipboardData) : null;
+
+            if (file) {
+                event.preventDefault();
+                this.handleFormImage(file);
+            }
+        });
+
+        this.els.editFile.addEventListener("change", () => {
+            const button = this.editTarget;
+            const file = this.els.editFile.files[0];
+
+            this.editTarget = null;
+
+            if (button && file) {
+                this.editScreenshotWithFile(button.dataset.editScreenshot, button, file);
+            }
+        });
+
+        // 也可以把圖片直接拖到自己貼文的「新增／更換截圖」按鈕上
+        this.els.list.addEventListener("dragover", (event) => {
+            if (event.target.closest("[data-edit-screenshot]")) {
+                event.preventDefault();
+            }
+        });
+
+        this.els.list.addEventListener("drop", (event) => {
+            const button = event.target.closest("[data-edit-screenshot]");
+
+            if (!button) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const file = imageFromTransfer(event.dataTransfer);
+
+            if (file) {
+                this.editScreenshotWithFile(button.dataset.editScreenshot, button, file);
+            } else {
+                this.showToast(this.t("error.notImage"), "error");
+            }
+        });
+
         this.els.donePicker.addEventListener("click", (event) => {
             const item = event.target.closest("[data-done]");
 
@@ -1014,12 +1263,18 @@ export class MatchBoard {
             const del = event.target.closest("[data-delete]");
             const editTokens = event.target.closest("[data-edit-tokens]");
             const editScreenshot = event.target.closest("[data-edit-screenshot]");
+            const removeScreenshot = event.target.closest("[data-remove-screenshot]");
             const report = event.target.closest("[data-report]");
             const copy = event.target.closest("[data-copy]");
             const reportComment = event.target.closest("[data-report-comment]");
 
             if (editScreenshot) {
-                this.editScreenshot(editScreenshot.dataset.editScreenshot, editScreenshot);
+                // 開啟選擇圖片；選好後由 editFile 的 change 事件上傳
+                this.editTarget = editScreenshot;
+                this.els.editFile.value = "";
+                this.els.editFile.click();
+            } else if (removeScreenshot) {
+                this.removeScreenshot(removeScreenshot.dataset.removeScreenshot, removeScreenshot);
             } else if (editTokens) {
                 this.editTokens(editTokens.dataset.editTokens, editTokens);
             } else if (reportComment) {

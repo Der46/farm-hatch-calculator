@@ -3,8 +3,8 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261023l";
-import { MatchBoard } from "./match.js?v=20261023l";
+} from "./i18n.js?v=20261023m";
+import { MatchBoard } from "./match.js?v=20261023m";
 
 const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
 

@@ -10,8 +10,16 @@ export const MATCH_I18N = {
         refresh: "重新整理",
         listTitle: "徵求列表",
         form: {
-            screenshotHint: "建議用 Imgur 上傳，貼上圖片網址（i.imgur.com 開頭）或 Imgur 單張圖片頁面，就會直接顯示在徵求裡；也可用 ImgBB、Postimages 的圖片網址，或設為公開的 Google 雲端硬碟檔案。",
-            screenshot: "遊戲畫面截圖連結（選填）",
+            waitUpload: "請等圖片上傳完成再送出。",
+            orPasteLink: "或貼上截圖連結",
+            uploadLinked: "已附上截圖連結",
+            uploadRemove: "移除",
+            uploading: "圖片上傳中…",
+            uploadPaste: "也可以直接貼上（Ctrl+V）",
+            uploadPick: "選擇圖片",
+            uploadDrop: "拖曳圖片到這裡，或",
+            screenshotHint: "圖片會自動壓縮後保存 7 天，之後自動刪除。附上截圖可以提高大家幫你的意願。",
+            screenshot: "遊戲畫面截圖（選填）",
             doneHint: "已完成 {done} / {total} 隻・點第幾隻就代表完成幾隻，再點一次可取消",
             done: "已完成幾隻（點選）",
             confirmNormal: "⚠️ 請再次確認\n\n普通孵化 / 普通耕種必須自己有超過一半的代幣（此模式至少 {min}）才可以找人幫忙。\n只差一顆或兩顆的玩家會優先獲得幫忙。\n\n若事後被發現與事實不符，其他玩家可以舉報，管理員可能禁止你再使用媒合平台。\n\n確定要送出嗎？",
@@ -31,9 +39,9 @@ export const MATCH_I18N = {
             all: "全部"
         },
         post: {
+            removeScreenshot: "移除截圖",
             addScreenshot: "📷 新增截圖",
             changeScreenshot: "📷 更換截圖",
-            screenshotPrompt: "請貼上遊戲截圖連結（Imgur、ImgBB、Postimages 或 Google 雲端硬碟）。留空並按確定可移除截圖：",
             screenshotRemoveConfirm: "確定要移除這篇徵求的截圖嗎？",
             screenshotUpdated: "已更新截圖。",
             screenshotRemoved: "已移除截圖。",
@@ -65,6 +73,9 @@ export const MATCH_I18N = {
             send: "留言"
         },
         error: {
+            uploadFailed: "圖片上傳失敗，請稍後再試。",
+            imageTooLarge: "圖片太大（上限 15MB）。",
+            notImage: "請選擇圖片檔。",
             rateLimited: "操作太頻繁，請 {minutes} 分鐘後再試。",
             cooldown: "這個交友連結 24 小時內已發過徵求，請 {hours} 小時後再發。",
             noLinks: "暱稱和留言不能包含連結或網址。",
@@ -101,8 +112,16 @@ export const MATCH_I18N = {
         refresh: "Refresh",
         listTitle: "Requests",
         form: {
-            screenshotHint: "Upload to Imgur and paste the image link (starting with i.imgur.com) or a single-image Imgur page to show it in your request. ImgBB / Postimages direct image links or a public Google Drive file also work.",
-            screenshot: "Game screenshot link (optional)",
+            waitUpload: "Please wait for the image to finish uploading.",
+            orPasteLink: "Or paste a screenshot link",
+            uploadLinked: "Screenshot link attached",
+            uploadRemove: "Remove",
+            uploading: "Uploading image…",
+            uploadPaste: "You can also paste it (Ctrl+V)",
+            uploadPick: "Choose image",
+            uploadDrop: "Drag an image here, or",
+            screenshotHint: "Images are compressed and kept for 7 days, then deleted automatically. A screenshot helps others trust your request.",
+            screenshot: "Game screenshot (optional)",
             doneHint: "{done} / {total} done · tap the Nth one to mark N done, tap again to undo",
             done: "How many are done (tap)",
             confirmNormal: "⚠️ Please confirm\n\nNormal Hatch / Normal Farm requires more than half of the tokens yourself (at least {min} in this mode) before asking for help.\nPlayers who are only one or two short get priority.\n\nIf this turns out to be untrue, other players can report you and the admin may ban you from the matching board.\n\nPost this request?",
@@ -122,9 +141,9 @@ export const MATCH_I18N = {
             all: "All"
         },
         post: {
+            removeScreenshot: "Remove screenshot",
             addScreenshot: "📷 Add screenshot",
             changeScreenshot: "📷 Change screenshot",
-            screenshotPrompt: "Paste a game screenshot link (Imgur, ImgBB, Postimages or Google Drive). Leave empty and press OK to remove it:",
             screenshotRemoveConfirm: "Remove the screenshot from this request?",
             screenshotUpdated: "Screenshot updated.",
             screenshotRemoved: "Screenshot removed.",
@@ -156,6 +175,9 @@ export const MATCH_I18N = {
             send: "Send"
         },
         error: {
+            uploadFailed: "Image upload failed. Please try again later.",
+            imageTooLarge: "Image is too large (max 15MB).",
+            notImage: "Please choose an image file.",
             rateLimited: "Too many actions. Please try again in {minutes} minutes.",
             cooldown: "This friend link already posted within 24 hours. Please try again in {hours} hours.",
             noLinks: "Nicknames and comments cannot contain links or web addresses.",
@@ -192,8 +214,16 @@ export const MATCH_I18N = {
         refresh: "Làm mới",
         listTitle: "Danh sách yêu cầu",
         form: {
-            screenshotHint: "Nên tải lên Imgur rồi dán liên kết ảnh (bắt đầu bằng i.imgur.com) hoặc trang ảnh đơn của Imgur để ảnh hiện trong bài. Cũng dùng được liên kết ảnh trực tiếp của ImgBB, Postimages hoặc tệp Google Drive công khai.",
-            screenshot: "Liên kết ảnh chụp màn hình game (không bắt buộc)",
+            waitUpload: "Vui lòng đợi ảnh tải lên xong rồi gửi.",
+            orPasteLink: "Hoặc dán liên kết ảnh",
+            uploadLinked: "Đã đính kèm liên kết ảnh",
+            uploadRemove: "Xoá",
+            uploading: "Đang tải ảnh lên…",
+            uploadPaste: "Cũng có thể dán trực tiếp (Ctrl+V)",
+            uploadPick: "Chọn ảnh",
+            uploadDrop: "Kéo ảnh vào đây, hoặc",
+            screenshotHint: "Ảnh sẽ được nén và lưu 7 ngày, sau đó tự xoá. Có ảnh chụp giúp mọi người tin tưởng hơn.",
+            screenshot: "Ảnh chụp màn hình game (không bắt buộc)",
             doneHint: "Đã xong {done} / {total} · chạm con thứ N là xong N con, chạm lại để huỷ",
             done: "Đã hoàn thành mấy con (chạm để chọn)",
             confirmNormal: "⚠️ Vui lòng xác nhận\n\nẤp trứng / Trồng trọt thường phải tự có hơn một nửa số token (chế độ này ít nhất {min}) mới được tìm người giúp.\nNgười chỉ thiếu một hoặc hai sẽ được ưu tiên giúp.\n\nNếu sau đó bị phát hiện không đúng sự thật, người khác có thể báo cáo và quản trị viên có thể cấm bạn dùng trang ghép đội.\n\nBạn chắc chắn muốn đăng?",
@@ -213,9 +243,9 @@ export const MATCH_I18N = {
             all: "Tất cả"
         },
         post: {
+            removeScreenshot: "Xoá ảnh chụp",
             addScreenshot: "📷 Thêm ảnh chụp",
             changeScreenshot: "📷 Đổi ảnh chụp",
-            screenshotPrompt: "Dán liên kết ảnh chụp game (Imgur, ImgBB, Postimages hoặc Google Drive). Để trống rồi bấm OK để xoá ảnh:",
             screenshotRemoveConfirm: "Xoá ảnh chụp khỏi yêu cầu này?",
             screenshotUpdated: "Đã cập nhật ảnh chụp.",
             screenshotRemoved: "Đã xoá ảnh chụp.",
@@ -247,6 +277,9 @@ export const MATCH_I18N = {
             send: "Gửi"
         },
         error: {
+            uploadFailed: "Tải ảnh lên thất bại, vui lòng thử lại sau.",
+            imageTooLarge: "Ảnh quá lớn (tối đa 15MB).",
+            notImage: "Vui lòng chọn tệp ảnh.",
             rateLimited: "Thao tác quá nhanh, vui lòng thử lại sau {minutes} phút.",
             cooldown: "Liên kết này đã đăng trong 24 giờ qua, vui lòng thử lại sau {hours} giờ.",
             noLinks: "Biệt danh và bình luận không được chứa liên kết hay địa chỉ web.",
@@ -283,8 +316,16 @@ export const MATCH_I18N = {
         refresh: "更新",
         listTitle: "募集一覧",
         form: {
-            screenshotHint: "Imgurにアップロードして画像URL（i.imgur.comで始まる）か1枚だけのImgurページを貼ると、募集に画像が表示されます。ImgBB・Postimagesの画像直リンクや公開設定のGoogleドライブのファイルも使えます。",
-            screenshot: "ゲーム画面のスクリーンショットURL（任意）",
+            waitUpload: "画像のアップロード完了まで待ってから送信してください。",
+            orPasteLink: "またはスクショのURLを貼る",
+            uploadLinked: "スクショのリンクを添付済み",
+            uploadRemove: "削除",
+            uploading: "画像をアップロード中…",
+            uploadPaste: "貼り付け（Ctrl+V）もできます",
+            uploadPick: "画像を選択",
+            uploadDrop: "ここに画像をドラッグ、または",
+            screenshotHint: "画像は自動で圧縮して7日間保存され、その後自動で削除されます。スクショがあると信頼されやすくなります。",
+            screenshot: "ゲーム画面のスクリーンショット（任意）",
             doneHint: "{done} / {total} 体完成・N体目をタップでN体完成、もう一度タップで取り消し",
             done: "完成した数（タップで選択）",
             confirmNormal: "⚠️ 確認してください\n\n通常の孵化／栽培は、半分以上のトークン（このモードは {min} 以上）を自分で持っている場合のみ助っ人を募集できます。\nあと1〜2個だけ足りない人が優先されます。\n\n事実と異なる場合は他のプレイヤーが通報でき、管理者がマッチング掲示板の利用を禁止することがあります。\n\n投稿しますか？",
@@ -304,9 +345,9 @@ export const MATCH_I18N = {
             all: "すべて"
         },
         post: {
+            removeScreenshot: "スクショを削除",
             addScreenshot: "📷 スクショを追加",
             changeScreenshot: "📷 スクショを変更",
-            screenshotPrompt: "ゲーム画面のスクリーンショットURL（Imgur・ImgBB・Postimages・Googleドライブ）を貼ってください。空欄でOKを押すと削除します：",
             screenshotRemoveConfirm: "この募集のスクリーンショットを削除しますか？",
             screenshotUpdated: "スクリーンショットを更新しました。",
             screenshotRemoved: "スクリーンショットを削除しました。",
@@ -338,6 +379,9 @@ export const MATCH_I18N = {
             send: "送信"
         },
         error: {
+            uploadFailed: "画像のアップロードに失敗しました。しばらくしてから再試行してください。",
+            imageTooLarge: "画像が大きすぎます（上限15MB）。",
+            notImage: "画像ファイルを選んでください。",
             rateLimited: "操作が多すぎます。{minutes} 分後に再度お試しください。",
             cooldown: "このフレンドリンクは24時間以内に投稿済みです。{hours} 時間後に再度お試しください。",
             noLinks: "ニックネームとコメントにリンクやURLは含められません。",
@@ -374,8 +418,16 @@ export const MATCH_I18N = {
         refresh: "새로고침",
         listTitle: "요청 목록",
         form: {
-            screenshotHint: "Imgur에 올린 뒤 이미지 주소(i.imgur.com으로 시작) 또는 단일 이미지 Imgur 페이지를 붙여 넣으면 요청에 바로 표시됩니다. ImgBB·Postimages 이미지 직접 링크나 공개된 Google 드라이브 파일도 가능합니다.",
-            screenshot: "게임 화면 스크린샷 링크 (선택)",
+            waitUpload: "이미지 업로드가 끝난 뒤 보내 주세요.",
+            orPasteLink: "또는 스크린샷 링크 붙여넣기",
+            uploadLinked: "스크린샷 링크 첨부됨",
+            uploadRemove: "삭제",
+            uploading: "이미지 업로드 중…",
+            uploadPaste: "붙여넣기(Ctrl+V)도 가능합니다",
+            uploadPick: "이미지 선택",
+            uploadDrop: "여기로 이미지를 끌어오거나",
+            screenshotHint: "이미지는 자동으로 압축되어 7일간 보관된 뒤 자동 삭제됩니다. 스크린샷이 있으면 더 신뢰를 얻을 수 있습니다.",
+            screenshot: "게임 화면 스크린샷 (선택)",
             doneHint: "{done} / {total} 완료 · N번째를 탭하면 N개 완료, 다시 탭하면 취소",
             done: "완료한 수 (탭하여 선택)",
             confirmNormal: "⚠️ 다시 확인해 주세요\n\n일반 부화 / 일반 재배는 토큰을 절반 이상(이 모드는 최소 {min}) 직접 보유해야 도움을 요청할 수 있습니다.\n한두 개만 부족한 플레이어가 우선 도움을 받습니다.\n\n사실과 다르면 다른 플레이어가 신고할 수 있으며, 관리자가 매칭 게시판 이용을 금지할 수 있습니다.\n\n게시하시겠습니까?",
@@ -395,9 +447,9 @@ export const MATCH_I18N = {
             all: "전체"
         },
         post: {
+            removeScreenshot: "스크린샷 삭제",
             addScreenshot: "📷 스크린샷 추가",
             changeScreenshot: "📷 스크린샷 변경",
-            screenshotPrompt: "게임 스크린샷 링크(Imgur, ImgBB, Postimages, Google 드라이브)를 붙여 넣으세요. 비워 두고 확인을 누르면 삭제됩니다:",
             screenshotRemoveConfirm: "이 요청의 스크린샷을 삭제하시겠습니까?",
             screenshotUpdated: "스크린샷을 업데이트했습니다.",
             screenshotRemoved: "스크린샷을 삭제했습니다.",
@@ -429,6 +481,9 @@ export const MATCH_I18N = {
             send: "등록"
         },
         error: {
+            uploadFailed: "이미지 업로드에 실패했습니다. 잠시 후 다시 시도하세요.",
+            imageTooLarge: "이미지가 너무 큽니다 (최대 15MB).",
+            notImage: "이미지 파일을 선택하세요.",
             rateLimited: "요청이 너무 많습니다. {minutes}분 후 다시 시도하세요.",
             cooldown: "이 친구 링크는 24시간 안에 이미 게시했습니다. {hours}시간 후 다시 시도하세요.",
             noLinks: "닉네임과 댓글에는 링크나 웹 주소를 넣을 수 없습니다.",
@@ -465,8 +520,16 @@ export const MATCH_I18N = {
         refresh: "รีเฟรช",
         listTitle: "รายการคำขอ",
         form: {
-            screenshotHint: "แนะนำให้อัปโหลดที่ Imgur แล้ววางลิงก์รูป (ขึ้นต้นด้วย i.imgur.com) หรือหน้ารูปเดี่ยวของ Imgur รูปจะแสดงในโพสต์ทันที ใช้ลิงก์รูปตรงของ ImgBB, Postimages หรือไฟล์ Google Drive ที่เปิดสาธารณะก็ได้",
-            screenshot: "ลิงก์ภาพหน้าจอเกม (ไม่บังคับ)",
+            waitUpload: "โปรดรอให้อัปโหลดรูปเสร็จก่อนส่ง",
+            orPasteLink: "หรือวางลิงก์ภาพหน้าจอ",
+            uploadLinked: "แนบลิงก์ภาพแล้ว",
+            uploadRemove: "ลบ",
+            uploading: "กำลังอัปโหลดรูป…",
+            uploadPaste: "วางรูปได้ด้วย (Ctrl+V)",
+            uploadPick: "เลือกรูป",
+            uploadDrop: "ลากรูปมาวางที่นี่ หรือ",
+            screenshotHint: "รูปจะถูกบีบอัดและเก็บไว้ 7 วัน แล้วลบอัตโนมัติ การแนบภาพช่วยให้คนอื่นเชื่อถือมากขึ้น",
+            screenshot: "ภาพหน้าจอเกม (ไม่บังคับ)",
             doneHint: "สำเร็จ {done} / {total} ตัว · แตะตัวที่ N = สำเร็จ N ตัว แตะซ้ำเพื่อยกเลิก",
             done: "ทำสำเร็จแล้วกี่ตัว (แตะเลือก)",
             confirmNormal: "⚠️ โปรดยืนยันอีกครั้ง\n\nฟักไข่ / ปลูกพืชแบบปกติต้องมีโทเคนเองมากกว่าครึ่ง (โหมดนี้อย่างน้อย {min}) จึงจะหาคนช่วยได้\nผู้ที่ขาดอีกเพียงหนึ่งหรือสองจะได้รับความช่วยเหลือก่อน\n\nหากภายหลังพบว่าไม่เป็นความจริง ผู้เล่นอื่นสามารถรายงาน และผู้ดูแลอาจห้ามคุณใช้กระดานจับคู่\n\nยืนยันการโพสต์?",
@@ -486,9 +549,9 @@ export const MATCH_I18N = {
             all: "ทั้งหมด"
         },
         post: {
+            removeScreenshot: "ลบภาพหน้าจอ",
             addScreenshot: "📷 เพิ่มภาพหน้าจอ",
             changeScreenshot: "📷 เปลี่ยนภาพหน้าจอ",
-            screenshotPrompt: "วางลิงก์ภาพหน้าจอเกม (Imgur, ImgBB, Postimages หรือ Google Drive) เว้นว่างแล้วกดตกลงเพื่อลบภาพ:",
             screenshotRemoveConfirm: "ลบภาพหน้าจอออกจากคำขอนี้หรือไม่?",
             screenshotUpdated: "อัปเดตภาพหน้าจอแล้ว",
             screenshotRemoved: "ลบภาพหน้าจอแล้ว",
@@ -520,6 +583,9 @@ export const MATCH_I18N = {
             send: "ส่ง"
         },
         error: {
+            uploadFailed: "อัปโหลดรูปไม่สำเร็จ โปรดลองใหม่ภายหลัง",
+            imageTooLarge: "รูปใหญ่เกินไป (สูงสุด 15MB)",
+            notImage: "โปรดเลือกไฟล์รูปภาพ",
             rateLimited: "ทำรายการถี่เกินไป โปรดลองใหม่ในอีก {minutes} นาที",
             cooldown: "ลิงก์เพื่อนนี้โพสต์ไปแล้วภายใน 24 ชั่วโมง โปรดลองใหม่ในอีก {hours} ชั่วโมง",
             noLinks: "ชื่อเล่นและคอมเมนต์ห้ามมีลิงก์หรือที่อยู่เว็บ",
@@ -556,8 +622,16 @@ export const MATCH_I18N = {
         refresh: "Muat ulang",
         listTitle: "Daftar permintaan",
         form: {
-            screenshotHint: "Unggah ke Imgur lalu tempel link gambar (diawali i.imgur.com) atau halaman satu gambar Imgur agar tampil di permintaan. Link gambar langsung ImgBB / Postimages atau file Google Drive publik juga bisa.",
-            screenshot: "Link screenshot game (opsional)",
+            waitUpload: "Tunggu gambar selesai diunggah sebelum mengirim.",
+            orPasteLink: "Atau tempel link screenshot",
+            uploadLinked: "Link screenshot terlampir",
+            uploadRemove: "Hapus",
+            uploading: "Mengunggah gambar…",
+            uploadPaste: "Bisa juga tempel langsung (Ctrl+V)",
+            uploadPick: "Pilih gambar",
+            uploadDrop: "Seret gambar ke sini, atau",
+            screenshotHint: "Gambar dikompres dan disimpan 7 hari, lalu terhapus otomatis. Screenshot membuat orang lebih percaya.",
+            screenshot: "Screenshot game (opsional)",
             doneHint: "Selesai {done} / {total} · ketuk yang ke-N untuk N selesai, ketuk lagi untuk batal",
             done: "Sudah selesai berapa (ketuk)",
             confirmNormal: "⚠️ Mohon konfirmasi\n\nTetas / Tanam biasa harus punya lebih dari setengah token sendiri (mode ini minimal {min}) sebelum mencari bantuan.\nPemain yang hanya kurang satu atau dua akan diprioritaskan.\n\nJika ternyata tidak sesuai, pemain lain bisa melapor dan admin dapat melarangmu memakai papan pencarian.\n\nKirim permintaan ini?",
@@ -577,9 +651,9 @@ export const MATCH_I18N = {
             all: "Semua"
         },
         post: {
+            removeScreenshot: "Hapus screenshot",
             addScreenshot: "📷 Tambah screenshot",
             changeScreenshot: "📷 Ganti screenshot",
-            screenshotPrompt: "Tempel link screenshot game (Imgur, ImgBB, Postimages atau Google Drive). Kosongkan lalu tekan OK untuk menghapus:",
             screenshotRemoveConfirm: "Hapus screenshot dari permintaan ini?",
             screenshotUpdated: "Screenshot diperbarui.",
             screenshotRemoved: "Screenshot dihapus.",
@@ -611,6 +685,9 @@ export const MATCH_I18N = {
             send: "Kirim"
         },
         error: {
+            uploadFailed: "Gagal mengunggah gambar, coba lagi nanti.",
+            imageTooLarge: "Gambar terlalu besar (maks 15MB).",
+            notImage: "Silakan pilih file gambar.",
             rateLimited: "Terlalu sering. Coba lagi dalam {minutes} menit.",
             cooldown: "Link teman ini sudah posting dalam 24 jam terakhir. Coba lagi dalam {hours} jam.",
             noLinks: "Nama panggilan dan komentar tidak boleh berisi link atau alamat web.",
@@ -647,8 +724,16 @@ export const MATCH_I18N = {
         refresh: "Actualizar",
         listTitle: "Solicitudes",
         form: {
-            screenshotHint: "Sube la imagen a Imgur y pega el enlace de la imagen (empieza por i.imgur.com) o la página de una sola imagen para que se vea en tu solicitud. También sirven enlaces directos de ImgBB / Postimages o un archivo público de Google Drive.",
-            screenshot: "Enlace a captura del juego (opcional)",
+            waitUpload: "Espera a que termine de subir la imagen.",
+            orPasteLink: "O pega un enlace de captura",
+            uploadLinked: "Enlace de captura adjunto",
+            uploadRemove: "Quitar",
+            uploading: "Subiendo imagen…",
+            uploadPaste: "También puedes pegarla (Ctrl+V)",
+            uploadPick: "Elegir imagen",
+            uploadDrop: "Arrastra una imagen aquí, o",
+            screenshotHint: "La imagen se comprime y se guarda 7 días, luego se borra automáticamente. Una captura ayuda a que confíen en tu solicitud.",
+            screenshot: "Captura del juego (opcional)",
             doneHint: "{done} / {total} completados · toca el N.º N para marcar N, toca de nuevo para deshacer",
             done: "Cuántos completaste (toca)",
             confirmNormal: "⚠️ Confirma, por favor\n\nIncubar / Cultivar normal exige tener tú mismo más de la mitad de los tokens (en este modo, al menos {min}) para pedir ayuda.\nQuienes solo necesiten uno o dos más tienen prioridad.\n\nSi luego resulta no ser cierto, otros jugadores pueden denunciarte y el administrador puede prohibirte usar el tablón.\n\n¿Publicar la solicitud?",
@@ -668,9 +753,9 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            removeScreenshot: "Quitar captura",
             addScreenshot: "📷 Añadir captura",
             changeScreenshot: "📷 Cambiar captura",
-            screenshotPrompt: "Pega el enlace de una captura del juego (Imgur, ImgBB, Postimages o Google Drive). Déjalo vacío y pulsa Aceptar para quitarla:",
             screenshotRemoveConfirm: "¿Quitar la captura de esta solicitud?",
             screenshotUpdated: "Captura actualizada.",
             screenshotRemoved: "Captura eliminada.",
@@ -702,6 +787,9 @@ export const MATCH_I18N = {
             send: "Enviar"
         },
         error: {
+            uploadFailed: "No se pudo subir la imagen; inténtalo más tarde.",
+            imageTooLarge: "La imagen es demasiado grande (máx. 15MB).",
+            notImage: "Elige un archivo de imagen.",
             rateLimited: "Demasiadas acciones. Inténtalo de nuevo en {minutes} minutos.",
             cooldown: "Este enlace ya publicó en las últimas 24 horas. Inténtalo de nuevo en {hours} horas.",
             noLinks: "Los apodos y comentarios no pueden incluir enlaces ni direcciones web.",
@@ -738,8 +826,16 @@ export const MATCH_I18N = {
         refresh: "Atualizar",
         listTitle: "Pedidos",
         form: {
-            screenshotHint: "Envie para o Imgur e cole o link da imagem (começando com i.imgur.com) ou a página de uma única imagem para ela aparecer no pedido. Links diretos do ImgBB / Postimages ou um arquivo público do Google Drive também funcionam.",
-            screenshot: "Link da captura do jogo (opcional)",
+            waitUpload: "Aguarde o envio da imagem terminar.",
+            orPasteLink: "Ou cole um link da captura",
+            uploadLinked: "Link da captura anexado",
+            uploadRemove: "Remover",
+            uploading: "Enviando imagem…",
+            uploadPaste: "Também dá para colar (Ctrl+V)",
+            uploadPick: "Escolher imagem",
+            uploadDrop: "Arraste uma imagem aqui, ou",
+            screenshotHint: "A imagem é comprimida e guardada por 7 dias, depois apagada automaticamente. Uma captura ajuda os outros a confiar no pedido.",
+            screenshot: "Captura do jogo (opcional)",
             doneHint: "{done} / {total} concluídos · toque no N.º N para marcar N, toque de novo para desfazer",
             done: "Quantos já concluiu (toque)",
             confirmNormal: "⚠️ Confirme, por favor\n\nChocar / Cultivar normal exige ter mais da metade dos tokens por conta própria (neste modo, pelo menos {min}) para pedir ajuda.\nQuem estiver faltando só um ou dois tem prioridade.\n\nSe depois for descoberto que não é verdade, outros jogadores podem denunciar e o administrador pode banir você do mural.\n\nPublicar o pedido?",
@@ -759,9 +855,9 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            removeScreenshot: "Remover captura",
             addScreenshot: "📷 Adicionar captura",
             changeScreenshot: "📷 Trocar captura",
-            screenshotPrompt: "Cole o link de uma captura do jogo (Imgur, ImgBB, Postimages ou Google Drive). Deixe vazio e toque em OK para remover:",
             screenshotRemoveConfirm: "Remover a captura deste pedido?",
             screenshotUpdated: "Captura atualizada.",
             screenshotRemoved: "Captura removida.",
@@ -793,6 +889,9 @@ export const MATCH_I18N = {
             send: "Enviar"
         },
         error: {
+            uploadFailed: "Falha ao enviar a imagem; tente mais tarde.",
+            imageTooLarge: "Imagem grande demais (máx. 15MB).",
+            notImage: "Escolha um arquivo de imagem.",
             rateLimited: "Muitas ações. Tente novamente em {minutes} minutos.",
             cooldown: "Este link já publicou nas últimas 24 horas. Tente novamente em {hours} horas.",
             noLinks: "Apelidos e comentários não podem conter links ou endereços da web.",

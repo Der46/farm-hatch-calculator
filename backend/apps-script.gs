@@ -21,6 +21,12 @@ const MAX_LIST_POSTS = 100;
 // 同一個交友連結發文後（就算刪除）要隔多久才能再發
 const REPOST_COOLDOWN_HOURS = 24;
 
+// 截圖上傳：前端壓縮成 JPEG 後送到這裡，存進部署者 Google 雲端硬碟的資料夾
+// （ImgBB 等圖床會擋 Google 伺服器的連線，所以改用雲端硬碟）
+const UPLOAD_FOLDER_NAME = "Coin999 媒合平台截圖";
+const UPLOAD_KEEP_DAYS = 7;
+const MAX_UPLOAD_BASE64_LENGTH = 3 * 1024 * 1024;
+
 // 舉報通知寄到這個信箱；留空則寄給部署這支程式的帳號
 const ADMIN_EMAIL = "";
 const MAX_EMAILS_PER_DAY = 50;
@@ -49,7 +55,8 @@ const RATE_LIMITS = {
     create: { device: [3, 3600], global: [60, 600] },
     comment: { device: [5, 60], device2: [30, 3600], global: [200, 600] },
     report: { device: [10, 3600] },
-    update: { device: [10, 3600] }
+    update: { device: [10, 3600] },
+    upload: { device: [10, 3600], global: [120, 600] }
 };
 
 const LIMITS = {
@@ -114,6 +121,9 @@ function doPost(e) {
                 return withLock_(() => updateTokens_(body));
             case "updateScreenshot":
                 return withLock_(() => updateScreenshot_(body));
+            case "uploadImage":
+                // 存檔比較久，不佔用全站鎖，只在計數時短暫上鎖
+                return uploadImage_(body);
             case "report":
                 return withLock_(() => reportPost_(body));
             case "reportComment":
@@ -131,6 +141,7 @@ function onOpen() {
         .createMenu("媒合平台")
         .addItem("封鎖選取列的玩家", "banSelectedRows")
         .addItem("寄送測試通知信", "sendTestEmail")
+        .addItem("設定截圖上傳", "setupImageUpload")
         .addToUi();
 }
 
@@ -254,6 +265,56 @@ function sendTestEmail() {
         "[媒合平台] 測試通知信",
         "收到這封信代表舉報通知已設定完成。\n試算表：" + SpreadsheetApp.getActiveSpreadsheet().getUrl()
     );
+}
+
+/**
+ * 在 Apps Script 編輯器執行一次：
+ * 授權雲端硬碟與觸發條件權限、建立截圖資料夾、測試存檔，並安裝每天自動清理舊截圖的排程。
+ */
+function setupImageUpload() {
+    const folder = getUploadFolder_();
+
+    // 測試：存一張 1x1 的 JPEG 再丟到垃圾桶
+    const test = saveImageToDrive_("/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=");
+
+    DriveApp.getFileById(driveIdFromUrl_(test)).setTrashed(true);
+
+    const hasTrigger = ScriptApp.getProjectTriggers().some((trigger) => {
+        return trigger.getHandlerFunction() === "cleanupOldUploads";
+    });
+
+    if (!hasTrigger) {
+        ScriptApp.newTrigger("cleanupOldUploads").timeBased().everyDays(1).atHour(4).create();
+    }
+
+    const message = "截圖上傳設定成功！圖片會存在雲端硬碟「" + folder.getName() + "」資料夾，"
+        + UPLOAD_KEEP_DAYS + " 天前的截圖每天會自動清理。";
+
+    console.log(message);
+
+    try {
+        SpreadsheetApp.getUi().alert(message);
+    } catch (err) {
+        // 從編輯器執行時沒有試算表介面
+    }
+}
+
+// 每天由排程執行：把超過保存天數的截圖丟到垃圾桶（垃圾桶 30 天後由 Google 自動清空）
+function cleanupOldUploads() {
+    const cutoff = Date.now() - UPLOAD_KEEP_DAYS * 24 * 60 * 60 * 1000;
+    const files = getUploadFolder_().getFiles();
+    let trashed = 0;
+
+    while (files.hasNext()) {
+        const file = files.next();
+
+        if (file.getDateCreated().getTime() < cutoff) {
+            file.setTrashed(true);
+            trashed += 1;
+        }
+    }
+
+    console.log("已清理 " + trashed + " 張舊截圖");
 }
 
 /* ---------- actions ---------- */
@@ -572,13 +633,121 @@ function updateScreenshot_(body) {
 
     rateLimit_("update", ownerId);
 
+    const previous = String(post.row.screenshot || "");
+
     post.sheet.getRange(post.rowNumber, POST_HEADERS.indexOf("screenshot") + 1).setValue(sheetSafe_(screenshot));
     clearListCache_();
+
+    if (previous && previous !== screenshot) {
+        trashUploadedImage_(previous);
+    }
 
     return {
         id: String(post.row.id),
         screenshot: screenshot
     };
+}
+
+function uploadImage_(body) {
+    const ownerId = ownerIdFrom_(body.ownerKey);
+    const image = String(body.image || "").replace(/^data:image\/[a-z+]+;base64,/i, "");
+
+    if (!image || !/^[A-Za-z0-9+/=]+$/.test(image)) {
+        throw userError_("notImage");
+    }
+
+    if (image.length > MAX_UPLOAD_BASE64_LENGTH) {
+        throw userError_("imageTooLarge");
+    }
+
+    if (getBanSet_().has(ownerId)) {
+        throw userError_("banned");
+    }
+
+    withLock_(() => rateLimit_("upload", ownerId));
+
+    return {
+        url: saveImageToDrive_(image)
+    };
+}
+
+function saveImageToDrive_(base64) {
+    let bytes;
+
+    try {
+        bytes = Utilities.base64Decode(base64);
+    } catch (err) {
+        throw userError_("notImage");
+    }
+
+    // 只收 JPEG（前端一律轉成 JPEG），避免資料夾被拿來放其他檔案
+    if (bytes.length < 4 || (bytes[0] & 0xff) !== 0xff || (bytes[1] & 0xff) !== 0xd8) {
+        throw userError_("notImage");
+    }
+
+    try {
+        const name = "screenshot-" + Utilities.formatDate(new Date(), "Asia/Taipei", "yyyyMMdd-HHmmss") + "-" + Utilities.getUuid().slice(0, 8) + ".jpg";
+        const file = getUploadFolder_().createFile(Utilities.newBlob(bytes, "image/jpeg", name));
+
+        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+        return "https://drive.google.com/file/d/" + file.getId() + "/view";
+    } catch (err) {
+        console.error(err);
+        throw userError_("uploadFailed");
+    }
+}
+
+function getUploadFolder_() {
+    const props = PropertiesService.getScriptProperties();
+    const savedId = props.getProperty("UPLOAD_FOLDER_ID");
+
+    if (savedId) {
+        try {
+            const folder = DriveApp.getFolderById(savedId);
+
+            if (!folder.isTrashed()) {
+                return folder;
+            }
+        } catch (err) {
+            // 資料夾被刪除或無法存取時重新建立
+        }
+    }
+
+    const folder = DriveApp.createFolder(UPLOAD_FOLDER_NAME);
+
+    props.setProperty("UPLOAD_FOLDER_ID", folder.getId());
+    return folder;
+}
+
+function driveIdFromUrl_(url) {
+    const match = String(url).match(/^https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]{10,})/);
+
+    return match ? match[1] : "";
+}
+
+// 更換或移除截圖時，若舊圖是本平台上傳到雲端硬碟的，順便丟到垃圾桶
+function trashUploadedImage_(url) {
+    const id = driveIdFromUrl_(url);
+
+    if (!id) {
+        return;
+    }
+
+    try {
+        const folderId = getUploadFolder_().getId();
+        const file = DriveApp.getFileById(id);
+        const parents = file.getParents();
+
+        while (parents.hasNext()) {
+            if (parents.next().getId() === folderId) {
+                file.setTrashed(true);
+                return;
+            }
+        }
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 function reportPost_(body) {

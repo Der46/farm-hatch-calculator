@@ -987,9 +987,9 @@ button.match-creature:active {
     font-weight: 950;
 }
 
-/* 有縮圖時隱藏文字連結（display 會蓋掉 hidden 屬性，需明確指定） */
-.match-screenshot-link[hidden] {
-    display: none;
+/* 媒合頁裡元件常自訂 display，會蓋掉 hidden 屬性，統一確保 hidden 一定隱藏 */
+.match-page [hidden] {
+    display: none !important;
 }
 
 .match-screenshot {
@@ -1008,6 +1008,134 @@ button.match-creature:active {
     max-width: 100%;
     max-height: 160px;
     object-fit: contain;
+}
+
+.match-upload {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border: 2px dashed #e1a53c;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.match-upload.dragover {
+    border-color: #30b54a;
+    background: rgba(122, 236, 87, 0.15);
+}
+
+.match-upload.uploading {
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.match-upload-empty {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    color: #73340f;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.match-upload-empty small {
+    color: #9a6a43;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.match-upload-pick {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 18px;
+    color: white;
+    font-size: 14px;
+    font-weight: 950;
+    background: linear-gradient(180deg, #4fb5ff, #1a6fd1);
+}
+
+.match-upload-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.match-upload-preview img {
+    max-width: 60%;
+    max-height: 140px;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.match-upload-linked {
+    color: #187a2e;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.match-upload-remove,
+.match-shot-remove {
+    border: 0;
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: #8a2a1a;
+    font-size: 13px;
+    font-weight: 950;
+    background: #f5ddd0;
+}
+
+.match-upload-status {
+    margin: 0;
+    color: #73340f;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.match-upload-status:empty {
+    display: none;
+}
+
+.match-upload-status.busy::before {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 6px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: -2px;
+    animation: match-spin 0.7s linear infinite;
+}
+
+.match-upload-status.error {
+    color: #b71934;
+}
+
+.match-link-fallback summary {
+    color: #8a5a32;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.match-link-fallback input {
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.match-shot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.match-shot-actions .match-shot-btn {
+    margin-top: 0;
 }
 
 .match-shot-btn {

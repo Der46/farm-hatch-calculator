@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coin999 夥伴計算機</title>
 
-    <link rel="stylesheet" href="./style.css?v=20261023l">
+    <link rel="stylesheet" href="./style.css?v=20261023m">
 </head>
 
 <body>
@@ -204,8 +204,31 @@
                     </div>
 
                     <div class="field">
-                        <label for="matchScreenshot" data-match-i18n="form.screenshot">遊戲畫面截圖連結（選填）</label>
-                        <input id="matchScreenshot" type="url" maxlength="300" autocomplete="off" placeholder="https://imgur.com/...">
+                        <span class="match-field-label" data-match-i18n="form.screenshot">遊戲畫面截圖（選填）</span>
+
+                        <div class="match-upload" id="matchUpload">
+                            <div class="match-upload-empty" id="matchUploadEmpty">
+                                <span data-match-i18n="form.uploadDrop">拖曳圖片到這裡，或</span>
+                                <button type="button" class="match-upload-pick" id="matchUploadPick" data-match-i18n="form.uploadPick">選擇圖片</button>
+                                <small data-match-i18n="form.uploadPaste">也可以直接貼上（Ctrl+V）</small>
+                            </div>
+
+                            <div class="match-upload-preview" id="matchUploadPreview" hidden>
+                                <img id="matchUploadImg" alt="" referrerpolicy="no-referrer">
+                                <span class="match-upload-linked" id="matchUploadLinked" hidden></span>
+                                <button type="button" class="match-upload-remove" id="matchUploadRemove" data-match-i18n="form.uploadRemove">移除</button>
+                            </div>
+
+                            <p class="match-upload-status" id="matchUploadStatus" role="status"></p>
+                        </div>
+
+                        <input type="file" id="matchUploadFile" accept="image/*" hidden>
+
+                        <details class="match-link-fallback">
+                            <summary data-match-i18n="form.orPasteLink">或貼上截圖連結</summary>
+                            <input id="matchScreenshot" type="url" maxlength="300" autocomplete="off" placeholder="https://i.imgur.com/...">
+                        </details>
+
                         <p class="match-field-hint" data-match-i18n="form.screenshotHint"></p>
                     </div>
 
@@ -242,8 +265,9 @@
     </section>
 
     <div class="match-toast" id="matchToast" role="status" aria-live="polite"></div>
+    <input type="file" id="matchEditFile" accept="image/*" hidden>
 
-    <script type="module" src="./app.js?v=20261023l"></script>
+    <script type="module" src="./app.js?v=20261023m"></script>
 </body>
 
 </html>
