@@ -1,7 +1,7 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023m";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023n";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
-const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
+const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby-6b5hjaPsLo3fpQvS8WXw8oKQZGTBzHH-f4FJtWsyAv7igaGtKDQtZ20nVoOKhPpthQ/exec";
 
 const PROFILE_KEY = "coin999_match_profile_v1";
 const OWNER_KEY = "coin999_match_owner_v1";
