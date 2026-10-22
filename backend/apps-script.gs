@@ -18,6 +18,13 @@ const SHEET_BANS = "Bans";
 const POST_TTL_DAYS = 3;
 const MAX_LIST_POSTS = 100;
 
+// 同一個交友連結發文後（就算刪除）要隔多久才能再發
+const REPOST_COOLDOWN_HOURS = 24;
+
+// 舉報通知寄到這個信箱；留空則寄給部署這支程式的帳號
+const ADMIN_EMAIL = "";
+const MAX_EMAILS_PER_DAY = 50;
+
 // 上來找人至少要能完成一半：普通孵化 170,000 分 = 14,500 代幣、普通耕種 90,000 分 = 7,500 代幣
 const MIN_TOKENS = {
     hatch: 14500,
@@ -34,23 +41,55 @@ const CREATURE_COUNT = {
     goldFarm: 2
 };
 
+/**
+ * 頻率限制：[次數, 秒數]。device 以裝置為單位，global 以全站為單位，
+ * 避免有人用程式大量發文或洗留言拖垮試算表。
+ */
+const RATE_LIMITS = {
+    create: { device: [3, 3600], global: [60, 600] },
+    comment: { device: [5, 60], device2: [30, 3600], global: [200, 600] },
+    report: { device: [10, 3600] }
+};
+
 const LIMITS = {
-    team: 30,
+    team: 20,
     link: 300,
+    screenshot: 300,
     name: 20,
     message: 200,
     reason: 200,
     tokens: 100000000
 };
 
+// 只接受 Coin Master 官方交友連結，避免釣魚網站或亂填連結
+const COIN_LINK_RE = /^https:\/\/(www\.)?getcoinmaster\.com\/~[A-Za-z0-9_-]{4,40}\/?(\?[A-Za-z0-9=&_%.-]*)?$/i;
+
+// 截圖連結只接受常見圖床，避免被拿來放釣魚網址
+const SCREENSHOT_HOSTS = [
+    "imgur.com",
+    "ibb.co",
+    "imgbb.com",
+    "postimg.cc",
+    "postimages.org",
+    "photos.app.goo.gl",
+    "photos.google.com",
+    "drive.google.com"
+];
+
+// 留言、暱稱不可夾帶連結或網址（避免搶人、導向釣魚網站）
+const LINK_IN_TEXT_RE = /(https?:\/\/|www\.|getcoinmaster|~[A-Za-z0-9]{6,}|\b[a-z0-9-]+\.(com|net|org|io|me|ly|gg|tw|cc|co|app|link|xyz|top|info)\b)/i;
+
 // note 為舊版欄位（已改用 done），保留以相容舊資料
-const POST_HEADERS = ["id", "createdAt", "mode", "team", "link", "tokens", "note", "ownerId", "deleted", "done"];
+const POST_HEADERS = ["id", "createdAt", "mode", "team", "link", "tokens", "note", "ownerId", "deleted", "done", "screenshot"];
 const COMMENT_HEADERS = ["id", "postId", "createdAt", "name", "message", "deleted", "ownerId"];
-const REPORT_HEADERS = ["id", "createdAt", "postId", "team", "link", "postOwnerId", "reason", "reporterId", "handled"];
+const REPORT_HEADERS = ["id", "createdAt", "postId", "team", "link", "postOwnerId", "reason", "reporterId", "handled", "type", "commentId", "commentName", "commentOwnerId"];
 const BAN_HEADERS = ["target", "note", "createdAt"];
 
+const LIST_CACHE_KEY = "list_v2";
+const LIST_CACHE_SECONDS = 20;
+
 function doGet() {
-    return respond_(() => listPosts_());
+    return respond_(() => listPostsCached_());
 }
 
 function doPost(e) {
@@ -72,6 +111,8 @@ function doPost(e) {
                 return withLock_(() => deletePost_(body));
             case "report":
                 return withLock_(() => reportPost_(body));
+            case "reportComment":
+                return withLock_(() => reportComment_(body));
             default:
                 throw userError_("badRequest");
         }
@@ -84,24 +125,28 @@ function onOpen() {
     SpreadsheetApp.getUi()
         .createMenu("媒合平台")
         .addItem("封鎖選取列的玩家", "banSelectedRows")
+        .addItem("寄送測試通知信", "sendTestEmail")
         .addToUi();
 }
 
 /**
  * 在 Posts / Reports / Comments 工作表選取一列或多列後執行：
- * 會把該玩家的交友連結與作者ID加入 Bans，並隱藏相關貼文。
+ * - Posts：封鎖發文者（交友連結＋作者ID），隱藏他的貼文
+ * - Comments：封鎖留言者（作者ID），隱藏他的留言
+ * - Reports：依舉報類型封鎖被舉報的發文者或留言者，並把該舉報標記為已處理
  * 解除封鎖：到 Bans 工作表刪除對應的列即可。
  */
 function banSelectedRows() {
     const ui = SpreadsheetApp.getUi();
     const sheet = SpreadsheetApp.getActiveSheet();
+    const sheetName = sheet.getName();
     const headersByName = {};
 
     headersByName[SHEET_POSTS] = POST_HEADERS;
     headersByName[SHEET_REPORTS] = REPORT_HEADERS;
     headersByName[SHEET_COMMENTS] = COMMENT_HEADERS;
 
-    const headers = headersByName[sheet.getName()];
+    const headers = headersByName[sheetName];
 
     if (!headers) {
         ui.alert("請先到 Posts、Reports 或 Comments 工作表選取要封鎖的列。");
@@ -129,20 +174,25 @@ function banSelectedRows() {
 
     const targets = new Set();
     const postIds = new Set();
+    const add = (value) => {
+        if (value) {
+            targets.add(normalizeLink_(value));
+        }
+    };
 
     rows.forEach((row) => {
-        [row.link, row.ownerId, row.postOwnerId].forEach((value) => {
-            if (value) {
-                targets.add(normalizeLink_(value));
-            }
-        });
-
-        if (sheet.getName() === SHEET_POSTS && row.id) {
+        if (sheetName === SHEET_POSTS) {
+            add(row.link);
+            add(row.ownerId);
             postIds.add(String(row.id));
-        }
-
-        // Reports 的 postId 是被舉報的貼文；Comments 的 postId 是別人的貼文，不能隱藏
-        if (sheet.getName() === SHEET_REPORTS && row.postId) {
+        } else if (sheetName === SHEET_COMMENTS) {
+            // 留言的 postId 是別人的貼文，不能隱藏
+            add(row.ownerId);
+        } else if (String(row.type) === "comment") {
+            add(row.commentOwnerId);
+        } else {
+            add(row.link);
+            add(row.postOwnerId);
             postIds.add(String(row.postId));
         }
     });
@@ -158,7 +208,7 @@ function banSelectedRows() {
 
         targets.forEach((target) => {
             if (!existing.has(target)) {
-                bansSheet.appendRow([sheetSafe_(target), "從 " + sheet.getName() + " 封鎖", now]);
+                bansSheet.appendRow([sheetSafe_(target), "從 " + sheetName + " 封鎖", now]);
                 added += 1;
             }
         });
@@ -178,19 +228,59 @@ function banSelectedRows() {
             }
         });
 
+        if (sheetName === SHEET_REPORTS) {
+            const handledCol = REPORT_HEADERS.indexOf("handled") + 1;
+
+            sheet.getRange(firstRow, handledCol, lastRow - firstRow + 1, 1)
+                .setValues(rows.map(() => [true]));
+        }
+
+        clearListCache_();
         ui.alert("已加入封鎖 " + added + " 筆，隱藏貼文 " + hidden + " 篇。\n解除封鎖請到 Bans 工作表刪除對應的列。");
     } finally {
         lock.releaseLock();
     }
 }
 
+// 第一次使用前請在 Apps Script 編輯器執行一次，授權寄信權限
+function sendTestEmail() {
+    MailApp.sendEmail(
+        getAdminEmail_(),
+        "[媒合平台] 測試通知信",
+        "收到這封信代表舉報通知已設定完成。\n試算表：" + SpreadsheetApp.getActiveSpreadsheet().getUrl()
+    );
+}
+
 /* ---------- actions ---------- */
+
+function listPostsCached_() {
+    const cache = CacheService.getScriptCache();
+    const cached = cache.get(LIST_CACHE_KEY);
+
+    if (cached) {
+        return JSON.parse(cached);
+    }
+
+    const data = listPosts_();
+
+    try {
+        cache.put(LIST_CACHE_KEY, JSON.stringify(data), LIST_CACHE_SECONDS);
+    } catch (err) {
+        // 資料超過快取上限時不快取
+    }
+
+    return data;
+}
+
+function clearListCache_() {
+    CacheService.getScriptCache().remove(LIST_CACHE_KEY);
+}
 
 function listPosts_() {
     const since = Date.now() - POST_TTL_DAYS * 24 * 60 * 60 * 1000;
     const bans = getBanSet_();
 
-    const posts = readRows_(getSheet_(SHEET_POSTS, POST_HEADERS), POST_HEADERS)
+    const postRows = readRows_(getSheet_(SHEET_POSTS, POST_HEADERS), POST_HEADERS)
         .filter((row) => {
             return !isTrue_(row.deleted)
                 && Number(row.createdAt) >= since
@@ -198,16 +288,38 @@ function listPosts_() {
                 && !bans.has(String(row.ownerId));
         })
         .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
-        .slice(0, MAX_LIST_POSTS)
-        .map(publicPost_);
+        .slice(0, MAX_LIST_POSTS);
 
-    const postIds = new Set(posts.map((post) => post.id));
+    // 被舉報次數以「交友連結」累計，刪文重發也不會歸零（被管理員駁回的不算）
+    const reportCounts = {};
+
+    readRows_(getSheet_(SHEET_REPORTS, REPORT_HEADERS), REPORT_HEADERS).forEach((row) => {
+        if (String(row.type) !== "comment" && !isDismissed_(row.handled)) {
+            const key = normalizeLink_(row.link);
+
+            reportCounts[key] = (reportCounts[key] || 0) + 1;
+        }
+    });
+
+    const posts = postRows.map((row) => {
+        const post = publicPost_(row);
+
+        post.reportCount = reportCounts[normalizeLink_(row.link)] || 0;
+        return post;
+    });
+
+    const ownerByPost = {};
+
+    posts.forEach((post) => {
+        ownerByPost[post.id] = post.ownerId;
+    });
+
     const commentsByPost = {};
 
     readRows_(getSheet_(SHEET_COMMENTS, COMMENT_HEADERS), COMMENT_HEADERS)
         .filter((row) => {
             return !isTrue_(row.deleted)
-                && postIds.has(String(row.postId))
+                && Object.prototype.hasOwnProperty.call(ownerByPost, String(row.postId))
                 && !bans.has(String(row.ownerId));
         })
         .sort((a, b) => Number(a.createdAt) - Number(b.createdAt))
@@ -218,7 +330,10 @@ function listPosts_() {
                 id: String(row.id),
                 createdAt: Number(row.createdAt),
                 name: String(row.name),
-                message: String(row.message)
+                message: String(row.message),
+                ownerId: String(row.ownerId),
+                // 發文者本人的留言，前端會加上「作者」標籤，避免被冒充
+                isAuthor: Boolean(row.ownerId) && String(row.ownerId) === ownerByPost[postId]
             });
         });
 
@@ -242,6 +357,7 @@ function createPost_(body) {
     const ownerId = ownerIdFrom_(body.ownerKey);
     const team = cleanText_(body.team, LIMITS.team);
     const link = cleanText_(body.link, LIMITS.link);
+    const screenshot = cleanText_(body.screenshot, LIMITS.screenshot);
     const tokens = Number(body.tokens);
     const done = Number(body.done);
 
@@ -249,8 +365,16 @@ function createPost_(body) {
         throw userError_("badTeam");
     }
 
-    if (!/^https:\/\/[^\s<>"']+$/i.test(link)) {
+    if (LINK_IN_TEXT_RE.test(team)) {
+        throw userError_("noLinks");
+    }
+
+    if (!COIN_LINK_RE.test(link)) {
         throw userError_("badLink");
+    }
+
+    if (screenshot && !isAllowedScreenshot_(screenshot)) {
+        throw userError_("badScreenshot");
     }
 
     if (!Number.isInteger(tokens) || tokens < 0 || tokens > LIMITS.tokens) {
@@ -273,24 +397,32 @@ function createPost_(body) {
     }
 
     const sheet = getSheet_(SHEET_POSTS, POST_HEADERS);
-    const since = Date.now() - POST_TTL_DAYS * 24 * 60 * 60 * 1000;
+    const rows = readRows_(sheet, POST_HEADERS).filter((row) => normalizeLink_(row.link) === linkKey);
+    const now = Date.now();
+    const since = now - POST_TTL_DAYS * 24 * 60 * 60 * 1000;
 
     // 一個交友連結同時只能有一篇徵求（不分模式），避免用無痕視窗重複發文
-    const duplicate = readRows_(sheet, POST_HEADERS).some((row) => {
-        return !isTrue_(row.deleted)
-            && Number(row.createdAt) >= since
-            && normalizeLink_(row.link) === linkKey;
-    });
-
-    if (duplicate) {
+    if (rows.some((row) => !isTrue_(row.deleted) && Number(row.createdAt) >= since)) {
         throw userError_("duplicateLink");
     }
+
+    // 刪文後也要等冷卻時間才能重發，避免刪文洗掉舉報、重新置頂
+    const lastPostAt = rows.reduce((max, row) => Math.max(max, Number(row.createdAt) || 0), 0);
+    const cooldownMs = REPOST_COOLDOWN_HOURS * 60 * 60 * 1000;
+
+    if (lastPostAt && now - lastPostAt < cooldownMs) {
+        throw userError_("cooldown", {
+            hours: Math.ceil((cooldownMs - (now - lastPostAt)) / 3600000)
+        });
+    }
+
+    rateLimit_("create", ownerId);
 
     const id = Utilities.getUuid();
 
     sheet.appendRow([
         id,
-        Date.now(),
+        now,
         mode,
         sheetSafe_(team),
         sheetSafe_(link),
@@ -298,8 +430,11 @@ function createPost_(body) {
         "",
         ownerId,
         false,
-        done
+        done,
+        sheetSafe_(screenshot)
     ]);
+
+    clearListCache_();
 
     return {
         id: id
@@ -320,6 +455,10 @@ function addComment_(body) {
         throw userError_("badMessage");
     }
 
+    if (LINK_IN_TEXT_RE.test(name) || LINK_IN_TEXT_RE.test(message)) {
+        throw userError_("noLinks");
+    }
+
     if (getBanSet_().has(ownerId)) {
         throw userError_("banned");
     }
@@ -329,6 +468,8 @@ function addComment_(body) {
     if (!post || isTrue_(post.row.deleted)) {
         throw userError_("notFound");
     }
+
+    rateLimit_("comment", ownerId);
 
     const id = Utilities.getUuid();
 
@@ -341,6 +482,8 @@ function addComment_(body) {
         false,
         ownerId
     ]);
+
+    clearListCache_();
 
     return {
         id: id
@@ -360,6 +503,7 @@ function deletePost_(body) {
     }
 
     post.sheet.getRange(post.rowNumber, POST_HEADERS.indexOf("deleted") + 1).setValue(true);
+    clearListCache_();
 
     return {
         id: post.row.id
@@ -386,14 +530,19 @@ function reportPost_(body) {
     }
 
     const sheet = getSheet_(SHEET_REPORTS, REPORT_HEADERS);
+    const reports = readRows_(sheet, REPORT_HEADERS);
 
-    const already = readRows_(sheet, REPORT_HEADERS).some((row) => {
-        return String(row.postId) === postId && String(row.reporterId) === reporterId;
+    const already = reports.some((row) => {
+        return String(row.type) !== "comment"
+            && String(row.postId) === postId
+            && String(row.reporterId) === reporterId;
     });
 
     if (already) {
         throw userError_("alreadyReported");
     }
+
+    rateLimit_("report", reporterId);
 
     sheet.appendRow([
         Utilities.getUuid(),
@@ -404,12 +553,191 @@ function reportPost_(body) {
         String(post.row.ownerId),
         sheetSafe_(reason),
         reporterId,
-        false
+        false,
+        "post",
+        "",
+        "",
+        ""
     ]);
+
+    const linkKey = normalizeLink_(post.row.link);
+    const count = 1 + reports.filter((row) => {
+        return String(row.type) !== "comment"
+            && !isDismissed_(row.handled)
+            && normalizeLink_(row.link) === linkKey;
+    }).length;
+
+    clearListCache_();
+    notifyAdmin_("post:" + linkKey,
+        "[媒合平台] 貼文被舉報：" + post.row.team + "（此連結累計 " + count + " 次）",
+        [
+            "暱稱：" + post.row.team,
+            "交友連結：" + post.row.link,
+            "舉報原因：" + reason,
+            "此連結累計被舉報：" + count + " 次"
+        ]);
 
     return {
         postId: postId
     };
+}
+
+function reportComment_(body) {
+    const reporterId = ownerIdFrom_(body.ownerKey);
+    const commentId = String(body.commentId || "");
+    const reason = cleanText_(body.reason, LIMITS.reason);
+
+    if (!reason) {
+        throw userError_("badReason");
+    }
+
+    const comments = readRows_(getSheet_(SHEET_COMMENTS, COMMENT_HEADERS), COMMENT_HEADERS);
+    const comment = comments.find((row) => String(row.id) === commentId);
+
+    if (!comment || isTrue_(comment.deleted)) {
+        throw userError_("notFound");
+    }
+
+    if (String(comment.ownerId) === reporterId) {
+        throw userError_("badRequest");
+    }
+
+    const post = findPost_(String(comment.postId));
+    const sheet = getSheet_(SHEET_REPORTS, REPORT_HEADERS);
+
+    const already = readRows_(sheet, REPORT_HEADERS).some((row) => {
+        return String(row.type) === "comment"
+            && String(row.commentId) === commentId
+            && String(row.reporterId) === reporterId;
+    });
+
+    if (already) {
+        throw userError_("alreadyReported");
+    }
+
+    rateLimit_("report", reporterId);
+
+    sheet.appendRow([
+        Utilities.getUuid(),
+        Date.now(),
+        String(comment.postId),
+        post ? sheetSafe_(String(post.row.team)) : "",
+        post ? sheetSafe_(String(post.row.link)) : "",
+        post ? String(post.row.ownerId) : "",
+        sheetSafe_(reason),
+        reporterId,
+        false,
+        "comment",
+        commentId,
+        sheetSafe_(String(comment.name)),
+        String(comment.ownerId)
+    ]);
+
+    notifyAdmin_("comment:" + comment.ownerId,
+        "[媒合平台] 留言被舉報：" + comment.name,
+        [
+            "留言者暱稱：" + comment.name,
+            "留言內容：" + comment.message,
+            "所在貼文：" + (post ? post.row.team + "（" + post.row.link + "）" : "已不存在"),
+            "舉報原因：" + reason
+        ]);
+
+    return {
+        commentId: commentId
+    };
+}
+
+/* ---------- 防濫用 ---------- */
+
+function rateLimit_(action, ownerId) {
+    const rules = RATE_LIMITS[action];
+    const cache = CacheService.getScriptCache();
+    const now = Date.now();
+    const hits = [];
+
+    Object.keys(rules).forEach((scope) => {
+        const limit = rules[scope][0];
+        const seconds = rules[scope][1];
+        const key = "rl:" + action + ":" + scope + ":" + (scope === "global" ? "all" : ownerId);
+        const saved = JSON.parse(cache.get(key) || "null");
+        const entry = saved && now - saved.start < seconds * 1000
+            ? saved
+            : { start: now, count: 0 };
+
+        if (entry.count >= limit) {
+            throw userError_("rateLimited", {
+                minutes: Math.ceil((seconds * 1000 - (now - entry.start)) / 60000)
+            });
+        }
+
+        hits.push({ key: key, entry: entry, seconds: seconds });
+    });
+
+    // 全部通過才計數，避免被擋下的請求也佔用額度
+    hits.forEach((hit) => {
+        const remaining = Math.max(1, Math.ceil((hit.seconds * 1000 - (now - hit.entry.start)) / 1000));
+
+        hit.entry.count += 1;
+        cache.put(hit.key, JSON.stringify(hit.entry), remaining);
+    });
+}
+
+function notifyAdmin_(dedupeKey, subject, lines) {
+    try {
+        // 同一個對象 30 分鐘內只寄一次，避免被大量舉報灌爆信箱
+        const cache = CacheService.getScriptCache();
+        const cacheKey = "mail:" + sha256Hex_(dedupeKey);
+
+        if (cache.get(cacheKey)) {
+            return;
+        }
+
+        const props = PropertiesService.getScriptProperties();
+        const dayKey = "mail_" + Utilities.formatDate(new Date(), "Asia/Taipei", "yyyyMMdd");
+        const sent = Number(props.getProperty(dayKey) || 0);
+
+        if (sent >= MAX_EMAILS_PER_DAY) {
+            return;
+        }
+
+        MailApp.sendEmail(
+            getAdminEmail_(),
+            subject,
+            lines.concat([
+                "",
+                "處理方式：到 Reports 工作表選取該列 → 媒合平台 → 封鎖選取列的玩家；",
+                "若舉報不成立，把 handled 欄改成「駁回」。",
+                "試算表：" + SpreadsheetApp.getActiveSpreadsheet().getUrl()
+            ]).join("\n")
+        );
+
+        props.setProperty(dayKey, String(sent + 1));
+        cache.put(cacheKey, "1", 1800);
+    } catch (err) {
+        // 寄信失敗（例如尚未授權）不影響舉報本身
+        console.error(err);
+    }
+}
+
+function getAdminEmail_() {
+    return ADMIN_EMAIL || Session.getEffectiveUser().getEmail();
+}
+
+function isAllowedScreenshot_(url) {
+    const match = String(url).match(/^https:\/\/([^\/?#\s]+)[^\s<>"']*$/i);
+
+    if (!match) {
+        return false;
+    }
+
+    const host = match[1].toLowerCase();
+
+    return SCREENSHOT_HOSTS.some((allowed) => host === allowed || host.endsWith("." + allowed));
+}
+
+// 管理員在 Reports 的 handled 欄填「駁回」代表舉報不成立，不列入被舉報次數
+function isDismissed_(value) {
+    return /^(駁回|dismiss(ed)?)$/i.test(String(value).trim());
 }
 
 /* ---------- helpers ---------- */
@@ -427,6 +755,10 @@ function respond_(fn) {
             ok: false,
             error: err && err.userCode ? err.userCode : "server"
         };
+
+        if (err && err.detail) {
+            out.detail = err.detail;
+        }
 
         if (!err || !err.userCode) {
             console.error(err);
@@ -452,9 +784,10 @@ function withLock_(fn) {
     }
 }
 
-function userError_(code) {
+function userError_(code, detail) {
     const err = new Error(code);
     err.userCode = code;
+    err.detail = detail;
     return err;
 }
 
@@ -546,6 +879,8 @@ function findPost_(postId) {
 }
 
 function publicPost_(row) {
+    const screenshot = String(row.screenshot || "");
+
     return {
         id: String(row.id),
         createdAt: Number(row.createdAt),
@@ -555,6 +890,7 @@ function publicPost_(row) {
         tokens: Number(row.tokens),
         done: row.done === "" || row.done === null ? null : Number(row.done),
         total: CREATURE_COUNT[String(row.mode)] || 0,
+        screenshot: isAllowedScreenshot_(screenshot) ? screenshot : "",
         ownerId: String(row.ownerId)
     };
 }

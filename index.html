@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coin999 夥伴計算機</title>
 
-    <link rel="stylesheet" href="./style.css?v=20261023h">
+    <link rel="stylesheet" href="./style.css?v=20261023i">
 </head>
 
 <body>
@@ -200,7 +200,13 @@
 
                     <div class="field">
                         <label for="matchLink" data-match-i18n="form.link">遊戲交友連結</label>
-                        <input id="matchLink" type="url" maxlength="300" autocomplete="off" placeholder="https://">
+                        <input id="matchLink" type="url" maxlength="300" autocomplete="off" placeholder="https://getcoinmaster.com/~...">
+                    </div>
+
+                    <div class="field">
+                        <label for="matchScreenshot" data-match-i18n="form.screenshot">遊戲畫面截圖連結（選填）</label>
+                        <input id="matchScreenshot" type="url" maxlength="300" autocomplete="off" placeholder="https://imgur.com/...">
+                        <p class="match-field-hint" data-match-i18n="form.screenshotHint"></p>
                     </div>
 
                     <div class="field">
@@ -237,7 +243,7 @@
 
     <div class="match-toast" id="matchToast" role="status" aria-live="polite"></div>
 
-    <script type="module" src="./app.js?v=20261023h"></script>
+    <script type="module" src="./app.js?v=20261023i"></script>
 </body>
 
 </html>

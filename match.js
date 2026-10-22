@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023h";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023i";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -15,6 +15,32 @@ const CREATURE_COUNT = {
     goldHatch: 2,
     goldFarm: 2
 };
+
+// 以下規則需與 backend/apps-script.gs 一致（前端先擋，後端仍會再檢查）
+const COIN_LINK_RE = /^https:\/\/(www\.)?getcoinmaster\.com\/~[A-Za-z0-9_-]{4,40}\/?(\?[A-Za-z0-9=&_%.-]*)?$/i;
+const LINK_IN_TEXT_RE = /(https?:\/\/|www\.|getcoinmaster|~[A-Za-z0-9]{6,}|\b[a-z0-9-]+\.(com|net|org|io|me|ly|gg|tw|cc|co|app|link|xyz|top|info)\b)/i;
+const SCREENSHOT_HOSTS = [
+    "imgur.com",
+    "ibb.co",
+    "imgbb.com",
+    "postimg.cc",
+    "postimages.org",
+    "photos.app.goo.gl",
+    "photos.google.com",
+    "drive.google.com"
+];
+
+function isAllowedScreenshot(url) {
+    const match = String(url).match(/^https:\/\/([^\/?#\s]+)[^\s<>"']*$/i);
+
+    if (!match) {
+        return false;
+    }
+
+    const host = match[1].toLowerCase();
+
+    return SCREENSHOT_HOSTS.some((allowed) => host === allowed || host.endsWith(`.${allowed}`));
+}
 
 // 至少能完成一半才可以上來找人（需與 backend/apps-script.gs 的 MIN_TOKENS 一致）
 const MIN_TOKENS = {
@@ -50,6 +76,7 @@ export class MatchBoard {
             mode: document.getElementById("matchMode"),
             team: document.getElementById("matchTeam"),
             link: document.getElementById("matchLink"),
+            screenshot: document.getElementById("matchScreenshot"),
             tokens: document.getElementById("matchTokens"),
             donePicker: document.getElementById("matchDonePicker"),
             doneHint: document.getElementById("matchDoneHint"),
@@ -231,7 +258,10 @@ export class MatchBoard {
         }
 
         if (!json.ok) {
-            throw new Error(json.error || "server");
+            const err = new Error(json.error || "server");
+
+            err.detail = json.detail || {};
+            throw err;
         }
 
         return json.data;
@@ -239,8 +269,11 @@ export class MatchBoard {
 
     errorText(err) {
         const code = err && err.message ? err.message : "server";
+        const detail = (err && err.detail) || {};
         const text = this.t(`error.${code}`, {
-            min: this.formatNumber(MIN_TOKENS[this.els.mode.value] || 0)
+            min: this.formatNumber(MIN_TOKENS[this.els.mode.value] || 0),
+            hours: detail.hours || 24,
+            minutes: detail.minutes || 1
         });
 
         return text === `error.${code}` ? this.t("error.server") : text;
@@ -355,13 +388,22 @@ export class MatchBoard {
         const link = this.els.link.value.trim();
         const tokensText = this.els.tokens.value.trim();
         const tokens = Number(tokensText);
+        const screenshot = this.els.screenshot.value.trim();
 
         if (!team) {
             return "badTeam";
         }
 
-        if (!/^https:\/\/[^\s<>"']+$/i.test(link)) {
+        if (LINK_IN_TEXT_RE.test(team)) {
+            return "noLinks";
+        }
+
+        if (!COIN_LINK_RE.test(link)) {
             return "badLink";
+        }
+
+        if (screenshot && !isAllowedScreenshot(screenshot)) {
+            return "badScreenshot";
         }
 
         if (!tokensText || !Number.isInteger(tokens) || tokens < 0) {
@@ -412,7 +454,8 @@ export class MatchBoard {
                 team: this.els.team.value.trim(),
                 link: this.els.link.value.trim(),
                 tokens: Number(this.els.tokens.value),
-                done: this.done
+                done: this.done,
+                screenshot: this.els.screenshot.value.trim()
             });
 
             this.saveProfile({
@@ -445,6 +488,11 @@ export class MatchBoard {
 
         if (!name || !message) {
             msgEl.textContent = this.t(!name ? "error.badName" : "error.badMessage");
+            return;
+        }
+
+        if (LINK_IN_TEXT_RE.test(name) || LINK_IN_TEXT_RE.test(message)) {
+            msgEl.textContent = this.t("error.noLinks");
             return;
         }
 
@@ -502,6 +550,30 @@ export class MatchBoard {
 
         try {
             await this.api({ action: "report", postId, reason: reason.trim() });
+            this.showToast(this.t("post.reported"));
+        } catch (err) {
+            this.showToast(this.errorText(err), "error");
+        } finally {
+            this.setBusy(button, false);
+        }
+    }
+
+    async reportComment(commentId, button) {
+        const reason = prompt(this.t("post.reportCommentPrompt"));
+
+        if (reason === null) {
+            return;
+        }
+
+        if (!reason.trim()) {
+            this.showToast(this.t("error.badReason"), "error");
+            return;
+        }
+
+        this.setBusy(button, true);
+
+        try {
+            await this.api({ action: "reportComment", commentId, reason: reason.trim() });
             this.showToast(this.t("post.reported"));
         } catch (err) {
             this.showToast(this.errorText(err), "error");
@@ -709,14 +781,25 @@ export class MatchBoard {
         const isMine = Boolean(this.ownerId) && post.ownerId === this.ownerId;
         const comments = Array.isArray(post.comments) ? post.comments : [];
 
+        const safeScreenshot = post.screenshot && isAllowedScreenshot(post.screenshot) ? post.screenshot : "";
+        const reportCount = Number(post.reportCount) || 0;
+
         const commentItems = comments.length
-            ? comments.map((comment) => `
-                <li>
-                    <b>${esc(comment.name)}</b>
-                    <span class="match-comment-text">${esc(comment.message)}</span>
-                    <time>${esc(this.formatTimeAgo(comment.createdAt))}</time>
-                </li>
-            `).join("")
+            ? comments.map((comment) => {
+                const canReport = Boolean(this.ownerId) && comment.ownerId !== this.ownerId;
+
+                return `
+                    <li class="${comment.isAuthor ? "author" : ""}">
+                        <b>${esc(comment.name)}</b>
+                        ${comment.isAuthor ? `<span class="match-author-badge">${esc(this.t("post.author"))}</span>` : ""}
+                        <span class="match-comment-text">${esc(comment.message)}</span>
+                        <div class="match-comment-meta">
+                            <time>${esc(this.formatTimeAgo(comment.createdAt))}</time>
+                            ${canReport ? `<button type="button" class="match-comment-report" data-report-comment="${esc(comment.id)}">${esc(this.t("post.report"))}</button>` : ""}
+                        </div>
+                    </li>
+                `;
+            }).join("")
             : `<li class="match-no-comment">${esc(this.t("post.noComments"))}</li>`;
 
         return `
@@ -728,6 +811,7 @@ export class MatchBoard {
                 </div>
 
                 <h3 class="match-team">${esc(post.team)}</h3>
+                ${reportCount > 0 ? `<div class="match-report-count">${esc(this.t("post.reportCount", { n: reportCount }))}</div>` : ""}
                 <div class="match-tokens">${esc(this.t("post.tokens", { n: this.formatNumber(post.tokens) }))}</div>
                 ${Number.isInteger(post.done) && post.total ? `
                     <div class="match-done-row">
@@ -735,6 +819,8 @@ export class MatchBoard {
                         <span class="match-done-text">${esc(this.t("post.done", { done: post.done, total: post.total }))}</span>
                     </div>
                 ` : ""}
+
+                ${safeScreenshot ? `<a class="match-screenshot-link" href="${esc(safeScreenshot)}" target="_blank" rel="noopener noreferrer nofollow">${esc(this.t("post.viewScreenshot"))}</a>` : ""}
 
                 <div class="match-actions">
                     ${safeLink ? `<button type="button" class="match-link-btn" data-copy="${esc(safeLink)}">${esc(this.t("post.copyLink"))}</button>` : ""}
@@ -795,8 +881,11 @@ export class MatchBoard {
             const del = event.target.closest("[data-delete]");
             const report = event.target.closest("[data-report]");
             const copy = event.target.closest("[data-copy]");
+            const reportComment = event.target.closest("[data-report-comment]");
 
-            if (del) {
+            if (reportComment) {
+                this.reportComment(reportComment.dataset.reportComment, reportComment);
+            } else if (del) {
                 this.deletePost(del.dataset.delete, del);
             } else if (report) {
                 this.reportPost(report.dataset.report, report);

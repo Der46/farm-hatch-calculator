@@ -10,6 +10,8 @@ export const MATCH_I18N = {
         refresh: "重新整理",
         listTitle: "徵求列表",
         form: {
+            screenshotHint: "把截圖上傳到 Imgur、ImgBB、Postimages 或 Google 相簿後貼上連結，可以提高大家幫你的意願。",
+            screenshot: "遊戲畫面截圖連結（選填）",
             doneHint: "已完成 {done} / {total} 隻・點第幾隻就代表完成幾隻，再點一次可取消",
             done: "已完成幾隻（點選）",
             confirmNormal: "⚠️ 請再次確認\n\n普通孵化 / 普通耕種必須自己有超過一半的代幣（此模式至少 {min}）才可以找人幫忙。\n只差一顆或兩顆的玩家會優先獲得幫忙。\n\n若事後被發現與事實不符，其他玩家可以舉報，管理員可能禁止你再使用媒合平台。\n\n確定要送出嗎？",
@@ -29,6 +31,10 @@ export const MATCH_I18N = {
             all: "全部"
         },
         post: {
+            reportCommentPrompt: "請輸入舉報這則留言的原因（例如：沒出力、冒充作者）：",
+            author: "作者",
+            reportCount: "⚠️ 此連結被舉報 {n} 次",
+            viewScreenshot: "📷 查看遊戲截圖",
             deleted: "已刪除這篇徵求。",
             done: "已完成 {done} / {total} 隻",
             copyLink: "複製好友連結",
@@ -48,6 +54,10 @@ export const MATCH_I18N = {
             send: "留言"
         },
         error: {
+            rateLimited: "操作太頻繁，請 {minutes} 分鐘後再試。",
+            cooldown: "這個交友連結 24 小時內已發過徵求，請 {hours} 小時後再發。",
+            noLinks: "暱稱和留言不能包含連結或網址。",
+            badScreenshot: "截圖連結只接受 Imgur、ImgBB、Postimages、Google 相簿或 Google 雲端硬碟。",
             badDone: "請點選已完成的隻數。",
             banned: "你已被管理員停止使用媒合平台。",
             alreadyReported: "你已經舉報過這篇貼文了。",
@@ -57,7 +67,7 @@ export const MATCH_I18N = {
             badRequest: "請求格式錯誤。",
             badMode: "請選擇模式。",
             badTeam: "請輸入暱稱。",
-            badLink: "請輸入以 https:// 開頭的交友連結。",
+            badLink: "請貼上 Coin Master 官方交友連結（https://getcoinmaster.com/~ 開頭）。",
             badTokens: "請輸入正確的代幣數量。",
             notEnoughTokens: "代幣需有 {min} 以上（可自己完成一半）才可以發文。",
             notFound: "找不到這篇貼文，可能已被刪除。",
@@ -80,6 +90,8 @@ export const MATCH_I18N = {
         refresh: "Refresh",
         listTitle: "Requests",
         form: {
+            screenshotHint: "Upload a screenshot to Imgur, ImgBB, Postimages or Google Photos and paste the link. It helps others trust your request.",
+            screenshot: "Game screenshot link (optional)",
             doneHint: "{done} / {total} done · tap the Nth one to mark N done, tap again to undo",
             done: "How many are done (tap)",
             confirmNormal: "⚠️ Please confirm\n\nNormal Hatch / Normal Farm requires more than half of the tokens yourself (at least {min} in this mode) before asking for help.\nPlayers who are only one or two short get priority.\n\nIf this turns out to be untrue, other players can report you and the admin may ban you from the matching board.\n\nPost this request?",
@@ -99,6 +111,10 @@ export const MATCH_I18N = {
             all: "All"
         },
         post: {
+            reportCommentPrompt: "Enter a reason for reporting this comment (e.g. didn't help, pretending to be the author):",
+            author: "Author",
+            reportCount: "⚠️ This link has been reported {n} times",
+            viewScreenshot: "📷 View screenshot",
             deleted: "Request deleted.",
             done: "{done} / {total} done",
             copyLink: "Copy friend link",
@@ -118,6 +134,10 @@ export const MATCH_I18N = {
             send: "Send"
         },
         error: {
+            rateLimited: "Too many actions. Please try again in {minutes} minutes.",
+            cooldown: "This friend link already posted within 24 hours. Please try again in {hours} hours.",
+            noLinks: "Nicknames and comments cannot contain links or web addresses.",
+            badScreenshot: "Screenshot links must be from Imgur, ImgBB, Postimages, Google Photos or Google Drive.",
             badDone: "Please tap how many you have completed.",
             banned: "You have been banned from the matching board by the admin.",
             alreadyReported: "You have already reported this post.",
@@ -127,7 +147,7 @@ export const MATCH_I18N = {
             badRequest: "Invalid request.",
             badMode: "Please choose a mode.",
             badTeam: "Please enter a nickname.",
-            badLink: "Please enter a friend link starting with https://.",
+            badLink: "Please paste an official Coin Master friend link (starting with https://getcoinmaster.com/~).",
             badTokens: "Please enter a valid token amount.",
             notEnoughTokens: "You need at least {min} tokens (enough to finish half) to post.",
             notFound: "Post not found. It may have been deleted.",
@@ -150,6 +170,8 @@ export const MATCH_I18N = {
         refresh: "Làm mới",
         listTitle: "Danh sách yêu cầu",
         form: {
+            screenshotHint: "Tải ảnh lên Imgur, ImgBB, Postimages hoặc Google Photos rồi dán liên kết để mọi người tin tưởng hơn.",
+            screenshot: "Liên kết ảnh chụp màn hình game (không bắt buộc)",
             doneHint: "Đã xong {done} / {total} · chạm con thứ N là xong N con, chạm lại để huỷ",
             done: "Đã hoàn thành mấy con (chạm để chọn)",
             confirmNormal: "⚠️ Vui lòng xác nhận\n\nẤp trứng / Trồng trọt thường phải tự có hơn một nửa số token (chế độ này ít nhất {min}) mới được tìm người giúp.\nNgười chỉ thiếu một hoặc hai sẽ được ưu tiên giúp.\n\nNếu sau đó bị phát hiện không đúng sự thật, người khác có thể báo cáo và quản trị viên có thể cấm bạn dùng trang ghép đội.\n\nBạn chắc chắn muốn đăng?",
@@ -169,6 +191,10 @@ export const MATCH_I18N = {
             all: "Tất cả"
         },
         post: {
+            reportCommentPrompt: "Nhập lý do báo cáo bình luận này (ví dụ: không giúp, mạo danh tác giả):",
+            author: "Tác giả",
+            reportCount: "⚠️ Liên kết này đã bị báo cáo {n} lần",
+            viewScreenshot: "📷 Xem ảnh chụp",
             deleted: "Đã xoá yêu cầu.",
             done: "Đã xong {done} / {total}",
             copyLink: "Sao chép liên kết kết bạn",
@@ -188,6 +214,10 @@ export const MATCH_I18N = {
             send: "Gửi"
         },
         error: {
+            rateLimited: "Thao tác quá nhanh, vui lòng thử lại sau {minutes} phút.",
+            cooldown: "Liên kết này đã đăng trong 24 giờ qua, vui lòng thử lại sau {hours} giờ.",
+            noLinks: "Biệt danh và bình luận không được chứa liên kết hay địa chỉ web.",
+            badScreenshot: "Ảnh chụp chỉ chấp nhận Imgur, ImgBB, Postimages, Google Photos hoặc Google Drive.",
             badDone: "Vui lòng chọn số con đã hoàn thành.",
             banned: "Bạn đã bị quản trị viên cấm dùng trang ghép đội.",
             alreadyReported: "Bạn đã báo cáo bài này rồi.",
@@ -197,7 +227,7 @@ export const MATCH_I18N = {
             badRequest: "Yêu cầu không hợp lệ.",
             badMode: "Vui lòng chọn chế độ.",
             badTeam: "Vui lòng nhập biệt danh.",
-            badLink: "Vui lòng nhập liên kết bắt đầu bằng https://.",
+            badLink: "Vui lòng dán liên kết kết bạn chính thức của Coin Master (bắt đầu bằng https://getcoinmaster.com/~).",
             badTokens: "Vui lòng nhập số token hợp lệ.",
             notEnoughTokens: "Cần ít nhất {min} token (tự hoàn thành một nửa) mới được đăng.",
             notFound: "Không tìm thấy bài, có thể đã bị xoá.",
@@ -220,6 +250,8 @@ export const MATCH_I18N = {
         refresh: "更新",
         listTitle: "募集一覧",
         form: {
+            screenshotHint: "Imgur・ImgBB・Postimages・Googleフォトにアップロードしてリンクを貼ると、信頼されやすくなります。",
+            screenshot: "ゲーム画面のスクリーンショットURL（任意）",
             doneHint: "{done} / {total} 体完成・N体目をタップでN体完成、もう一度タップで取り消し",
             done: "完成した数（タップで選択）",
             confirmNormal: "⚠️ 確認してください\n\n通常の孵化／栽培は、半分以上のトークン（このモードは {min} 以上）を自分で持っている場合のみ助っ人を募集できます。\nあと1〜2個だけ足りない人が優先されます。\n\n事実と異なる場合は他のプレイヤーが通報でき、管理者がマッチング掲示板の利用を禁止することがあります。\n\n投稿しますか？",
@@ -239,6 +271,10 @@ export const MATCH_I18N = {
             all: "すべて"
         },
         post: {
+            reportCommentPrompt: "このコメントを通報する理由を入力してください（例：手伝わない、投稿者のなりすまし）：",
+            author: "投稿者",
+            reportCount: "⚠️ このリンクは {n} 回通報されています",
+            viewScreenshot: "📷 スクリーンショットを見る",
             deleted: "募集を削除しました。",
             done: "{done} / {total} 体完成",
             copyLink: "フレンドリンクをコピー",
@@ -258,6 +294,10 @@ export const MATCH_I18N = {
             send: "送信"
         },
         error: {
+            rateLimited: "操作が多すぎます。{minutes} 分後に再度お試しください。",
+            cooldown: "このフレンドリンクは24時間以内に投稿済みです。{hours} 時間後に再度お試しください。",
+            noLinks: "ニックネームとコメントにリンクやURLは含められません。",
+            badScreenshot: "スクリーンショットはImgur・ImgBB・Postimages・Googleフォト・Googleドライブのリンクのみ使えます。",
             badDone: "完成した数をタップで選んでください。",
             banned: "管理者によりマッチング掲示板の利用が停止されています。",
             alreadyReported: "この投稿はすでに通報済みです。",
@@ -267,7 +307,7 @@ export const MATCH_I18N = {
             badRequest: "リクエストが不正です。",
             badMode: "モードを選択してください。",
             badTeam: "ニックネームを入力してください。",
-            badLink: "https:// で始まるフレンドリンクを入力してください。",
+            badLink: "Coin Master公式のフレンドリンク（https://getcoinmaster.com/~ で始まる）を貼ってください。",
             badTokens: "正しいトークン数を入力してください。",
             notEnoughTokens: "投稿には {min} トークン以上（半分を自分で達成可能）が必要です。",
             notFound: "投稿が見つかりません。削除された可能性があります。",
@@ -290,6 +330,8 @@ export const MATCH_I18N = {
         refresh: "새로고침",
         listTitle: "요청 목록",
         form: {
+            screenshotHint: "Imgur, ImgBB, Postimages, Google 포토에 올린 뒤 링크를 붙여 넣으면 더 신뢰를 얻을 수 있습니다.",
+            screenshot: "게임 화면 스크린샷 링크 (선택)",
             doneHint: "{done} / {total} 완료 · N번째를 탭하면 N개 완료, 다시 탭하면 취소",
             done: "완료한 수 (탭하여 선택)",
             confirmNormal: "⚠️ 다시 확인해 주세요\n\n일반 부화 / 일반 재배는 토큰을 절반 이상(이 모드는 최소 {min}) 직접 보유해야 도움을 요청할 수 있습니다.\n한두 개만 부족한 플레이어가 우선 도움을 받습니다.\n\n사실과 다르면 다른 플레이어가 신고할 수 있으며, 관리자가 매칭 게시판 이용을 금지할 수 있습니다.\n\n게시하시겠습니까?",
@@ -309,6 +351,10 @@ export const MATCH_I18N = {
             all: "전체"
         },
         post: {
+            reportCommentPrompt: "이 댓글을 신고하는 이유를 입력하세요 (예: 도와주지 않음, 작성자 사칭):",
+            author: "작성자",
+            reportCount: "⚠️ 이 링크는 {n}번 신고되었습니다",
+            viewScreenshot: "📷 스크린샷 보기",
             deleted: "요청을 삭제했습니다.",
             done: "{done} / {total} 완료",
             copyLink: "친구 링크 복사",
@@ -328,6 +374,10 @@ export const MATCH_I18N = {
             send: "등록"
         },
         error: {
+            rateLimited: "요청이 너무 많습니다. {minutes}분 후 다시 시도하세요.",
+            cooldown: "이 친구 링크는 24시간 안에 이미 게시했습니다. {hours}시간 후 다시 시도하세요.",
+            noLinks: "닉네임과 댓글에는 링크나 웹 주소를 넣을 수 없습니다.",
+            badScreenshot: "스크린샷 링크는 Imgur, ImgBB, Postimages, Google 포토, Google 드라이브만 가능합니다.",
             badDone: "완료한 수를 탭하여 선택하세요.",
             banned: "관리자에 의해 매칭 게시판 이용이 제한되었습니다.",
             alreadyReported: "이미 신고한 게시글입니다.",
@@ -337,7 +387,7 @@ export const MATCH_I18N = {
             badRequest: "잘못된 요청입니다.",
             badMode: "모드를 선택하세요.",
             badTeam: "닉네임을 입력하세요.",
-            badLink: "https:// 로 시작하는 친구 링크를 입력하세요.",
+            badLink: "Coin Master 공식 친구 링크(https://getcoinmaster.com/~ 로 시작)를 붙여 넣으세요.",
             badTokens: "올바른 토큰 수를 입력하세요.",
             notEnoughTokens: "토큰이 {min}개 이상(절반 스스로 완료 가능)이어야 게시할 수 있습니다.",
             notFound: "게시글을 찾을 수 없습니다. 삭제되었을 수 있습니다.",
@@ -360,6 +410,8 @@ export const MATCH_I18N = {
         refresh: "รีเฟรช",
         listTitle: "รายการคำขอ",
         form: {
+            screenshotHint: "อัปโหลดภาพไปที่ Imgur, ImgBB, Postimages หรือ Google Photos แล้ววางลิงก์ จะช่วยให้คนอื่นเชื่อถือมากขึ้น",
+            screenshot: "ลิงก์ภาพหน้าจอเกม (ไม่บังคับ)",
             doneHint: "สำเร็จ {done} / {total} ตัว · แตะตัวที่ N = สำเร็จ N ตัว แตะซ้ำเพื่อยกเลิก",
             done: "ทำสำเร็จแล้วกี่ตัว (แตะเลือก)",
             confirmNormal: "⚠️ โปรดยืนยันอีกครั้ง\n\nฟักไข่ / ปลูกพืชแบบปกติต้องมีโทเคนเองมากกว่าครึ่ง (โหมดนี้อย่างน้อย {min}) จึงจะหาคนช่วยได้\nผู้ที่ขาดอีกเพียงหนึ่งหรือสองจะได้รับความช่วยเหลือก่อน\n\nหากภายหลังพบว่าไม่เป็นความจริง ผู้เล่นอื่นสามารถรายงาน และผู้ดูแลอาจห้ามคุณใช้กระดานจับคู่\n\nยืนยันการโพสต์?",
@@ -379,6 +431,10 @@ export const MATCH_I18N = {
             all: "ทั้งหมด"
         },
         post: {
+            reportCommentPrompt: "กรอกเหตุผลที่รายงานคอมเมนต์นี้ (เช่น ไม่ช่วยจริง แอบอ้างเป็นเจ้าของโพสต์):",
+            author: "เจ้าของโพสต์",
+            reportCount: "⚠️ ลิงก์นี้ถูกรายงาน {n} ครั้ง",
+            viewScreenshot: "📷 ดูภาพหน้าจอ",
             deleted: "ลบคำขอแล้ว",
             done: "สำเร็จ {done} / {total} ตัว",
             copyLink: "คัดลอกลิงก์เพื่อน",
@@ -398,6 +454,10 @@ export const MATCH_I18N = {
             send: "ส่ง"
         },
         error: {
+            rateLimited: "ทำรายการถี่เกินไป โปรดลองใหม่ในอีก {minutes} นาที",
+            cooldown: "ลิงก์เพื่อนนี้โพสต์ไปแล้วภายใน 24 ชั่วโมง โปรดลองใหม่ในอีก {hours} ชั่วโมง",
+            noLinks: "ชื่อเล่นและคอมเมนต์ห้ามมีลิงก์หรือที่อยู่เว็บ",
+            badScreenshot: "ลิงก์ภาพรองรับเฉพาะ Imgur, ImgBB, Postimages, Google Photos หรือ Google Drive",
             badDone: "โปรดแตะเลือกจำนวนที่ทำสำเร็จ",
             banned: "คุณถูกผู้ดูแลห้ามใช้กระดานจับคู่",
             alreadyReported: "คุณรายงานโพสต์นี้ไปแล้ว",
@@ -407,7 +467,7 @@ export const MATCH_I18N = {
             badRequest: "คำขอไม่ถูกต้อง",
             badMode: "โปรดเลือกโหมด",
             badTeam: "โปรดกรอกชื่อเล่น",
-            badLink: "โปรดกรอกลิงก์ที่ขึ้นต้นด้วย https://",
+            badLink: "โปรดวางลิงก์เพิ่มเพื่อนทางการของ Coin Master (ขึ้นต้นด้วย https://getcoinmaster.com/~)",
             badTokens: "โปรดกรอกจำนวนโทเคนให้ถูกต้อง",
             notEnoughTokens: "ต้องมีโทเคน {min} ขึ้นไป (ทำได้ครึ่งหนึ่งเอง) จึงจะโพสต์ได้",
             notFound: "ไม่พบโพสต์ อาจถูกลบไปแล้ว",
@@ -430,6 +490,8 @@ export const MATCH_I18N = {
         refresh: "Muat ulang",
         listTitle: "Daftar permintaan",
         form: {
+            screenshotHint: "Unggah screenshot ke Imgur, ImgBB, Postimages atau Google Foto lalu tempel link-nya agar orang lebih percaya.",
+            screenshot: "Link screenshot game (opsional)",
             doneHint: "Selesai {done} / {total} · ketuk yang ke-N untuk N selesai, ketuk lagi untuk batal",
             done: "Sudah selesai berapa (ketuk)",
             confirmNormal: "⚠️ Mohon konfirmasi\n\nTetas / Tanam biasa harus punya lebih dari setengah token sendiri (mode ini minimal {min}) sebelum mencari bantuan.\nPemain yang hanya kurang satu atau dua akan diprioritaskan.\n\nJika ternyata tidak sesuai, pemain lain bisa melapor dan admin dapat melarangmu memakai papan pencarian.\n\nKirim permintaan ini?",
@@ -449,6 +511,10 @@ export const MATCH_I18N = {
             all: "Semua"
         },
         post: {
+            reportCommentPrompt: "Masukkan alasan melaporkan komentar ini (contoh: tidak membantu, menyamar sebagai penulis):",
+            author: "Penulis",
+            reportCount: "⚠️ Link ini sudah dilaporkan {n} kali",
+            viewScreenshot: "📷 Lihat screenshot",
             deleted: "Permintaan dihapus.",
             done: "Selesai {done} / {total}",
             copyLink: "Salin link teman",
@@ -468,6 +534,10 @@ export const MATCH_I18N = {
             send: "Kirim"
         },
         error: {
+            rateLimited: "Terlalu sering. Coba lagi dalam {minutes} menit.",
+            cooldown: "Link teman ini sudah posting dalam 24 jam terakhir. Coba lagi dalam {hours} jam.",
+            noLinks: "Nama panggilan dan komentar tidak boleh berisi link atau alamat web.",
+            badScreenshot: "Link screenshot hanya dari Imgur, ImgBB, Postimages, Google Foto atau Google Drive.",
             badDone: "Silakan ketuk jumlah yang sudah selesai.",
             banned: "Kamu telah dilarang memakai papan pencarian oleh admin.",
             alreadyReported: "Kamu sudah melaporkan postingan ini.",
@@ -477,7 +547,7 @@ export const MATCH_I18N = {
             badRequest: "Permintaan tidak valid.",
             badMode: "Silakan pilih mode.",
             badTeam: "Silakan isi nama panggilan.",
-            badLink: "Silakan isi link yang diawali https://.",
+            badLink: "Tempel link teman resmi Coin Master (diawali https://getcoinmaster.com/~).",
             badTokens: "Silakan isi jumlah token yang benar.",
             notEnoughTokens: "Butuh minimal {min} token (cukup untuk setengah) agar bisa posting.",
             notFound: "Postingan tidak ditemukan, mungkin sudah dihapus.",
@@ -500,6 +570,8 @@ export const MATCH_I18N = {
         refresh: "Actualizar",
         listTitle: "Solicitudes",
         form: {
+            screenshotHint: "Sube una captura a Imgur, ImgBB, Postimages o Google Fotos y pega el enlace; así otros confiarán más en tu solicitud.",
+            screenshot: "Enlace a captura del juego (opcional)",
             doneHint: "{done} / {total} completados · toca el N.º N para marcar N, toca de nuevo para deshacer",
             done: "Cuántos completaste (toca)",
             confirmNormal: "⚠️ Confirma, por favor\n\nIncubar / Cultivar normal exige tener tú mismo más de la mitad de los tokens (en este modo, al menos {min}) para pedir ayuda.\nQuienes solo necesiten uno o dos más tienen prioridad.\n\nSi luego resulta no ser cierto, otros jugadores pueden denunciarte y el administrador puede prohibirte usar el tablón.\n\n¿Publicar la solicitud?",
@@ -519,6 +591,10 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            reportCommentPrompt: "Escribe el motivo para denunciar este comentario (ej.: no ayudó, se hace pasar por el autor):",
+            author: "Autor",
+            reportCount: "⚠️ Este enlace ha sido denunciado {n} veces",
+            viewScreenshot: "📷 Ver captura",
             deleted: "Solicitud borrada.",
             done: "{done} / {total} completados",
             copyLink: "Copiar enlace de amistad",
@@ -538,6 +614,10 @@ export const MATCH_I18N = {
             send: "Enviar"
         },
         error: {
+            rateLimited: "Demasiadas acciones. Inténtalo de nuevo en {minutes} minutos.",
+            cooldown: "Este enlace ya publicó en las últimas 24 horas. Inténtalo de nuevo en {hours} horas.",
+            noLinks: "Los apodos y comentarios no pueden incluir enlaces ni direcciones web.",
+            badScreenshot: "Las capturas solo pueden ser de Imgur, ImgBB, Postimages, Google Fotos o Google Drive.",
             badDone: "Toca cuántos has completado.",
             banned: "El administrador te ha prohibido usar el tablón.",
             alreadyReported: "Ya denunciaste esta publicación.",
@@ -547,7 +627,7 @@ export const MATCH_I18N = {
             badRequest: "Solicitud no válida.",
             badMode: "Elige un modo.",
             badTeam: "Escribe un apodo.",
-            badLink: "Escribe un enlace que empiece por https://.",
+            badLink: "Pega un enlace de amistad oficial de Coin Master (que empiece por https://getcoinmaster.com/~).",
             badTokens: "Escribe una cantidad de tokens válida.",
             notEnoughTokens: "Necesitas al menos {min} tokens (suficiente para la mitad) para publicar.",
             notFound: "No se encontró la publicación; puede que se haya borrado.",
@@ -570,6 +650,8 @@ export const MATCH_I18N = {
         refresh: "Atualizar",
         listTitle: "Pedidos",
         form: {
+            screenshotHint: "Envie a captura para Imgur, ImgBB, Postimages ou Google Fotos e cole o link; assim os outros confiam mais no seu pedido.",
+            screenshot: "Link da captura do jogo (opcional)",
             doneHint: "{done} / {total} concluídos · toque no N.º N para marcar N, toque de novo para desfazer",
             done: "Quantos já concluiu (toque)",
             confirmNormal: "⚠️ Confirme, por favor\n\nChocar / Cultivar normal exige ter mais da metade dos tokens por conta própria (neste modo, pelo menos {min}) para pedir ajuda.\nQuem estiver faltando só um ou dois tem prioridade.\n\nSe depois for descoberto que não é verdade, outros jogadores podem denunciar e o administrador pode banir você do mural.\n\nPublicar o pedido?",
@@ -589,6 +671,10 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            reportCommentPrompt: "Digite o motivo da denúncia deste comentário (ex.: não ajudou, fingiu ser o autor):",
+            author: "Autor",
+            reportCount: "⚠️ Este link foi denunciado {n} vezes",
+            viewScreenshot: "📷 Ver captura",
             deleted: "Pedido apagado.",
             done: "{done} / {total} concluídos",
             copyLink: "Copiar link de amizade",
@@ -608,6 +694,10 @@ export const MATCH_I18N = {
             send: "Enviar"
         },
         error: {
+            rateLimited: "Muitas ações. Tente novamente em {minutes} minutos.",
+            cooldown: "Este link já publicou nas últimas 24 horas. Tente novamente em {hours} horas.",
+            noLinks: "Apelidos e comentários não podem conter links ou endereços da web.",
+            badScreenshot: "A captura só pode ser do Imgur, ImgBB, Postimages, Google Fotos ou Google Drive.",
             badDone: "Toque em quantos você já concluiu.",
             banned: "Você foi banido do mural pelo administrador.",
             alreadyReported: "Você já denunciou esta publicação.",
@@ -617,7 +707,7 @@ export const MATCH_I18N = {
             badRequest: "Pedido inválido.",
             badMode: "Escolha um modo.",
             badTeam: "Digite um apelido.",
-            badLink: "Digite um link que comece com https://.",
+            badLink: "Cole um link de amizade oficial do Coin Master (começando com https://getcoinmaster.com/~).",
             badTokens: "Digite uma quantidade de tokens válida.",
             notEnoughTokens: "É preciso ter pelo menos {min} tokens (suficiente para metade) para publicar.",
             notFound: "Publicação não encontrada; pode ter sido apagada.",

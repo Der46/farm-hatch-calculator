@@ -960,6 +960,64 @@ button.match-creature:active {
     font-weight: 950;
 }
 
+.match-field-hint {
+    margin: 0;
+    color: #8a5a32;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.match-report-count {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    color: #9a1c1c;
+    font-size: 12px;
+    font-weight: 950;
+    background: #ffe0dc;
+}
+
+.match-screenshot-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #1a6fd1;
+    font-size: 14px;
+    font-weight: 950;
+}
+
+.match-author-badge {
+    margin-right: 6px;
+    border-radius: 999px;
+    padding: 1px 7px;
+    color: white;
+    font-size: 11px;
+    font-weight: 950;
+    background: #1a6fd1;
+}
+
+.match-comments li.author {
+    background: #e8f3ff;
+}
+
+.match-comment-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.match-comment-report {
+    border: 0;
+    padding: 0;
+    color: #a08060;
+    font-size: 11px;
+    font-weight: 900;
+    text-decoration: underline;
+    background: none;
+}
+
 .match-note {
     margin: 8px 0 0;
     padding: 8px 10px;
