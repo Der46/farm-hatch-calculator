@@ -29,6 +29,7 @@ export const MATCH_I18N = {
             all: "全部"
         },
         post: {
+            deleted: "已刪除這篇徵求。",
             done: "已完成 {done} / {total} 隻",
             copyLink: "複製好友連結",
             copied: "已複製！",
@@ -98,6 +99,7 @@ export const MATCH_I18N = {
             all: "All"
         },
         post: {
+            deleted: "Request deleted.",
             done: "{done} / {total} done",
             copyLink: "Copy friend link",
             copied: "Copied!",
@@ -167,6 +169,7 @@ export const MATCH_I18N = {
             all: "Tất cả"
         },
         post: {
+            deleted: "Đã xoá yêu cầu.",
             done: "Đã xong {done} / {total}",
             copyLink: "Sao chép liên kết kết bạn",
             copied: "Đã sao chép!",
@@ -236,6 +239,7 @@ export const MATCH_I18N = {
             all: "すべて"
         },
         post: {
+            deleted: "募集を削除しました。",
             done: "{done} / {total} 体完成",
             copyLink: "フレンドリンクをコピー",
             copied: "コピーしました！",
@@ -305,6 +309,7 @@ export const MATCH_I18N = {
             all: "전체"
         },
         post: {
+            deleted: "요청을 삭제했습니다.",
             done: "{done} / {total} 완료",
             copyLink: "친구 링크 복사",
             copied: "복사됨!",
@@ -374,6 +379,7 @@ export const MATCH_I18N = {
             all: "ทั้งหมด"
         },
         post: {
+            deleted: "ลบคำขอแล้ว",
             done: "สำเร็จ {done} / {total} ตัว",
             copyLink: "คัดลอกลิงก์เพื่อน",
             copied: "คัดลอกแล้ว!",
@@ -443,6 +449,7 @@ export const MATCH_I18N = {
             all: "Semua"
         },
         post: {
+            deleted: "Permintaan dihapus.",
             done: "Selesai {done} / {total}",
             copyLink: "Salin link teman",
             copied: "Tersalin!",
@@ -512,6 +519,7 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            deleted: "Solicitud borrada.",
             done: "{done} / {total} completados",
             copyLink: "Copiar enlace de amistad",
             copied: "¡Copiado!",
@@ -581,6 +589,7 @@ export const MATCH_I18N = {
             all: "Todos"
         },
         post: {
+            deleted: "Pedido apagado.",
             done: "{done} / {total} concluídos",
             copyLink: "Copiar link de amizade",
             copied: "Copiado!",

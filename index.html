@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coin999 夥伴計算機</title>
 
-    <link rel="stylesheet" href="./style.css?v=20261023g">
+    <link rel="stylesheet" href="./style.css?v=20261023h">
 </head>
 
 <body>
@@ -228,13 +228,16 @@
 
             <div class="match-filter" id="matchFilter"></div>
             <p class="match-notice" id="matchNotice" hidden></p>
+            <div class="match-progress" id="matchProgress" hidden></div>
             <div class="match-list" id="matchList"></div>
 
             <footer data-i18n="app.footer">© {year} 資料提供 CM大佬群 隊伍｜網頁製作 Coin999-長長久久 隊伍</footer>
         </div>
     </section>
 
-    <script type="module" src="./app.js?v=20261023g"></script>
+    <div class="match-toast" id="matchToast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./app.js?v=20261023h"></script>
 </body>
 
 </html>

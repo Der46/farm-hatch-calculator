@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023g";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023h";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycbyocp1bZSLy3IVUYbJ1r7596t_RqNj8_AvssK7pCckDCz6ICbVpga1LTOA3q1CvTIQYNg/exec";
@@ -38,6 +38,8 @@ export class MatchBoard {
         this.status = "idle";
         this.submitting = false;
         this.done = 0;
+        this.loadSeq = 0;
+        this.refreshing = false;
 
         this.els = {
             openBtn: document.getElementById("matchOpenBtn"),
@@ -56,7 +58,9 @@ export class MatchBoard {
             submit: document.getElementById("matchSubmit"),
             refresh: document.getElementById("matchRefresh"),
             filter: document.getElementById("matchFilter"),
-            list: document.getElementById("matchList")
+            list: document.getElementById("matchList"),
+            progress: document.getElementById("matchProgress"),
+            toast: document.getElementById("matchToast")
         };
 
         this.bindEvents();
@@ -169,6 +173,37 @@ export class MatchBoard {
         return this.els.page.classList.contains("open");
     }
 
+    /* ---------- 等待後端時的狀態 ---------- */
+
+    // 按鈕顯示轉圈並鎖住，直到整個操作（含重新載入列表）完成
+    setBusy(button, busy) {
+        if (!button) {
+            return;
+        }
+
+        button.disabled = busy;
+        button.classList.toggle("is-busy", busy);
+        button.setAttribute("aria-busy", String(busy));
+    }
+
+    setFormLocked(form, locked) {
+        form.querySelectorAll("input, select, textarea, button").forEach((field) => {
+            field.disabled = locked;
+        });
+    }
+
+    showToast(text, type = "success") {
+        const toast = this.els.toast;
+
+        toast.textContent = text;
+        toast.className = `match-toast ${type} show`;
+
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2600);
+    }
+
     /* ---------- api ---------- */
 
     async api(payload) {
@@ -218,22 +253,51 @@ export class MatchBoard {
             return;
         }
 
-        this.status = "loading";
+        // 只採用最後一次載入的結果，避免連點時舊資料蓋掉新資料
+        const seq = ++this.loadSeq;
+
+        if (this.status !== "ready") {
+            this.status = "loading";
+        }
+
+        this.setRefreshing(true);
         this.render();
 
         try {
             const data = await this.api();
 
             await this.ownerIdReady;
+
+            if (seq !== this.loadSeq) {
+                return;
+            }
+
             this.posts = Array.isArray(data.posts) ? data.posts : [];
             this.ttlDays = data.ttlDays;
             this.status = "ready";
         } catch (err) {
-            this.status = "error";
-            this.loadError = this.errorText(err);
+            if (seq !== this.loadSeq) {
+                return;
+            }
+
+            if (this.status === "ready") {
+                // 已有列表時只提示錯誤，不清空畫面
+                this.showToast(this.errorText(err), "error");
+            } else {
+                this.status = "error";
+                this.loadError = this.errorText(err);
+            }
         }
 
+        this.setRefreshing(false);
         this.render();
+    }
+
+    setRefreshing(refreshing) {
+        this.refreshing = refreshing;
+        this.els.progress.hidden = !refreshing;
+        this.els.list.classList.toggle("refreshing", refreshing && this.status === "ready");
+        this.setBusy(this.els.refresh, refreshing);
     }
 
     /* ---------- form ---------- */
@@ -336,7 +400,8 @@ export class MatchBoard {
         }
 
         this.submitting = true;
-        this.els.submit.disabled = true;
+        this.setFormLocked(this.els.form, true);
+        this.setBusy(this.els.submit, true);
         this.els.submit.textContent = this.t("form.submitting");
         this.setFormMessage("");
 
@@ -355,14 +420,16 @@ export class MatchBoard {
                 link: this.els.link.value.trim()
             });
 
-            this.setFormMessage(this.t("form.success"), "success");
             this.filter = "all";
             await this.load();
+            this.setFormMessage(this.t("form.success"), "success");
+            this.showToast(this.t("form.success"));
         } catch (err) {
             this.setFormMessage(this.errorText(err), "error");
         } finally {
             this.submitting = false;
-            this.els.submit.disabled = false;
+            this.setFormLocked(this.els.form, false);
+            this.setBusy(this.els.submit, false);
             this.els.submit.textContent = this.t("form.submit");
         }
     }
@@ -381,33 +448,45 @@ export class MatchBoard {
             return;
         }
 
-        button.disabled = true;
+        this.setFormLocked(form, true);
+        this.setBusy(button, true);
         msgEl.textContent = "";
 
         try {
             await this.api({ action: "comment", postId, name, message });
             this.saveProfile({ name });
+            // 留言已送出，重新載入時不要再還原草稿
+            messageInput.value = "";
             await this.load();
         } catch (err) {
             msgEl.textContent = this.errorText(err);
-            button.disabled = false;
+            this.setFormLocked(form, false);
+            this.setBusy(button, false);
         }
     }
 
-    async deletePost(postId) {
+    async deletePost(postId, button) {
         if (!confirm(this.t("post.deleteConfirm"))) {
             return;
         }
 
+        const card = button.closest(".match-post");
+
+        this.setBusy(button, true);
+        card.classList.add("busy");
+
         try {
             await this.api({ action: "delete", postId });
             await this.load();
+            this.showToast(this.t("post.deleted"));
         } catch (err) {
-            alert(this.errorText(err));
+            this.showToast(this.errorText(err), "error");
+            this.setBusy(button, false);
+            card.classList.remove("busy");
         }
     }
 
-    async reportPost(postId) {
+    async reportPost(postId, button) {
         const reason = prompt(this.t("post.reportPrompt"));
 
         if (reason === null) {
@@ -415,15 +494,19 @@ export class MatchBoard {
         }
 
         if (!reason.trim()) {
-            alert(this.t("error.badReason"));
+            this.showToast(this.t("error.badReason"), "error");
             return;
         }
 
+        this.setBusy(button, true);
+
         try {
             await this.api({ action: "report", postId, reason: reason.trim() });
-            alert(this.t("post.reported"));
+            this.showToast(this.t("post.reported"));
         } catch (err) {
-            alert(this.errorText(err));
+            this.showToast(this.errorText(err), "error");
+        } finally {
+            this.setBusy(button, false);
         }
     }
 
@@ -546,13 +629,17 @@ export class MatchBoard {
 
         const notice = {
             notConfigured: this.t("notConfigured"),
-            loading: this.t("loading"),
             error: this.loadError || this.t("error.server")
         }[this.status];
 
         this.els.notice.hidden = !notice;
         this.els.notice.textContent = notice || "";
         this.els.notice.className = `match-notice ${this.status}`;
+
+        if (this.status === "loading") {
+            this.els.list.innerHTML = this.renderSkeleton();
+            return;
+        }
 
         if (this.status !== "ready") {
             this.els.list.innerHTML = "";
@@ -569,8 +656,50 @@ export class MatchBoard {
         }
 
         const profile = this.readProfile();
+        const drafts = this.collectCommentDrafts();
 
         this.els.list.innerHTML = posts.map((post) => this.renderPost(post, profile)).join("");
+        this.restoreCommentDrafts(drafts);
+    }
+
+    renderSkeleton() {
+        const card = `
+            <div class="match-post match-skeleton" aria-hidden="true">
+                <span class="sk sk-badge"></span>
+                <span class="sk sk-title"></span>
+                <span class="sk sk-line"></span>
+                <span class="sk sk-button"></span>
+            </div>
+        `;
+
+        return `<p class="match-sr-only" role="status">${this.escapeHtml(this.t("loading"))}</p>${card}${card}`;
+    }
+
+    // 重新載入列表時保留正在輸入的留言
+    collectCommentDrafts() {
+        const drafts = {};
+
+        this.els.list.querySelectorAll(".match-comment-form").forEach((form) => {
+            const name = form.querySelector("[name=name]").value;
+            const message = form.querySelector("[name=message]").value;
+
+            if (message) {
+                drafts[form.dataset.postId] = { name, message };
+            }
+        });
+
+        return drafts;
+    }
+
+    restoreCommentDrafts(drafts) {
+        this.els.list.querySelectorAll(".match-comment-form").forEach((form) => {
+            const draft = drafts[form.dataset.postId];
+
+            if (draft) {
+                form.querySelector("[name=name]").value = draft.name;
+                form.querySelector("[name=message]").value = draft.message;
+            }
+        });
     }
 
     renderPost(post, profile) {
@@ -668,9 +797,9 @@ export class MatchBoard {
             const copy = event.target.closest("[data-copy]");
 
             if (del) {
-                this.deletePost(del.dataset.delete);
+                this.deletePost(del.dataset.delete, del);
             } else if (report) {
-                this.reportPost(report.dataset.report);
+                this.reportPost(report.dataset.report, report);
             } else if (copy) {
                 this.copyLink(copy);
             }
