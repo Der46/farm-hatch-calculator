@@ -56,9 +56,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 夥伴計算機",
             footer: "© {year} 資料提供 CM大佬群 隊伍｜網頁製作 Coin999-長長久久 隊伍",
-            credit: "由Coin999-長長久久 隊伍製作",
-            privacy: "隱私權政策",
-            dataDeletion: "資料刪除說明"
+            credit: "由Coin999-長長久久 隊伍製作"
         },
         settings: {
             title: "關卡設定",
@@ -131,9 +129,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 Partner Calculator",
             footer: "© {year} Data provided by CM Leaders Team｜Website by Coin999-長長久久 Team",
-            credit: "Made by Coin999-長長久久 Team",
-            privacy: "Privacy Policy",
-            dataDeletion: "Data Deletion"
+            credit: "Made by Coin999-長長久久 Team"
         },
         settings: {
             title: "Stage Settings",
@@ -206,9 +202,7 @@ export const I18N = {
         app: {
             documentTitle: "Máy tính Đồng Đội Coin999",
             footer: "© {year} Dữ liệu được cung cấp bởi đội CM大佬群｜Website được thực hiện bởi Coin999-長長久久 Đội",
-            credit: "Được thực hiện bởi đội Coin999-長長久久",
-            privacy: "Chính sách quyền riêng tư",
-            dataDeletion: "Xoá dữ liệu"
+            credit: "Được thực hiện bởi đội Coin999-長長久久"
         },
         settings: {
             title: "Cài đặt ải",
@@ -281,9 +275,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 パートナー計算機",
             footer: "© {year} データ提供：CM大佬群 チーム｜Web制作：Coin999-長長久久 チーム",
-            credit: "Coin999-長長久久 チーム制作",
-            privacy: "プライバシーポリシー",
-            dataDeletion: "データ削除"
+            credit: "Coin999-長長久久 チーム制作"
         },
         settings: {
             title: "ステージ設定",
@@ -356,9 +348,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 파트너 계산기",
             footer: "© {year} 데이터 제공: CM大佬群 팀｜웹 제작: Coin999-長長久久 팀",
-            credit: "Coin999-長長久久 팀 제작",
-            privacy: "개인정보처리방침",
-            dataDeletion: "데이터 삭제"
+            credit: "Coin999-長長久久 팀 제작"
         },
         settings: {
             title: "스테이지 설정",
@@ -431,9 +421,7 @@ export const I18N = {
         app: {
             documentTitle: "เครื่องคิดเลขพาร์ทเนอร์ Coin999",
             footer: "© {year} ข้อมูลโดยทีม CM大佬群｜จัดทำเว็บไซต์โดยทีม Coin999-長長久久",
-            credit: "จัดทำโดยทีม Coin999-長長久久",
-            privacy: "นโยบายความเป็นส่วนตัว",
-            dataDeletion: "การลบข้อมูล"
+            credit: "จัดทำโดยทีม Coin999-長長久久"
         },
         settings: {
             title: "ตั้งค่าด่าน",
@@ -506,9 +494,7 @@ export const I18N = {
         app: {
             documentTitle: "Kalkulator Partner Coin999",
             footer: "© {year} Data disediakan oleh Tim CM大佬群｜Website dibuat oleh Tim Coin999-長長久久",
-            credit: "Dibuat oleh Tim Coin999-長長久久",
-            privacy: "Kebijakan Privasi",
-            dataDeletion: "Penghapusan Data"
+            credit: "Dibuat oleh Tim Coin999-長長久久"
         },
         settings: {
             title: "Pengaturan Level",
@@ -581,9 +567,7 @@ export const I18N = {
         app: {
             documentTitle: "Calculadora de Socios Coin999",
             footer: "© {year} Datos proporcionados por el equipo CM大佬群｜Sitio web creado por Coin999-長長久久 Equipo",
-            credit: "Creado por el equipo Coin999-長長久久",
-            privacy: "Política de privacidad",
-            dataDeletion: "Eliminación de datos"
+            credit: "Creado por el equipo Coin999-長長久久"
         },
         settings: {
             title: "Configuración de etapa",
@@ -656,9 +640,7 @@ export const I18N = {
         app: {
             documentTitle: "Calculadora de Parceiros Coin999",
             footer: "© {year} Dados fornecidos pela equipe CM大佬群｜Site criado por Coin999-長長久久 Equipe",
-            credit: "Criado pela equipe Coin999-長長久久",
-            privacy: "Política de Privacidade",
-            dataDeletion: "Exclusão de dados"
+            credit: "Criado pela equipe Coin999-長長久久"
         },
         settings: {
             title: "Configurações da fase",

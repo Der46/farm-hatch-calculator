@@ -425,19 +425,6 @@ footer {
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
 }
 
-.legal-links {
-    margin: 6px 0 0;
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.legal-links a {
-    color: rgba(255, 255, 255, 0.92);
-    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
-}
-
 /* 詳情彈窗與比對視圖 */
 .detail-page {
     position: fixed;
