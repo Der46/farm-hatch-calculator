@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coin999 夥伴計算機</title>
 
-    <link rel="stylesheet" href="./style.css?v=20261023c">
+    <link rel="stylesheet" href="./style.css?v=20261023e">
 </head>
 
 <body>
@@ -78,6 +78,10 @@
                 </div>
             </div>
         </section>
+
+        <button class="match-open-btn" type="button" id="matchOpenBtn" data-match-i18n="openButton">
+            🤝 媒合平台：找人幫忙
+        </button>
 
         <button class="clear-btn" type="button" id="clearAllBtn" data-i18n="button.clearAll">
             重置所有設定
@@ -169,7 +173,72 @@
         </div>
     </section>
 
-    <script type="module" src="./app.js?v=20261023c"></script>
+    <section class="detail-page match-page" id="matchPage">
+        <div class="detail-inner">
+            <div class="top-bar">
+                <button class="back-btn" type="button" id="matchBackBtn" aria-label="Back">‹</button>
+            </div>
+
+            <h2 class="match-title" data-match-i18n="title">媒合平台</h2>
+            <p class="match-intro" data-match-i18n="intro"></p>
+
+            <section class="settings-card match-form-card">
+                <div class="settings-head">
+                    <span data-match-i18n="form.title">我要找人幫忙</span>
+                </div>
+
+                <form class="match-form" id="matchForm" novalidate>
+                    <div class="field">
+                        <label for="matchMode" data-match-i18n="form.mode">模式</label>
+                        <select id="matchMode" class="match-input"></select>
+                    </div>
+
+                    <div class="field">
+                        <label for="matchTeam" data-match-i18n="form.team">隊伍名稱</label>
+                        <input id="matchTeam" type="text" maxlength="30" autocomplete="off" data-match-i18n-placeholder="form.teamPlaceholder">
+                    </div>
+
+                    <div class="field">
+                        <label for="matchLink" data-match-i18n="form.link">遊戲交友連結</label>
+                        <input id="matchLink" type="url" maxlength="300" autocomplete="off" placeholder="https://">
+                    </div>
+
+                    <div class="field">
+                        <label for="matchTokens" data-match-i18n="form.tokens">目前代幣</label>
+                        <input id="matchTokens" type="number" min="0" step="1" inputmode="numeric">
+                    </div>
+
+                    <div class="field">
+                        <label for="matchNote" data-match-i18n="form.note">備註（選填）</label>
+                        <textarea id="matchNote" class="match-input" rows="2" maxlength="200" data-match-i18n-placeholder="form.notePlaceholder"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="matchPassword" data-match-i18n="form.password">刪除密碼</label>
+                        <input id="matchPassword" type="password" maxlength="30" autocomplete="new-password" data-match-i18n-placeholder="form.passwordPlaceholder">
+                    </div>
+
+                    <p class="match-rule" id="matchRule"></p>
+                    <p class="match-form-msg" id="matchFormMsg" role="status"></p>
+
+                    <button class="match-submit-btn" type="submit" id="matchSubmit">送出</button>
+                </form>
+            </section>
+
+            <div class="match-list-head">
+                <span data-match-i18n="listTitle">徵求列表</span>
+                <button class="match-refresh-btn" type="button" id="matchRefresh" data-match-i18n="refresh">重新整理</button>
+            </div>
+
+            <div class="match-filter" id="matchFilter"></div>
+            <p class="match-notice" id="matchNotice" hidden></p>
+            <div class="match-list" id="matchList"></div>
+
+            <footer data-i18n="app.footer">© {year} 資料提供 CM大佬群 隊伍｜網頁製作 Coin999-長長久久 隊伍</footer>
+        </div>
+    </section>
+
+    <script type="module" src="./app.js?v=20261023e"></script>
 </body>
 
 </html>

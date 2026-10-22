@@ -3,7 +3,8 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261023c";
+} from "./i18n.js?v=20261023e";
+import { MatchBoard } from "./match.js?v=20261023e";
 
 const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
 
@@ -150,6 +151,15 @@ class Coin999PartnerCalculator {
 
         this.setupLanguageOptions();
         this.bindEvents();
+
+        this.matchBoard = new MatchBoard({
+            getLang: () => this.getLang(),
+            getLocale: () => this.getLocale(),
+            getMode: () => this.appData.mode,
+            appT: (path, params) => this.t(path, params),
+            escapeHtml: (value) => this.escapeHtml(value)
+        });
+
         this.render();
     }
 
@@ -261,6 +271,8 @@ class Coin999PartnerCalculator {
                 year
             });
         });
+
+        this.matchBoard?.applyI18n();
     }
 
     setLanguage(lang) {
@@ -882,6 +894,7 @@ class Coin999PartnerCalculator {
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
                 this.closeDetail();
+                this.matchBoard.close();
             }
         });
 

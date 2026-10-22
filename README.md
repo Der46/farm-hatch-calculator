@@ -22,6 +22,10 @@
   - 耕種：種在圖騰花盆裡的食人花（粉紅厚唇大笑）
   - 黃金模式會自動換成金色配色並加上發光效果
 - **多國語言**：繁體中文、English、Tiếng Việt、日本語、한국어、ไทย、Indonesia、Español、Português BR。
+- **媒合平台**：玩家可貼上遊戲交友連結、隊伍名稱、目前代幣與備註來找人幫忙，想幫忙的人可以開啟連結加好友並留言。
+  - 普通孵化需 14,500 代幣以上、普通耕種需 7,500 代幣以上（能自己完成一半）才可發文；黃金模式不限。
+  - 免登入，發文時設定刪除密碼，之後可用密碼刪除；貼文只顯示最近 3 天。
+  - 資料存在 Google 試算表，透過 Google Apps Script 讀寫，完全免費（設定方式見下方）。
 - **本機保存**：所有設定與分數自動存到 `localStorage`，可用「重置所有設定」一鍵恢復預設值。
 
 ## 代幣換算
@@ -62,15 +66,50 @@ python -m http.server 8000
 ├── index.html   # 頁面結構（設定區、隊伍區、個別計算頁）
 ├── style.css    # 版面與樣式
 ├── app.js       # 主程式：資料、計算、渲染、SVG 角色、localStorage
-└── i18n.js      # 多國語言文字與語言 / 時區設定
+├── i18n.js      # 多國語言文字與語言設定
+├── match.js     # 媒合平台前端（發文、列表、留言、刪除）
+├── match-i18n.js  # 媒合平台多國語言文字
+└── backend/
+    └── apps-script.gs  # 媒合平台後端（Google Apps Script）
 ```
+
+## 媒合平台設定
+
+GitHub Pages 只能放靜態檔案，所以媒合平台的資料存在 Google 試算表，由 Google Apps Script 提供 API。全部免費，只需要一個 Google 帳號。
+
+1. 到 [Google 試算表](https://sheets.google.com) 建立一個新的空白試算表（例如命名為「Coin999 媒合平台」）。
+2. 在試算表選單點「擴充功能 → Apps Script」。
+3. 把編輯器裡預設的程式碼全部刪掉，貼上 [`backend/apps-script.gs`](backend/apps-script.gs) 的完整內容，按儲存。
+4. 點右上角「部署 → 新增部署作業」：
+   - 類型選「網頁應用程式」
+   - 執行身分：**我**
+   - 誰可以存取：**所有人**
+   - 按「部署」，第一次會要求授權，用你自己的 Google 帳號允許即可（若出現「Google 尚未驗證這個應用程式」，點「進階 → 前往（不安全）」，因為這是你自己寫的腳本）。
+5. 複製部署完成後的「網頁應用程式網址」（`https://script.google.com/macros/s/.../exec`）。
+6. 打開 [`match.js`](match.js)，把網址貼到最上方：
+
+   ```js
+   const MATCH_API_URL = "https://script.google.com/macros/s/.../exec";
+   ```
+
+7. 更新 `index.html` 與 `app.js` 裡的 `?v=` 版本號後 commit、push，GitHub Pages 更新後就能使用。
+
+第一次有人發文時，會自動在試算表建立 `Posts`（貼文）與 `Comments`（留言）兩個工作表。
+
+**管理與注意事項**
+
+- **刪除不當內容**：在試算表把該列的 `deleted` 欄改成 `TRUE` 即可隱藏（貼文或留言都一樣）。
+- **修改後端程式**：改完 Apps Script 後要「部署 → 管理部署作業 → 編輯 → 版本選『新版本』→ 部署」，網址不變。
+- **調整規則**：顯示天數 `POST_TTL_DAYS`、代幣門檻 `MIN_TOKENS` 在 `apps-script.gs`；前端提示用的 `MIN_TOKENS` 在 `match.js`，兩邊要一致。
+- **免費額度**：Apps Script 免費帳號有同時執行數量（約 30 個）等配額限制，一般活動規模足夠；尖峰時若太多人同時發文，會提示稍後再試。
+- **安全**：試算表本身不需要公開分享，外部只能透過 API 讀到貼文與留言，刪除密碼以雜湊方式保存、不會回傳給前端。
 
 ## 開發備註
 
 - **新增語言**：在 `i18n.js` 的 `SUPPORTED_LANGS`、`LANGUAGE_META` 與 `I18N` 加上對應項目。
 - **調整換算比例或預設目標**：修改 `app.js` 的 `RATES` 與 `DEFAULT_DATA.targets`。
 - **修改角色造型**：`app.js` 的 `getLizardSvg()`（孵化）與 `getPlantSvg()`（耕種），各自有一般與黃金兩組配色。
-- **快取版本**：修改 CSS / JS 後，請同步更新 `index.html`（以及 `app.js` 內 import `i18n.js`）的 `?v=` 版本號，讓使用者立即載入新檔案。
+- **快取版本**：修改 CSS / JS 後，請同步更新 `index.html`、`app.js`（import `i18n.js`、`match.js`）與 `match.js`（import `match-i18n.js`）的 `?v=` 版本號，讓使用者立即載入新檔案。
 - **本機資料 key**：`coin999_partner_calc_v10_multilang_timezone`，若資料結構有不相容變更可更換 key。
 
 ## 製作
