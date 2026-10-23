@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023q";
+import { MATCH_I18N } from "./match-i18n.js?v=20261024a";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby-6b5hjaPsLo3fpQvS8WXw8oKQZGTBzHH-f4FJtWsyAv7igaGtKDQtZ20nVoOKhPpthQ/exec";
@@ -18,6 +18,8 @@ const CREATURE_COUNT = {
 
 // 以下規則需與 backend/apps-script.gs 一致（前端先擋，後端仍會再檢查）
 const COIN_LINK_RE = /^https:\/\/(www\.)?getcoinmaster\.com\/~[A-Za-z0-9_-]{4,40}\/?(\?[A-Za-z0-9=&_%.-]*)?$/i;
+// 從「跟我一起玩 Coin Master https://getcoinmaster.com/~...」這類分享文字裡挑出連結
+const COIN_LINK_IN_TEXT_RE = /https:\/\/(www\.)?getcoinmaster\.com\/~[A-Za-z0-9_-]+\/?(\?[A-Za-z0-9=&_%.-]*)?/i;
 const LINK_IN_TEXT_RE = /(https?:\/\/|www\.|getcoinmaster|~[A-Za-z0-9]{6,}|\b[a-z0-9-]+\.(com|net|org|io|me|ly|gg|tw|cc|co|app|link|xyz|top|info)\b)/i;
 const SCREENSHOT_HOSTS = [
     "imgur.com",
@@ -29,6 +31,12 @@ const SCREENSHOT_HOSTS = [
     "photos.google.com",
     "drive.google.com"
 ];
+
+function extractCoinLink(text) {
+    const value = String(text || "").trim();
+    const match = value.match(COIN_LINK_IN_TEXT_RE);
+    return match ? match[0] : value;
+}
 
 function isAllowedScreenshot(url) {
     const match = String(url).match(/^https:\/\/([^\/?#\s]+)[^\s<>"']*$/i);
@@ -533,7 +541,7 @@ export class MatchBoard {
     validateForm() {
         const mode = this.formMode;
         const team = this.els.team.value.trim();
-        const link = this.els.link.value.trim();
+        const link = extractCoinLink(this.els.link.value);
         const tokensText = this.els.tokens.value.trim();
         const tokens = Number(tokensText);
         const screenshot = this.els.screenshot.value.trim();
@@ -605,7 +613,7 @@ export class MatchBoard {
                 action: "create",
                 mode: this.formMode,
                 team: this.els.team.value.trim(),
-                link: this.els.link.value.trim(),
+                link: extractCoinLink(this.els.link.value),
                 tokens: Number(this.els.tokens.value),
                 done: this.done,
                 screenshot: this.els.screenshot.value.trim()
@@ -613,7 +621,7 @@ export class MatchBoard {
 
             this.saveProfile({
                 team: this.els.team.value.trim(),
-                link: this.els.link.value.trim()
+                link: extractCoinLink(this.els.link.value)
             });
 
             this.setFormScreenshot("");
@@ -1206,6 +1214,13 @@ export class MatchBoard {
         });
 
         this.els.screenshot.addEventListener("input", () => this.renderUploadPreview());
+        this.els.link.addEventListener("input", () => {
+            const link = extractCoinLink(this.els.link.value);
+
+            if (link !== this.els.link.value && COIN_LINK_RE.test(link)) {
+                this.els.link.value = link;
+            }
+        });
 
         this.els.upload.addEventListener("dragover", (event) => {
             event.preventDefault();
