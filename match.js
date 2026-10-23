@@ -1,4 +1,4 @@
-import { MATCH_I18N } from "./match-i18n.js?v=20261023p";
+import { MATCH_I18N } from "./match-i18n.js?v=20261023q";
 
 // 部署 Apps Script 後，把「網頁應用程式」網址貼在這裡（見 README「媒合平台設定」）
 const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby-6b5hjaPsLo3fpQvS8WXw8oKQZGTBzHH-f4FJtWsyAv7igaGtKDQtZ20nVoOKhPpthQ/exec";
@@ -6,7 +6,7 @@ const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby-6b5hjaPsLo3fpQ
 const PROFILE_KEY = "coin999_match_profile_v1";
 const OWNER_KEY = "coin999_match_owner_v1";
 
-const MODE_ORDER = ["hatch", "farm", "goldHatch", "goldFarm"];
+const MODE_ORDER = ["farm", "hatch", "goldFarm", "goldHatch"];
 
 // 每種模式的夥伴隻數（需與 backend/apps-script.gs 的 CREATURE_COUNT 一致）
 const CREATURE_COUNT = {
@@ -170,10 +170,9 @@ const MIN_TOKENS = {
 };
 
 export class MatchBoard {
-    constructor({ getLang, getLocale, getMode, appT, escapeHtml, getCreatureSvg }) {
+    constructor({ getLang, getLocale, appT, escapeHtml, getCreatureSvg }) {
         this.getLang = getLang;
         this.getLocale = getLocale;
-        this.getMode = getMode;
         this.appT = appT;
         this.escapeHtml = escapeHtml;
         this.getCreatureSvg = getCreatureSvg;
@@ -183,6 +182,7 @@ export class MatchBoard {
         this.status = "idle";
         this.submitting = false;
         this.done = 0;
+        this.formMode = "farm";
         this.loadSeq = 0;
         this.refreshing = false;
 
@@ -312,7 +312,6 @@ export class MatchBoard {
     /* ---------- open / close ---------- */
 
     open() {
-        this.els.mode.value = this.getMode();
         this.updateRule();
         this.renderDonePicker();
         this.els.page.classList.add("open");
@@ -396,7 +395,7 @@ export class MatchBoard {
         return json.data;
     }
 
-    errorText(err, mode = this.els.mode.value) {
+    errorText(err, mode = this.formMode) {
         const code = err && err.message ? err.message : "server";
         const detail = (err && err.detail) || {};
         const text = this.t(`error.${code}`, {
@@ -465,7 +464,7 @@ export class MatchBoard {
     /* ---------- form ---------- */
 
     updateRule() {
-        const min = MIN_TOKENS[this.els.mode.value] || 0;
+        const min = MIN_TOKENS[this.formMode] || 0;
 
         this.els.rule.textContent = min > 0
             ? this.t("form.rule", { min: this.formatNumber(min) })
@@ -492,12 +491,32 @@ export class MatchBoard {
     }
 
     renderDonePicker() {
-        const mode = this.els.mode.value;
+        const mode = this.formMode;
         const total = this.getTotal(mode);
 
         this.done = Math.min(this.done, total);
         this.els.donePicker.innerHTML = this.renderCreatureIcons(mode, this.done, true);
         this.els.doneHint.textContent = this.t("form.doneHint", { done: this.done, total });
+    }
+
+    renderModePicker() {
+        this.els.mode.innerHTML = MODE_ORDER.map((mode) => {
+            const gold = mode.startsWith("gold") ? " gold" : "";
+            const active = this.formMode === mode;
+
+            return `
+                <button type="button" class="match-chip${gold}${active ? " active" : ""}" data-form-mode="${mode}" aria-pressed="${active}">
+                    ${this.escapeHtml(this.appT(`mode.${mode}`))}
+                </button>
+            `;
+        }).join("");
+    }
+
+    setFormMode(mode) {
+        this.formMode = mode;
+        this.renderModePicker();
+        this.updateRule();
+        this.renderDonePicker();
     }
 
     // 點第 n 隻 = 完成 n 隻；再點同一隻則取消這一隻
@@ -512,7 +531,7 @@ export class MatchBoard {
     }
 
     validateForm() {
-        const mode = this.els.mode.value;
+        const mode = this.formMode;
         const team = this.els.team.value.trim();
         const link = this.els.link.value.trim();
         const tokensText = this.els.tokens.value.trim();
@@ -569,7 +588,7 @@ export class MatchBoard {
         }
 
         // 普通模式送出前再次提醒：需能自己完成一半，缺一兩顆的人優先幫忙
-        const min = MIN_TOKENS[this.els.mode.value] || 0;
+        const min = MIN_TOKENS[this.formMode] || 0;
 
         if (min > 0 && !confirm(this.t("form.confirmNormal", { min: this.formatNumber(min) }))) {
             return;
@@ -584,7 +603,7 @@ export class MatchBoard {
         try {
             await this.api({
                 action: "create",
-                mode: this.els.mode.value,
+                mode: this.formMode,
                 team: this.els.team.value.trim(),
                 link: this.els.link.value.trim(),
                 tokens: Number(this.els.tokens.value),
@@ -958,12 +977,7 @@ export class MatchBoard {
             node.placeholder = this.t(node.dataset.matchI18nPlaceholder);
         });
 
-        const selected = this.els.mode.value || this.getMode();
-
-        this.els.mode.innerHTML = MODE_ORDER.map((mode) => {
-            return `<option value="${mode}">${this.escapeHtml(this.appT(`mode.${mode}`))}</option>`;
-        }).join("");
-        this.els.mode.value = selected;
+        this.renderModePicker();
 
         if (!this.submitting) {
             this.els.submit.textContent = this.t("form.submit");
@@ -1168,9 +1182,12 @@ export class MatchBoard {
         this.els.openBtn.addEventListener("click", () => this.open());
         this.els.backBtn.addEventListener("click", () => this.close());
         this.els.refresh.addEventListener("click", () => this.load());
-        this.els.mode.addEventListener("change", () => {
-            this.updateRule();
-            this.renderDonePicker();
+        this.els.mode.addEventListener("click", (event) => {
+            const btn = event.target.closest("[data-form-mode]");
+
+            if (btn && !btn.disabled) {
+                this.setFormMode(btn.dataset.formMode);
+            }
         });
 
         // 截圖上傳：選擇檔案、拖曳、貼上

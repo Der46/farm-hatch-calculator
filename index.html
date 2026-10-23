@@ -8,7 +8,7 @@
 
     <link rel="icon" type="image/png" href="./assets/favicon-64.png">
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="./style.css?v=20261023p">
+    <link rel="stylesheet" href="./style.css?v=20261023q">
 </head>
 
 <body>
@@ -26,39 +26,39 @@
             </div>
 
             <div class="mode-tabs">
-                <button class="mode-btn" type="button" data-mode="hatch" data-i18n="mode.hatch">🥚 孵化</button>
                 <button class="mode-btn" type="button" data-mode="farm" data-i18n="mode.farm">🌱 耕種</button>
+                <button class="mode-btn" type="button" data-mode="hatch" data-i18n="mode.hatch">🥚 孵化</button>
             </div>
 
             <div class="mode-tabs">
-                <button class="mode-btn gold" type="button" data-mode="goldHatch" data-i18n="mode.goldHatch">
-                    🏆 黃金孵化
-                </button>
-
                 <button class="mode-btn gold" type="button" data-mode="goldFarm" data-i18n="mode.goldFarm">
                     👑 黃金耕種
+                </button>
+
+                <button class="mode-btn gold" type="button" data-mode="goldHatch" data-i18n="mode.goldHatch">
+                    🏆 黃金孵化
                 </button>
             </div>
 
             <div class="field-grid">
-                <div class="field">
-                    <label for="hatchTarget" data-i18n="target.hatch">孵化每位目標分數</label>
-                    <input id="hatchTarget" type="number" min="1" step="1">
-                </div>
-
                 <div class="field">
                     <label for="farmTarget" data-i18n="target.farm">耕種每位目標分數</label>
                     <input id="farmTarget" type="number" min="1" step="1">
                 </div>
 
                 <div class="field">
-                    <label for="goldHatchTarget" data-i18n="target.goldHatch">黃金孵化每位目標分數</label>
-                    <input id="goldHatchTarget" type="number" min="1" step="1">
+                    <label for="hatchTarget" data-i18n="target.hatch">孵化每位目標分數</label>
+                    <input id="hatchTarget" type="number" min="1" step="1">
                 </div>
 
                 <div class="field">
                     <label for="goldFarmTarget" data-i18n="target.goldFarm">黃金耕種每位目標分數</label>
                     <input id="goldFarmTarget" type="number" min="1" step="1">
+                </div>
+
+                <div class="field">
+                    <label for="goldHatchTarget" data-i18n="target.goldHatch">黃金孵化每位目標分數</label>
+                    <input id="goldHatchTarget" type="number" min="1" step="1">
                 </div>
             </div>
         </section>
@@ -191,8 +191,8 @@
 
                 <form class="match-form" id="matchForm" novalidate>
                     <div class="field">
-                        <label for="matchMode" data-match-i18n="form.mode">模式</label>
-                        <select id="matchMode" class="match-input"></select>
+                        <span class="match-field-label" data-match-i18n="form.mode">模式</span>
+                        <div class="match-mode-picker" id="matchMode" role="group"></div>
                     </div>
 
                     <div class="field">
@@ -269,7 +269,7 @@
     <div class="match-toast" id="matchToast" role="status" aria-live="polite"></div>
     <input type="file" id="matchEditFile" accept="image/*" hidden>
 
-    <script type="module" src="./app.js?v=20261023p"></script>
+    <script type="module" src="./app.js?v=20261023q"></script>
 </body>
 
 </html>
