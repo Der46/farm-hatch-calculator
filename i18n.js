@@ -56,7 +56,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 夥伴計算機",
             footer: "© {year} 大佬群CSL製作",
-            credit: "由Coin999-長長久久 隊伍製作"
+            credit: "大佬群CSL製作"
         },
         settings: {
             title: "關卡設定",
@@ -129,7 +129,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 Partner Calculator",
             footer: "© {year} Made by 大佬群CSL",
-            credit: "Made by Coin999-長長久久 Team"
+            credit: "Made by 大佬群CSL"
         },
         settings: {
             title: "Stage Settings",
@@ -202,7 +202,7 @@ export const I18N = {
         app: {
             documentTitle: "Máy tính Đồng Đội Coin999",
             footer: "© {year} Thực hiện bởi 大佬群CSL",
-            credit: "Được thực hiện bởi đội Coin999-長長久久"
+            credit: "Thực hiện bởi 大佬群CSL"
         },
         settings: {
             title: "Cài đặt ải",
@@ -275,7 +275,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 パートナー計算機",
             footer: "© {year} 制作：大佬群CSL",
-            credit: "Coin999-長長久久 チーム制作"
+            credit: "大佬群CSL制作"
         },
         settings: {
             title: "ステージ設定",
@@ -348,7 +348,7 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 파트너 계산기",
             footer: "© {year} 제작: 大佬群CSL",
-            credit: "Coin999-長長久久 팀 제작"
+            credit: "大佬群CSL 제작"
         },
         settings: {
             title: "스테이지 설정",
@@ -421,7 +421,7 @@ export const I18N = {
         app: {
             documentTitle: "เครื่องคิดเลขพาร์ทเนอร์ Coin999",
             footer: "© {year} จัดทำโดย 大佬群CSL",
-            credit: "จัดทำโดยทีม Coin999-長長久久"
+            credit: "จัดทำโดย 大佬群CSL"
         },
         settings: {
             title: "ตั้งค่าด่าน",
@@ -494,7 +494,7 @@ export const I18N = {
         app: {
             documentTitle: "Kalkulator Partner Coin999",
             footer: "© {year} Dibuat oleh 大佬群CSL",
-            credit: "Dibuat oleh Tim Coin999-長長久久"
+            credit: "Dibuat oleh 大佬群CSL"
         },
         settings: {
             title: "Pengaturan Level",
@@ -567,7 +567,7 @@ export const I18N = {
         app: {
             documentTitle: "Calculadora de Socios Coin999",
             footer: "© {year} Creado por 大佬群CSL",
-            credit: "Creado por el equipo Coin999-長長久久"
+            credit: "Creado por 大佬群CSL"
         },
         settings: {
             title: "Configuración de etapa",
@@ -640,7 +640,7 @@ export const I18N = {
         app: {
             documentTitle: "Calculadora de Parceiros Coin999",
             footer: "© {year} Criado por 大佬群CSL",
-            credit: "Criado pela equipe Coin999-長長久久"
+            credit: "Criado por 大佬群CSL"
         },
         settings: {
             title: "Configurações da fase",
