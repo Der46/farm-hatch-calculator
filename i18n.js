@@ -55,7 +55,7 @@ export const I18N = {
     "zh-Hant": {
         app: {
             documentTitle: "Coin999 夥伴計算機",
-            footer: "© {year} 資料提供 CM大佬群 隊伍｜網頁製作 Coin999-長長久久 隊伍",
+            footer: "© {year} 大佬群CSL製作",
             credit: "由Coin999-長長久久 隊伍製作"
         },
         settings: {
@@ -128,7 +128,7 @@ export const I18N = {
     en: {
         app: {
             documentTitle: "Coin999 Partner Calculator",
-            footer: "© {year} Data provided by CM Leaders Team｜Website by Coin999-長長久久 Team",
+            footer: "© {year} Made by 大佬群CSL",
             credit: "Made by Coin999-長長久久 Team"
         },
         settings: {
@@ -201,7 +201,7 @@ export const I18N = {
     vi: {
         app: {
             documentTitle: "Máy tính Đồng Đội Coin999",
-            footer: "© {year} Dữ liệu được cung cấp bởi đội CM大佬群｜Website được thực hiện bởi Coin999-長長久久 Đội",
+            footer: "© {year} Thực hiện bởi 大佬群CSL",
             credit: "Được thực hiện bởi đội Coin999-長長久久"
         },
         settings: {
@@ -274,7 +274,7 @@ export const I18N = {
     ja: {
         app: {
             documentTitle: "Coin999 パートナー計算機",
-            footer: "© {year} データ提供：CM大佬群 チーム｜Web制作：Coin999-長長久久 チーム",
+            footer: "© {year} 制作：大佬群CSL",
             credit: "Coin999-長長久久 チーム制作"
         },
         settings: {
@@ -347,7 +347,7 @@ export const I18N = {
     ko: {
         app: {
             documentTitle: "Coin999 파트너 계산기",
-            footer: "© {year} 데이터 제공: CM大佬群 팀｜웹 제작: Coin999-長長久久 팀",
+            footer: "© {year} 제작: 大佬群CSL",
             credit: "Coin999-長長久久 팀 제작"
         },
         settings: {
@@ -420,7 +420,7 @@ export const I18N = {
     th: {
         app: {
             documentTitle: "เครื่องคิดเลขพาร์ทเนอร์ Coin999",
-            footer: "© {year} ข้อมูลโดยทีม CM大佬群｜จัดทำเว็บไซต์โดยทีม Coin999-長長久久",
+            footer: "© {year} จัดทำโดย 大佬群CSL",
             credit: "จัดทำโดยทีม Coin999-長長久久"
         },
         settings: {
@@ -493,7 +493,7 @@ export const I18N = {
     id: {
         app: {
             documentTitle: "Kalkulator Partner Coin999",
-            footer: "© {year} Data disediakan oleh Tim CM大佬群｜Website dibuat oleh Tim Coin999-長長久久",
+            footer: "© {year} Dibuat oleh 大佬群CSL",
             credit: "Dibuat oleh Tim Coin999-長長久久"
         },
         settings: {
@@ -566,7 +566,7 @@ export const I18N = {
     es: {
         app: {
             documentTitle: "Calculadora de Socios Coin999",
-            footer: "© {year} Datos proporcionados por el equipo CM大佬群｜Sitio web creado por Coin999-長長久久 Equipo",
+            footer: "© {year} Creado por 大佬群CSL",
             credit: "Creado por el equipo Coin999-長長久久"
         },
         settings: {
@@ -639,7 +639,7 @@ export const I18N = {
     "pt-BR": {
         app: {
             documentTitle: "Calculadora de Parceiros Coin999",
-            footer: "© {year} Dados fornecidos pela equipe CM大佬群｜Site criado por Coin999-長長久久 Equipe",
+            footer: "© {year} Criado por 大佬群CSL",
             credit: "Criado pela equipe Coin999-長長久久"
         },
         settings: {
