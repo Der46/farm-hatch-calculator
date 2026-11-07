@@ -8,7 +8,11 @@
 
     <link rel="icon" type="image/png" href="./assets/favicon-64.png">
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="./style.css?v=20261024a">
+    <meta name="theme-color" content="#2e1a47">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Chiron+GoRound+TC:wght@500;700;900&display=swap">
+    <link rel="stylesheet" href="./style.css?v=20261107a">
 </head>
 
 <body>
@@ -20,25 +24,41 @@
             <p class="title-credit" data-i18n="app.credit">由Coin999-長長久久 隊伍製作</p>
         </div>
 
-        <section class="settings-card">
-            <div class="settings-head">
+        <nav class="mode-tabs" aria-label="Mode">
+            <button class="mode-btn" type="button" data-mode="farm" data-i18n="mode.farm">🌱 耕種</button>
+            <button class="mode-btn" type="button" data-mode="hatch" data-i18n="mode.hatch">🥚 孵化</button>
+            <button class="mode-btn gold" type="button" data-mode="goldFarm" data-i18n="mode.goldFarm">👑 黃金耕種</button>
+            <button class="mode-btn gold" type="button" data-mode="goldHatch" data-i18n="mode.goldHatch">🏆 黃金孵化</button>
+        </nav>
+
+        <section class="team-stage">
+            <div class="team-row normal" id="teamRow"></div>
+
+            <div class="summary">
+                <div class="team-bar" aria-hidden="true"><span id="teamBarFill"></span></div>
+
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label" data-i18n="summary.totalTarget">總目標分</div>
+                        <div class="summary-value" id="teamTarget">0</div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-label" data-i18n="summary.progress">完成進度</div>
+                        <div class="summary-value" id="teamProgress">0%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <button class="match-open-btn" type="button" id="matchOpenBtn" data-match-i18n="openButton">
+            🤝 媒合平台：找人幫忙
+        </button>
+
+        <details class="settings-card">
+            <summary class="settings-head">
                 <span data-i18n="settings.title">關卡設定</span>
-            </div>
-
-            <div class="mode-tabs">
-                <button class="mode-btn" type="button" data-mode="farm" data-i18n="mode.farm">🌱 耕種</button>
-                <button class="mode-btn" type="button" data-mode="hatch" data-i18n="mode.hatch">🥚 孵化</button>
-            </div>
-
-            <div class="mode-tabs">
-                <button class="mode-btn gold" type="button" data-mode="goldFarm" data-i18n="mode.goldFarm">
-                    👑 黃金耕種
-                </button>
-
-                <button class="mode-btn gold" type="button" data-mode="goldHatch" data-i18n="mode.goldHatch">
-                    🏆 黃金孵化
-                </button>
-            </div>
+            </summary>
 
             <div class="field-grid">
                 <div class="field">
@@ -61,33 +81,11 @@
                     <input id="goldHatchTarget" type="number" min="1" step="1">
                 </div>
             </div>
-        </section>
 
-        <section class="team-stage">
-            <div class="team-row normal" id="teamRow"></div>
-        </section>
-
-        <section class="summary">
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <div class="summary-label" data-i18n="summary.totalTarget">總目標分</div>
-                    <div class="summary-value" id="teamTarget">0</div>
-                </div>
-
-                <div class="summary-item">
-                    <div class="summary-label" data-i18n="summary.progress">完成進度</div>
-                    <div class="summary-value" id="teamProgress">0%</div>
-                </div>
-            </div>
-        </section>
-
-        <button class="match-open-btn" type="button" id="matchOpenBtn" data-match-i18n="openButton">
-            🤝 媒合平台：找人幫忙
-        </button>
-
-        <button class="clear-btn" type="button" id="clearAllBtn" data-i18n="button.clearAll">
-            重置所有設定
-        </button>
+            <button class="clear-btn" type="button" id="clearAllBtn" data-i18n="button.clearAll">
+                重置所有設定
+            </button>
+        </details>
 
         <footer data-i18n="app.footer">© {year} 資料提供 CM大佬群 隊伍｜網頁製作 Coin999-長長久久 隊伍</footer>
 
@@ -96,7 +94,7 @@
     <section class="detail-page" id="detailPage">
         <div class="detail-inner">
             <div class="top-bar">
-                <button class="back-btn" type="button" id="detailBackBtn">‹</button>
+                <button class="back-btn" type="button" id="detailBackBtn" aria-label="Back">‹</button>
             </div>
 
             <div class="gold-header">
@@ -148,7 +146,7 @@
                         <span id="detailRemainingScore">0</span>
                     </div>
 
-                    <div class="calc-card">
+                    <div class="calc-card coin">
                         <strong data-i18n="detail.needTokensWhole">一整顆代幣</strong>
                         <span id="detailNeedTokens">0</span>
                     </div>
@@ -158,7 +156,7 @@
                         <span id="detailResponsibilityScore">0</span>
                     </div>
 
-                    <div class="calc-card">
+                    <div class="calc-card coin">
                         <strong data-i18n="detail.responsibilityTokens">責任分代幣</strong>
                         <span id="detailResponsibilityTokens">0</span>
                     </div>
@@ -269,7 +267,7 @@
     <div class="match-toast" id="matchToast" role="status" aria-live="polite"></div>
     <input type="file" id="matchEditFile" accept="image/*" hidden>
 
-    <script type="module" src="./app.js?v=20261024a"></script>
+    <script type="module" src="./app.js?v=20261107a"></script>
 </body>
 
 </html>

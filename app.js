@@ -3,8 +3,8 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261024a";
-import { MatchBoard } from "./match.js?v=20261024a";
+} from "./i18n.js?v=20261107a";
+import { MatchBoard } from "./match.js?v=20261107a";
 
 const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
 
@@ -117,6 +117,7 @@ class Coin999PartnerCalculator {
             teamRow: document.getElementById("teamRow"),
             teamTarget: document.getElementById("teamTarget"),
             teamProgress: document.getElementById("teamProgress"),
+            teamBarFill: document.getElementById("teamBarFill"),
             clearAllBtn: document.getElementById("clearAllBtn"),
 
             detailPage: document.getElementById("detailPage"),
@@ -718,6 +719,7 @@ class Coin999PartnerCalculator {
 
         this.els.teamTarget.textContent = this.formatNumber(totalTarget);
         this.els.teamProgress.textContent = `${progress.toFixed(1)}${this.t("unit.percent")}`;
+        this.els.teamBarFill.style.width = `${progress}%`;
     }
 
     findEditingMember() {
