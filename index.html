@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Chiron+GoRound+TC:wght@500;700;900&display=swap">
-    <link rel="stylesheet" href="./style.css?v=20261108a">
+    <link rel="stylesheet" href="./style.css?v=20261120a">
 </head>
 
 <body>
@@ -21,7 +21,11 @@
             <select id="languageSelect" class="language-select" aria-label="Language"></select>
 
             <h1 class="title" id="pageTitle">孵化夥伴</h1>
-            <p class="title-credit" data-i18n="app.credit">大佬群CSL製作</p>
+            <p class="title-credit">
+                <span class="title-credit-star" aria-hidden="true">★</span>
+                <span data-i18n="app.credit">大佬群CSL製作</span>
+                <span class="title-credit-star" aria-hidden="true">★</span>
+            </p>
         </div>
 
         <nav class="mode-tabs" aria-label="Mode">
@@ -50,10 +54,6 @@
                 </div>
             </div>
         </section>
-
-        <button class="match-open-btn" type="button" id="matchOpenBtn" data-match-i18n="openButton">
-            🤝 媒合平台：找人幫忙
-        </button>
 
         <details class="settings-card">
             <summary class="settings-head">
@@ -87,7 +87,13 @@
             </button>
         </details>
 
-        <footer data-i18n="app.footer">© {year} 大佬群CSL製作</footer>
+        <footer>
+            <p class="dev-contact">
+                <span data-i18n="app.contact">有問題或建議？聯絡網頁開發者</span>
+                <a class="dev-contact-link" href="https://line.me/ti/g2/vFTIlDhsyEN9wo0SYbIpDBL9AsHbK-mbHTS5YA?utm_source=invitation&amp;utm_medium=link_copy&amp;utm_campaign=default" target="_blank" rel="noopener noreferrer" data-i18n="app.contactLink">加入 LINE 群組後標記 @CSL</a>
+            </p>
+            <p class="footer-copy" data-i18n="app.footer">© {year} 大佬群CSL製作</p>
+        </footer>
 
     </main>
 
@@ -169,105 +175,17 @@
                 </div>
             </section>
 
-            <footer data-i18n="app.footer">© {year} 大佬群CSL製作</footer>
+            <footer>
+                <p class="dev-contact">
+                    <span data-i18n="app.contact">有問題或建議？聯絡網頁開發者</span>
+                    <a class="dev-contact-link" href="https://line.me/ti/g2/vFTIlDhsyEN9wo0SYbIpDBL9AsHbK-mbHTS5YA?utm_source=invitation&amp;utm_medium=link_copy&amp;utm_campaign=default" target="_blank" rel="noopener noreferrer" data-i18n="app.contactLink">加入 LINE 群組後標記 @CSL</a>
+                </p>
+                <p class="footer-copy" data-i18n="app.footer">© {year} 大佬群CSL製作</p>
+            </footer>
         </div>
     </section>
 
-    <section class="detail-page match-page" id="matchPage">
-        <div class="detail-inner">
-            <div class="top-bar">
-                <button class="back-btn" type="button" id="matchBackBtn" aria-label="Back">‹</button>
-            </div>
-
-            <h2 class="match-title" data-match-i18n="title">媒合平台</h2>
-            <p class="match-intro" data-match-i18n="intro"></p>
-
-            <section class="settings-card match-form-card">
-                <div class="settings-head">
-                    <span data-match-i18n="form.title">我要找人幫忙</span>
-                </div>
-
-                <form class="match-form" id="matchForm" novalidate>
-                    <div class="field">
-                        <span class="match-field-label" data-match-i18n="form.mode">模式</span>
-                        <div class="match-mode-picker" id="matchMode" role="group"></div>
-                    </div>
-
-                    <div class="field">
-                        <label for="matchTeam" data-match-i18n="form.team">暱稱</label>
-                        <input id="matchTeam" type="text" maxlength="20" autocomplete="off" data-match-i18n-placeholder="form.teamPlaceholder">
-                    </div>
-
-                    <div class="field">
-                        <label for="matchLink" data-match-i18n="form.link">遊戲交友連結</label>
-                        <input id="matchLink" type="url" maxlength="300" autocomplete="off" placeholder="https://getcoinmaster.com/~...">
-                    </div>
-
-                    <div class="field">
-                        <span class="match-field-label" data-match-i18n="form.screenshot">遊戲畫面截圖（選填）</span>
-
-                        <div class="match-upload" id="matchUpload">
-                            <div class="match-upload-empty" id="matchUploadEmpty">
-                                <span data-match-i18n="form.uploadDrop">拖曳圖片到這裡，或</span>
-                                <button type="button" class="match-upload-pick" id="matchUploadPick" data-match-i18n="form.uploadPick">選擇圖片</button>
-                                <small data-match-i18n="form.uploadPaste">也可以直接貼上（Ctrl+V）</small>
-                            </div>
-
-                            <div class="match-upload-preview" id="matchUploadPreview" hidden>
-                                <img id="matchUploadImg" alt="" referrerpolicy="no-referrer">
-                                <span class="match-upload-linked" id="matchUploadLinked" hidden></span>
-                                <button type="button" class="match-upload-remove" id="matchUploadRemove" data-match-i18n="form.uploadRemove">移除</button>
-                            </div>
-
-                            <p class="match-upload-status" id="matchUploadStatus" role="status"></p>
-                        </div>
-
-                        <input type="file" id="matchUploadFile" accept="image/*" hidden>
-
-                        <details class="match-link-fallback">
-                            <summary data-match-i18n="form.orPasteLink">或貼上截圖連結</summary>
-                            <input id="matchScreenshot" type="url" maxlength="300" autocomplete="off" placeholder="https://i.imgur.com/...">
-                        </details>
-
-                        <p class="match-field-hint" data-match-i18n="form.screenshotHint"></p>
-                    </div>
-
-                    <div class="field">
-                        <label for="matchTokens" data-match-i18n="form.tokens">目前代幣</label>
-                        <input id="matchTokens" type="number" min="0" step="1" inputmode="numeric">
-                    </div>
-
-                    <div class="field">
-                        <span class="match-field-label" data-match-i18n="form.done">已完成幾隻</span>
-                        <div class="match-done-picker" id="matchDonePicker" role="group"></div>
-                        <p class="match-done-hint" id="matchDoneHint"></p>
-                    </div>
-
-                    <p class="match-rule" id="matchRule"></p>
-                    <p class="match-form-msg" id="matchFormMsg" role="status"></p>
-
-                    <button class="match-submit-btn" type="submit" id="matchSubmit">送出</button>
-                </form>
-            </section>
-
-            <div class="match-list-head">
-                <span data-match-i18n="listTitle">徵求列表</span>
-                <button class="match-refresh-btn" type="button" id="matchRefresh" data-match-i18n="refresh">重新整理</button>
-            </div>
-
-            <div class="match-filter" id="matchFilter"></div>
-            <p class="match-notice" id="matchNotice" hidden></p>
-            <div class="match-progress" id="matchProgress" hidden></div>
-            <div class="match-list" id="matchList"></div>
-
-            <footer data-i18n="app.footer">© {year} 大佬群CSL製作</footer>
-        </div>
-    </section>
-
-    <div class="match-toast" id="matchToast" role="status" aria-live="polite"></div>
-    <input type="file" id="matchEditFile" accept="image/*" hidden>
-
-    <script type="module" src="./app.js?v=20261108a"></script>
+    <script type="module" src="./app.js?v=20261120a"></script>
 </body>
 
 </html>

@@ -56,7 +56,9 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 夥伴計算機",
             footer: "© {year} 大佬群CSL製作",
-            credit: "大佬群CSL製作"
+            credit: "大佬群CSL製作",
+            contact: "有問題或建議？聯絡網頁開發者",
+            contactLink: "加入 LINE 群組後標記 @CSL"
         },
         settings: {
             title: "關卡設定",
@@ -129,7 +131,9 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 Partner Calculator",
             footer: "© {year} Made by 大佬群CSL",
-            credit: "Made by 大佬群CSL"
+            credit: "Made by 大佬群CSL",
+            contact: "Questions or ideas? Contact the developer",
+            contactLink: "Join the LINE group and tag @CSL"
         },
         settings: {
             title: "Stage Settings",
@@ -202,7 +206,9 @@ export const I18N = {
         app: {
             documentTitle: "Máy tính Đồng Đội Coin999",
             footer: "© {year} Thực hiện bởi 大佬群CSL",
-            credit: "Thực hiện bởi 大佬群CSL"
+            credit: "Thực hiện bởi 大佬群CSL",
+            contact: "Có câu hỏi hoặc góp ý? Liên hệ nhà phát triển",
+            contactLink: "Vào nhóm LINE rồi gắn thẻ @CSL"
         },
         settings: {
             title: "Cài đặt ải",
@@ -275,7 +281,9 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 パートナー計算機",
             footer: "© {year} 制作：大佬群CSL",
-            credit: "大佬群CSL制作"
+            credit: "大佬群CSL制作",
+            contact: "ご質問・ご要望はWeb開発者まで",
+            contactLink: "LINEグループに参加して @CSL をメンション"
         },
         settings: {
             title: "ステージ設定",
@@ -348,7 +356,9 @@ export const I18N = {
         app: {
             documentTitle: "Coin999 파트너 계산기",
             footer: "© {year} 제작: 大佬群CSL",
-            credit: "大佬群CSL 제작"
+            credit: "大佬群CSL 제작",
+            contact: "문의나 제안은 웹 개발자에게",
+            contactLink: "LINE 그룹에 참여한 뒤 @CSL 태그"
         },
         settings: {
             title: "스테이지 설정",
@@ -421,7 +431,9 @@ export const I18N = {
         app: {
             documentTitle: "เครื่องคิดเลขพาร์ทเนอร์ Coin999",
             footer: "© {year} จัดทำโดย 大佬群CSL",
-            credit: "จัดทำโดย 大佬群CSL"
+            credit: "จัดทำโดย 大佬群CSL",
+            contact: "มีคำถามหรือข้อเสนอแนะ? ติดต่อผู้พัฒนาเว็บ",
+            contactLink: "เข้ากลุ่ม LINE แล้วแท็ก @CSL"
         },
         settings: {
             title: "ตั้งค่าด่าน",
@@ -494,7 +506,9 @@ export const I18N = {
         app: {
             documentTitle: "Kalkulator Partner Coin999",
             footer: "© {year} Dibuat oleh 大佬群CSL",
-            credit: "Dibuat oleh 大佬群CSL"
+            credit: "Dibuat oleh 大佬群CSL",
+            contact: "Ada pertanyaan atau saran? Hubungi pengembang",
+            contactLink: "Gabung grup LINE lalu tag @CSL"
         },
         settings: {
             title: "Pengaturan Level",
@@ -567,7 +581,9 @@ export const I18N = {
         app: {
             documentTitle: "Calculadora de Socios Coin999",
             footer: "© {year} Creado por 大佬群CSL",
-            credit: "Creado por 大佬群CSL"
+            credit: "Creado por 大佬群CSL",
+            contact: "¿Dudas o ideas? Contacta al desarrollador",
+            contactLink: "Únete al grupo de LINE y etiqueta a @CSL"
         },
         settings: {
             title: "Configuración de etapa",
@@ -640,7 +656,9 @@ export const I18N = {
         app: {
             documentTitle: "Calculadora de Parceiros Coin999",
             footer: "© {year} Criado por 大佬群CSL",
-            credit: "Criado por 大佬群CSL"
+            credit: "Criado por 大佬群CSL",
+            contact: "Dúvidas ou ideias? Fale com o desenvolvedor",
+            contactLink: "Entre no grupo do LINE e marque @CSL"
         },
         settings: {
             title: "Configurações da fase",

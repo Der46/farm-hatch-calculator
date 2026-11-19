@@ -3,8 +3,7 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261108a";
-import { MatchBoard } from "./match.js?v=20261108a";
+} from "./i18n.js?v=20261120a";
 
 const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
 
@@ -153,16 +152,6 @@ class Coin999PartnerCalculator {
         this.setupLanguageOptions();
         this.bindEvents();
 
-        this.matchBoard = new MatchBoard({
-            getLang: () => this.getLang(),
-            getLocale: () => this.getLocale(),
-            appT: (path, params) => this.t(path, params),
-            escapeHtml: (value) => this.escapeHtml(value),
-            getCreatureSvg: (mode, isGold) => MODES[mode]?.creatureType === "farm"
-                ? this.getPlantSvg(isGold)
-                : this.getLizardSvg(isGold)
-        });
-
         this.render();
     }
 
@@ -274,8 +263,6 @@ class Coin999PartnerCalculator {
                 year
             });
         });
-
-        this.matchBoard?.applyI18n();
     }
 
     setLanguage(lang) {
@@ -850,7 +837,6 @@ class Coin999PartnerCalculator {
         this.els.detailPage.classList.remove("open");
 
         this.render();
-        this.matchBoard.resetProfile();
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.appData));
     }
@@ -899,7 +885,6 @@ class Coin999PartnerCalculator {
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
                 this.closeDetail();
-                this.matchBoard.close();
             }
         });
 
