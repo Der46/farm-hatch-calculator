@@ -113,10 +113,8 @@ button {
     text-shadow: 0 5px 0 var(--ink), 0 10px 18px rgba(0, 0, 0, 0.4);
 }
 
-/* 浮水印徽章：暮紫絨布緞帶＋金邊金字，左右燕尾，微微右傾 */
+/* 浮水印徽章：暮紫長方形＋金邊金字，微微右傾 */
 .title-credit {
-    position: relative;
-    z-index: 0;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -137,27 +135,6 @@ button {
         linear-gradient(180deg, #8a3a78 0%, var(--dusk-3) 45%, var(--dusk-2) 100%);
     box-shadow: inset 0 -3px 0 rgba(20, 6, 32, 0.35), 0 4px 0 #1c0d2e, 0 8px 16px rgba(10, 2, 20, 0.45);
     transform: rotate(2deg);
-}
-
-.title-credit::before,
-.title-credit::after {
-    content: "";
-    position: absolute;
-    top: 7px;
-    z-index: -1;
-    width: 24px;
-    height: 100%;
-    background: linear-gradient(180deg, var(--dusk-2), #24123a);
-}
-
-.title-credit::before {
-    left: -16px;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%);
-}
-
-.title-credit::after {
-    right: -16px;
-    clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%);
 }
 
 .title-credit-star {
