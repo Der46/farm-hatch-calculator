@@ -54,7 +54,7 @@ export const LANGUAGE_META = {
 export const I18N = {
     "zh-Hant": {
         app: {
-            documentTitle: "Coin999 夥伴計算機",
+            documentTitle: "耕種孵化夥伴計算機",
             footer: "© {year} 大佬群CSL製作",
             credit: "大佬群CSL製作",
             contact: "有問題或建議？聯絡網頁開發者",
@@ -129,7 +129,7 @@ export const I18N = {
 
     en: {
         app: {
-            documentTitle: "Coin999 Partner Calculator",
+            documentTitle: "Partner Calculator",
             footer: "© {year} Made by 大佬群CSL",
             credit: "Made by 大佬群CSL",
             contact: "Questions or ideas? Contact the developer",
@@ -204,7 +204,7 @@ export const I18N = {
 
     vi: {
         app: {
-            documentTitle: "Máy tính Đồng Đội Coin999",
+            documentTitle: "Máy tính Đồng Đội",
             footer: "© {year} Thực hiện bởi 大佬群CSL",
             credit: "Thực hiện bởi 大佬群CSL",
             contact: "Có câu hỏi hoặc góp ý? Liên hệ nhà phát triển",
@@ -279,7 +279,7 @@ export const I18N = {
 
     ja: {
         app: {
-            documentTitle: "Coin999 パートナー計算機",
+            documentTitle: "パートナー計算機",
             footer: "© {year} 制作：大佬群CSL",
             credit: "大佬群CSL制作",
             contact: "ご質問・ご要望はWeb開発者まで",
@@ -354,7 +354,7 @@ export const I18N = {
 
     ko: {
         app: {
-            documentTitle: "Coin999 파트너 계산기",
+            documentTitle: "파트너 계산기",
             footer: "© {year} 제작: 大佬群CSL",
             credit: "大佬群CSL 제작",
             contact: "문의나 제안은 웹 개발자에게",
@@ -429,7 +429,7 @@ export const I18N = {
 
     th: {
         app: {
-            documentTitle: "เครื่องคิดเลขพาร์ทเนอร์ Coin999",
+            documentTitle: "เครื่องคิดเลขพาร์ทเนอร์",
             footer: "© {year} จัดทำโดย 大佬群CSL",
             credit: "จัดทำโดย 大佬群CSL",
             contact: "มีคำถามหรือข้อเสนอแนะ? ติดต่อผู้พัฒนาเว็บ",
@@ -504,7 +504,7 @@ export const I18N = {
 
     id: {
         app: {
-            documentTitle: "Kalkulator Partner Coin999",
+            documentTitle: "Kalkulator Partner",
             footer: "© {year} Dibuat oleh 大佬群CSL",
             credit: "Dibuat oleh 大佬群CSL",
             contact: "Ada pertanyaan atau saran? Hubungi pengembang",
@@ -579,7 +579,7 @@ export const I18N = {
 
     es: {
         app: {
-            documentTitle: "Calculadora de Socios Coin999",
+            documentTitle: "Calculadora de Socios",
             footer: "© {year} Creado por 大佬群CSL",
             credit: "Creado por 大佬群CSL",
             contact: "¿Dudas o ideas? Contacta al desarrollador",
@@ -654,7 +654,7 @@ export const I18N = {
 
     "pt-BR": {
         app: {
-            documentTitle: "Calculadora de Parceiros Coin999",
+            documentTitle: "Calculadora de Parceiros",
             footer: "© {year} Criado por 大佬群CSL",
             credit: "Criado por 大佬群CSL",
             contact: "Dúvidas ou ideias? Fale com o desenvolvedor",

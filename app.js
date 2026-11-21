@@ -90,7 +90,7 @@ const DEFAULT_DATA = {
     }
 };
 
-class Coin999PartnerCalculator {
+class PartnerCalculator {
     constructor() {
         this.appData = this.loadData();
         this.editingMemberId = null;
@@ -900,5 +900,5 @@ class Coin999PartnerCalculator {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    new Coin999PartnerCalculator();
+    new PartnerCalculator();
 });
