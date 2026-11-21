@@ -72,7 +72,7 @@ python -m http.server 8000
 - **調整換算比例或預設目標**：修改 `app.js` 的 `RATES` 與 `DEFAULT_DATA.targets`。
 - **修改角色造型**：`app.js` 的 `getLizardSvg()`（孵化）與 `getPlantSvg()`（耕種），各自有一般與黃金兩組配色。
 - **快取版本**：修改 CSS / JS 後，請同步更新 `index.html` 與 `app.js`（import `i18n.js`）的 `?v=` 版本號，讓使用者立即載入新檔案。
-- **本機資料 key**：`coin999_partner_calc_v10_multilang_timezone`，若資料結構有不相容變更可更換 key。
+- **本機資料 key**：`farm_hatch_partner_calc_v10`，若資料結構有不相容變更可更換 key。
 
 ## 製作
 

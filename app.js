@@ -5,7 +5,7 @@ import {
     I18N
 } from "./i18n.js?v=20261120c";
 
-const STORAGE_KEY = "coin999_partner_calc_v10_multilang_timezone";
+const STORAGE_KEY = "farm_hatch_partner_calc_v10";
 
 const RATES = {
     hatch: {
