@@ -19,12 +19,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Chiron+GoRound+TC:wght@500;700;900&display=swap">
-    <link rel="stylesheet" href="./style.css?v=20261124a">
+    <link rel="stylesheet" href="./style.css?v=20261124b">
 </head>
 
 <body>
-    <main class="app">
-        <div class="title-row">
+    <div class="app">
+        <header class="title-row">
             <select id="languageSelect" class="language-select" aria-label="Language"></select>
 
             <h1 class="title" id="pageTitle">孵化夥伴</h1>
@@ -33,21 +33,22 @@
                 <span data-i18n="app.credit">大佬群CSL製作</span>
                 <span class="title-credit-star" aria-hidden="true">★</span>
             </p>
-        </div>
+        </header>
 
-        <nav class="mode-tabs" aria-label="Mode">
-            <button class="mode-btn" type="button" data-mode="farm" data-i18n="mode.farm">🌱 耕種</button>
-            <button class="mode-btn" type="button" data-mode="hatch" data-i18n="mode.hatch">🥚 孵化</button>
-            <button class="mode-btn gold" type="button" data-mode="goldFarm" data-i18n="mode.goldFarm">👑 黃金耕種</button>
-            <button class="mode-btn gold" type="button" data-mode="goldHatch" data-i18n="mode.goldHatch">🏆
+        <main>
+        <div class="mode-tabs" role="group" aria-label="Mode">
+            <button class="mode-btn" type="button" aria-pressed="false" data-mode="farm" data-i18n="mode.farm">🌱 耕種</button>
+            <button class="mode-btn" type="button" aria-pressed="false" data-mode="hatch" data-i18n="mode.hatch">🥚 孵化</button>
+            <button class="mode-btn gold" type="button" aria-pressed="false" data-mode="goldFarm" data-i18n="mode.goldFarm">👑 黃金耕種</button>
+            <button class="mode-btn gold" type="button" aria-pressed="false" data-mode="goldHatch" data-i18n="mode.goldHatch">🏆
                 黃金孵化</button>
-        </nav>
+        </div>
 
         <section class="team-stage">
             <div class="team-row normal" id="teamRow"></div>
 
             <div class="summary">
-                <div class="team-bar" aria-hidden="true"><span id="teamBarFill"></span></div>
+                <progress class="team-bar" id="teamBarFill" max="100" value="0" aria-labelledby="teamProgressLabel"></progress>
 
                 <div class="summary-grid">
                     <div class="summary-item">
@@ -56,7 +57,7 @@
                     </div>
 
                     <div class="summary-item">
-                        <div class="summary-label" data-i18n="summary.progress">完成進度</div>
+                        <div class="summary-label" id="teamProgressLabel" data-i18n="summary.progress">完成進度</div>
                         <div class="summary-value" id="teamProgress">0%</div>
                     </div>
                 </div>
@@ -94,6 +95,7 @@
                 重置所有設定
             </button>
         </details>
+        </main>
 
         <footer>
             <p class="dev-contact">
@@ -105,12 +107,12 @@
             <p class="footer-copy" data-i18n="app.footer">© {year} 大佬群CSL製作</p>
         </footer>
 
-    </main>
+    </div>
 
-    <section class="detail-page" id="detailPage">
+    <dialog class="detail-page" id="detailPage" aria-labelledby="detailTitle">
         <div class="detail-inner">
             <div class="top-bar">
-                <button class="back-btn" type="button" id="detailBackBtn" aria-label="Back">‹</button>
+                <button class="back-btn" type="button" id="detailBackBtn" aria-label="返回" data-i18n-aria-label="button.back">‹</button>
             </div>
 
             <div class="gold-header">
@@ -120,7 +122,7 @@
                     <div class="duel-score" id="selfScoreView">0</div>
                 </div>
 
-                <div class="gold-title-board" id="detailTitle">關卡</div>
+                <h1 class="gold-title-board" id="detailTitle">關卡</h1>
 
                 <div class="duel-card">
                     <div class="duel-name" id="friendNameView">隊友</div>
@@ -195,9 +197,18 @@
                 <p class="footer-copy" data-i18n="app.footer">© {year} 大佬群CSL製作</p>
             </footer>
         </div>
-    </section>
+    </dialog>
 
-    <script type="module" src="./app.js?v=20261124a"></script>
+    <dialog class="confirm-dialog" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+        <h1 class="confirm-title" id="confirmTitle" data-i18n="button.clearAll">重置所有設定</h1>
+        <p class="confirm-message" id="confirmMessage" data-i18n="message.clearConfirm">確定要重置所有設定嗎？此操作無法復原。</p>
+        <form class="confirm-actions" method="dialog">
+            <button class="confirm-cancel" value="cancel" autofocus data-i18n="button.cancel">取消</button>
+            <button class="confirm-ok" value="confirm" data-i18n="button.confirmReset">重置</button>
+        </form>
+    </dialog>
+
+    <script type="module" src="./app.js?v=20261124b"></script>
 </body>
 
 </html>

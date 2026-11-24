@@ -93,7 +93,9 @@ export const I18N = {
         },
         button: {
             clearAll: "重置所有設定",
-            back: "返回"
+            back: "返回",
+            cancel: "取消",
+            confirmReset: "重置"
         },
         person: {
             selfDefault: "自己",
@@ -168,7 +170,9 @@ export const I18N = {
         },
         button: {
             clearAll: "Reset all settings",
-            back: "Back"
+            back: "Back",
+            cancel: "Cancel",
+            confirmReset: "Reset"
         },
         person: {
             selfDefault: "Me",
@@ -243,7 +247,9 @@ export const I18N = {
         },
         button: {
             clearAll: "Đặt lại tất cả cài đặt",
-            back: "Quay lại"
+            back: "Quay lại",
+            cancel: "Hủy",
+            confirmReset: "Đặt lại"
         },
         person: {
             selfDefault: "Tôi",
@@ -318,7 +324,9 @@ export const I18N = {
         },
         button: {
             clearAll: "すべての設定をリセット",
-            back: "戻る"
+            back: "戻る",
+            cancel: "キャンセル",
+            confirmReset: "リセット"
         },
         person: {
             selfDefault: "自分",
@@ -393,7 +401,9 @@ export const I18N = {
         },
         button: {
             clearAll: "모든 설정 초기화",
-            back: "뒤로"
+            back: "뒤로",
+            cancel: "취소",
+            confirmReset: "초기화"
         },
         person: {
             selfDefault: "나",
@@ -468,7 +478,9 @@ export const I18N = {
         },
         button: {
             clearAll: "รีเซ็ตการตั้งค่าทั้งหมด",
-            back: "กลับ"
+            back: "กลับ",
+            cancel: "ยกเลิก",
+            confirmReset: "รีเซ็ต"
         },
         person: {
             selfDefault: "ฉัน",
@@ -543,7 +555,9 @@ export const I18N = {
         },
         button: {
             clearAll: "Reset semua pengaturan",
-            back: "Kembali"
+            back: "Kembali",
+            cancel: "Batal",
+            confirmReset: "Reset"
         },
         person: {
             selfDefault: "Saya",
@@ -618,7 +632,9 @@ export const I18N = {
         },
         button: {
             clearAll: "Restablecer toda la configuración",
-            back: "Volver"
+            back: "Volver",
+            cancel: "Cancelar",
+            confirmReset: "Restablecer"
         },
         person: {
             selfDefault: "Yo",
@@ -693,7 +709,9 @@ export const I18N = {
         },
         button: {
             clearAll: "Redefinir todas as configurações",
-            back: "Voltar"
+            back: "Voltar",
+            cancel: "Cancelar",
+            confirmReset: "Redefinir"
         },
         person: {
             selfDefault: "Eu",

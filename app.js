@@ -3,7 +3,7 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261124a";
+} from "./i18n.js?v=20261124b";
 
 const STORAGE_KEY = "farm_hatch_partner_calc_v10";
 
@@ -118,6 +118,8 @@ class PartnerCalculator {
             teamProgress: document.getElementById("teamProgress"),
             teamBarFill: document.getElementById("teamBarFill"),
             clearAllBtn: document.getElementById("clearAllBtn"),
+
+            confirmDialog: document.getElementById("confirmDialog"),
 
             detailPage: document.getElementById("detailPage"),
             detailBackBtn: document.getElementById("detailBackBtn"),
@@ -255,6 +257,10 @@ class PartnerCalculator {
             node.textContent = this.t(key, {
                 year
             });
+        });
+
+        document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+            node.setAttribute("aria-label", this.t(node.dataset.i18nAriaLabel));
         });
     }
 
@@ -430,7 +436,10 @@ class PartnerCalculator {
         this.els.pageTitle.textContent = this.t(`pageTitle.${this.appData.mode}`);
 
         this.els.modeButtons.forEach((button) => {
-            button.classList.toggle("active", button.dataset.mode === this.appData.mode);
+            const isActive = button.dataset.mode === this.appData.mode;
+
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-pressed", String(isActive));
         });
 
         this.els.teamRow.className = config.isGold
@@ -699,7 +708,7 @@ class PartnerCalculator {
 
         this.els.teamTarget.textContent = this.formatNumber(totalTarget);
         this.els.teamProgress.textContent = `${progress.toFixed(1)}${this.t("unit.percent")}`;
-        this.els.teamBarFill.style.width = `${progress}%`;
+        this.els.teamBarFill.value = progress;
     }
 
     findEditingMember() {
@@ -719,17 +728,26 @@ class PartnerCalculator {
         this.els.friendScoreInput.value = member.score || 0;
 
         this.updateDetailCalc();
-        this.els.detailPage.classList.add("open");
+
+        if (!this.els.detailPage.open) {
+            this.els.detailPage.showModal();
+        }
     }
 
     closeDetail() {
+        if (this.els.detailPage.open) {
+            this.els.detailPage.close();
+        }
+    }
+
+    // 不論是按返回、Esc 或手機返回手勢關閉，都在 close 事件統一存檔
+    handleDetailClosed() {
         if (this.editingMemberId) {
             this.autoSaveDetail();
             this.saveDataNow();
         }
 
         this.editingMemberId = null;
-        this.els.detailPage.classList.remove("open");
     }
 
     updateDetailCalc() {
@@ -812,7 +830,14 @@ class PartnerCalculator {
     }
 
     clearAllData() {
-        const confirmed = confirm(this.t("message.clearConfirm"));
+        this.els.confirmDialog.showModal();
+    }
+
+    handleConfirmClosed() {
+        const dialog = this.els.confirmDialog;
+        const confirmed = dialog.returnValue === "confirm";
+
+        dialog.returnValue = "";
 
         if (!confirmed) {
             return;
@@ -827,7 +852,7 @@ class PartnerCalculator {
         this.appData.lang = currentLang;
 
         this.editingMemberId = null;
-        this.els.detailPage.classList.remove("open");
+        this.closeDetail();
 
         this.render();
 
@@ -874,12 +899,8 @@ class PartnerCalculator {
         this.els.closeDetailBtn.addEventListener("click", () => this.closeDetail());
         this.els.detailBackBtn.addEventListener("click", () => this.closeDetail());
         this.els.clearAllBtn.addEventListener("click", () => this.clearAllData());
-
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape") {
-                this.closeDetail();
-            }
-        });
+        this.els.detailPage.addEventListener("close", () => this.handleDetailClosed());
+        this.els.confirmDialog.addEventListener("close", () => this.handleConfirmClosed());
 
         window.addEventListener("beforeunload", () => {
             if (this.editingMemberId) {
