@@ -3,7 +3,7 @@ import {
     SUPPORTED_LANGS,
     LANGUAGE_META,
     I18N
-} from "./i18n.js?v=20261120c";
+} from "./i18n.js?v=20261124a";
 
 const STORAGE_KEY = "farm_hatch_partner_calc_v10";
 
@@ -156,7 +156,7 @@ class PartnerCalculator {
     }
 
     clone(data) {
-        return JSON.parse(JSON.stringify(data));
+        return structuredClone(data);
     }
 
     numberValue(value, fallback = 0) {
@@ -227,16 +227,9 @@ class PartnerCalculator {
     }
 
     setupLanguageOptions() {
-        this.els.languageSelect.innerHTML = "";
+        const options = SUPPORTED_LANGS.map((lang) => new Option(LANGUAGE_META[lang].label, lang));
 
-        SUPPORTED_LANGS.forEach((lang) => {
-            const option = document.createElement("option");
-
-            option.value = lang;
-            option.textContent = LANGUAGE_META[lang].label;
-
-            this.els.languageSelect.appendChild(option);
-        });
+        this.els.languageSelect.replaceChildren(...options);
     }
 
     getMemberDisplayName(member) {
@@ -658,7 +651,7 @@ class PartnerCalculator {
         const config = this.getModeConfig();
         const members = this.getCurrentMembers();
 
-        this.els.teamRow.innerHTML = "";
+        this.els.teamRow.replaceChildren();
 
         members.forEach((member) => {
             const progressParts = this.getMemberProgressParts(member);
